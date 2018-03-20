@@ -42,8 +42,7 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
         storyViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Story story = stories.get(position);
-                onItemClickListener.onClick(story);
+                onItemClickListener.onClick(stories.get(position));
             }
         });
     }

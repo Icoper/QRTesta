@@ -19,10 +19,13 @@ public class Story implements Parcelable {
     StoryMediaPath media;
     ArrayList<Actor> actors;
 
+
     protected Story(Parcel in) {
         color = in.readInt();
         about = in.readInt();
         name = in.readString();
+        media = in.readParcelable(StoryMediaPath.class.getClassLoader());
+        actors = in.createTypedArrayList(Actor.CREATOR);
     }
 
     @Override
@@ -30,6 +33,8 @@ public class Story implements Parcelable {
         dest.writeInt(color);
         dest.writeInt(about);
         dest.writeString(name);
+        dest.writeParcelable(media, flags);
+        dest.writeTypedList(actors);
     }
 
     @Override

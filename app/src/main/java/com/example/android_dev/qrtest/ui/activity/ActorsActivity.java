@@ -31,7 +31,7 @@ public class ActorsActivity extends AppCompatActivity {
         initializeLv(story);
     }
 
-    public void initializeLv(Story story) {
+    public void initializeLv(final Story story) {
         ListView lvMain = (ListView) findViewById(R.id.fal_list_view);
         String[] actorsArray = new String[story.getActors().size()];
         for (int i = 0; i < story.getActors().size(); i++) {
@@ -44,15 +44,15 @@ public class ActorsActivity extends AppCompatActivity {
         // присваиваем адаптер списку
         lvMain.setAdapter(adapter);
 
-        final String[] finalActorsArray = actorsArray;
+//        final String[] finalActorsArray = actorsArray;
         lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final int i = position;
-                String s = finalActorsArray[i];
-                String[] splitArray = s.split("");
-                int arraySize = splitArray.length;
-                String actorId = splitArray[arraySize - 1];
-                showAlertDialog(actorId);
+//                String s = finalActorsArray[i];
+//                String[] splitArray = s.split("");
+//                int arraySize = splitArray.length;
+//                String actorId = splitArray[arraySize - 1];
+                showAlertDialog(story.getActors().get(position).getId());
             }
         });
     }

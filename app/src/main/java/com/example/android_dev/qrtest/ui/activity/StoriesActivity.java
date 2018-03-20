@@ -35,7 +35,6 @@ public class StoriesActivity extends AppCompatActivity {
 
         StoryListArrayAdapter storyListArrayAdapter = new StoryListArrayAdapter(stories,
                 new StoryListArrayAdapter.OnItemClickListener() {
-
                     @Override
                     public void onClick(Story story) {
                         Intent intent = new Intent(getApplicationContext(), ActorsActivity.class);
