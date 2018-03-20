@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:state_selected="true"
+        android:id="@+id/navigation_general_history"
+        android:icon="@drawable/ic_assignment_black_36dp"
+        android:title="@string/title_general_history" />
+
+    <item
+        android:id="@+id/navigation_characters_info"
+        android:icon="@drawable/ic_info_outline_black_36dp"
+        android:title="@string/title_characters_info" />
+
+    <item
+        android:id="@+id/navigation_qr_reader"
+        android:icon="@drawable/ic_qr_scan"
+        android:title="@string/title_qr_reader" />
+    <item
+        android:id="@+id/navigation_history_scan"
+        android:icon="@drawable/ic_history_black_36dp"
+        android:title="@string/title_history_scan" />
+</menu>

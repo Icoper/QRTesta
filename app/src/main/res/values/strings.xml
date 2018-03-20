@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">QR Test</string>
+    <string name="title_activity_main">MainActivity</string>
+    /* Bottom navigation bar
+    <string name="title_general_history">General History</string>
+    <string name="title_qr_reader">QR reader</string>
+    <string name="title_history_scan">History Scan</string>
+    <string name="title_characters_info">Character\'s info</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="validate_actor">Enter actor id</string>
+    <string name="ok_text">Ok</string>
+    <string name="wrong_id">id is not true</string>
+</resources>
