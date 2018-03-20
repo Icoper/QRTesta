@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
+import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.model.Actor;
+import com.example.android_dev.qrtest.model.Story;
 import com.example.android_dev.qrtest.ui.fragment.ma.CharacterInfoFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.GeneralHistoryFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.HistoryScanFragment;
@@ -20,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "MainActivity";
 
     private String actorId;
+    private InMemoryStoryRepository inMemoryStoryRepository;
+    private Story selectedStory;
     // ui
     private QrReaderFragment mQrReaderFragment;
     private CharacterInfoFragment mCharacterInfoFragment;
@@ -65,9 +70,20 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         Intent intent = getIntent();
         actorId = intent.getStringExtra("id");
 
+        inMemoryStoryRepository = new InMemoryStoryRepository();
+
+        for (Story story : inMemoryStoryRepository.getStoriesList()) {
+            for (Actor actor : story.getActors()) {
+                if (actor.getId().equals(actorId)) {
+                    Log.d(LOG_TAG, "Story is found - " + story.getName());
+                    selectedStory = story;
+                }
+            }
+        }
         initializeUi();
     }
 
@@ -78,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         mHistoryScanFragment = new HistoryScanFragment();
         mFragmentTransaction = getFragmentTransaction();
         mFragmentTransaction.add(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
-        Toast.makeText(this, actorId, Toast.LENGTH_SHORT).show();
     }
 
     private FragmentTransaction getFragmentTransaction() {
