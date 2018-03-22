@@ -44,14 +44,8 @@ public class ActorsActivity extends AppCompatActivity {
         // присваиваем адаптер списку
         lvMain.setAdapter(adapter);
 
-//        final String[] finalActorsArray = actorsArray;
         lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final int i = position;
-//                String s = finalActorsArray[i];
-//                String[] splitArray = s.split("");
-//                int arraySize = splitArray.length;
-//                String actorId = splitArray[arraySize - 1];
                 showAlertDialog(story.getActors().get(position).getId());
             }
         });
@@ -70,6 +64,7 @@ public class ActorsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (enterId.getText().toString().equals(actorId)) {
+                            inMemoryStoryRepository.setActorId(actorId);
                             showHistoryContent(actorId);
                         } else
                             Toast.makeText(view.getContext(), getString(R.string.wrong_id), Toast.LENGTH_SHORT).show();

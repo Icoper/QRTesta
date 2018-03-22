@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <EditText
+        android:inputType="number"
         android:layout_margin="16dp"
         android:id="@+id/aav_enter_id_et"
         android:layout_width="match_parent"

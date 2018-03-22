@@ -8,7 +8,6 @@ import com.example.android_dev.qrtest.model.Story;
 import com.example.android_dev.qrtest.model.StoryMediaPath;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MediaDataWorker {
 
@@ -30,21 +29,21 @@ public class MediaDataWorker {
         redHoodStory.setAbout(R.raw.text_redhood);
         redHoodStory.setColor(R.color.colorRed);
 
-        HashMap<String, Integer> redHoodImgStore = new HashMap<>();
-        redHoodImgStore.put("preview", R.raw.preview_redhood);
-        redHoodImgStore.put("img", R.raw.redhood_img);
+        ArrayList<Integer> redHoodImgStore = new ArrayList<>();
+        redHoodImgStore.add(R.raw.preview_redhood);
+        redHoodImgStore.add(R.raw.redhood_img);
         redHoodPath.setImages(redHoodImgStore);
 
-        HashMap<String, Integer> redHoodAudioStore = new HashMap<>();
-        redHoodAudioStore.put("audio", R.raw.redhood_audio);
+        ArrayList<Integer> redHoodAudioStore = new ArrayList<>();
+        redHoodAudioStore.add(R.raw.redhood_audio);
         redHoodPath.setAudio(redHoodAudioStore);
 
-        HashMap<String, Integer> redHoodVideo = new HashMap<>();
-        redHoodVideo.put("video", R.raw.redhood_video);
+        ArrayList<Integer> redHoodVideo = new ArrayList<>();
+        redHoodVideo.add(R.raw.redhood_video);
         redHoodPath.setVideo(redHoodVideo);
 
-        Actor actorRedHood = new Actor("Красная Шапочка", "40");
-        Actor actorWolf = new Actor("Волк", "45");
+        Actor actorRedHood = new Actor("Красная Шапочка", "40", R.raw.about_redhood_img, R.raw.about_redhood_text);
+        Actor actorWolf = new Actor("Волк", "45", R.raw.about_wolf_img, R.raw.about_wolf_text);
         ArrayList<Actor> redHoodActors = new ArrayList<>();
         redHoodActors.add(actorRedHood);
         redHoodActors.add(actorWolf);
@@ -59,21 +58,21 @@ public class MediaDataWorker {
         repkaStory.setColor(R.color.colorYellow);
 
 
-        HashMap<String, Integer> repkaImgStore = new HashMap<>();
-        repkaImgStore.put("preview", R.raw.preview_repka);
-        repkaImgStore.put("img", R.raw.repka_img);
+        ArrayList<Integer> repkaImgStore = new ArrayList<>();
+        repkaImgStore.add(R.raw.preview_repka);
+        repkaImgStore.add(R.raw.repka_img);
         repkaPath.setImages(repkaImgStore);
 
-        HashMap<String, Integer> repkaAudioStore = new HashMap<>();
-        repkaAudioStore.put("audio", R.raw.repka_audio);
+        ArrayList<Integer> repkaAudioStore = new ArrayList<>();
+        repkaAudioStore.add(R.raw.repka_audio);
         repkaPath.setAudio(repkaAudioStore);
 
-        HashMap<String, Integer> repkaVideo = new HashMap<>();
-        repkaVideo.put("video", R.raw.repka_video);
+        ArrayList<Integer> repkaVideo = new ArrayList<>();
+        repkaVideo.add(R.raw.repka_video);
         repkaPath.setVideo(repkaVideo);
 
-        Actor actorRepka = new Actor("Репка", "50");
-        Actor actorGrMather = new Actor("Бабушка", "55");
+        Actor actorRepka = new Actor("Репка", "50", R.raw.about_repka_img, R.raw.about_repka_text);
+        Actor actorGrMather = new Actor("Бабушка", "55", R.raw.about_gr_mather_img, R.raw.about_gr_mather_text);
         ArrayList<Actor> repkaActors = new ArrayList<>();
         repkaActors.add(actorRepka);
         repkaActors.add(actorGrMather);

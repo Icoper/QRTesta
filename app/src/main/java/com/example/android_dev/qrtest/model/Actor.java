@@ -3,33 +3,24 @@ package com.example.android_dev.qrtest.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by icoper on 20.03.2018.
- */
-
 public class Actor implements Parcelable {
     String name;
     String id;
+    int imgRes;
+    int aboutRes;
 
-    public Actor(String name, String id) {
+    public Actor(String name, String id, int imgRes, int aboutRes) {
         this.name = name;
         this.id = id;
+        this.imgRes = imgRes;
+        this.aboutRes = aboutRes;
     }
 
     protected Actor(Parcel in) {
         name = in.readString();
         id = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(id);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+        imgRes = in.readInt();
+        aboutRes = in.readInt();
     }
 
     public static final Creator<Actor> CREATOR = new Creator<Actor>() {
@@ -58,5 +49,34 @@ public class Actor implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getImgRes() {
+        return imgRes;
+    }
+
+    public void setImgRes(int imgRes) {
+        this.imgRes = imgRes;
+    }
+
+    public int getAboutRes() {
+        return aboutRes;
+    }
+
+    public void setAboutRes(int aboutRes) {
+        this.aboutRes = aboutRes;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(id);
+        parcel.writeInt(imgRes);
+        parcel.writeInt(aboutRes);
     }
 }

@@ -6,4 +6,10 @@ import java.util.ArrayList;
 
 public interface IStoryRepository {
     ArrayList<Story> getStoriesList();
+
+    void setActorId(String id);
+
+    String getActorId();
+
+    Story getSelectedStory();
 }

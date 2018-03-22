@@ -27,7 +27,7 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
 
     @Override
     public StoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.historylist_item, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_list_item, viewGroup, false);
         StoryViewHolder storyViewHolder = new StoryViewHolder(v);
         context = v.getContext();
         return storyViewHolder;
@@ -36,7 +36,7 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
     @Override
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
         final int position = i;
-        int imgRes = stories.get(position).getMedia().getImages().get("preview");
+        int imgRes = stories.get(position).getMedia().getImages().get(0);
         storyViewHolder.icon.setBackgroundResource(imgRes);
         storyViewHolder.name.setText(stories.get(position).getName());
         storyViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -46,7 +46,6 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -64,7 +63,6 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
             icon = (CircleImageView) v.findViewById(R.id.hli_story_icon);
             linearLayout = (LinearLayout) v.findViewById(R.id.hli_linear_layout);
         }
-
     }
 
     public interface OnItemClickListener {

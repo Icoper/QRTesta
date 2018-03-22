@@ -8,12 +8,33 @@ import java.util.ArrayList;
 public class SingletonMD {
     private static SingletonMD ourInstance = new SingletonMD();
     private ArrayList<Story> stories;
+    private Story selectedStory;
+    private String selectedActorId;
+
+    public String getSelectedActorId() {
+        return selectedActorId;
+    }
+
+    public void setSelectedActorId(String selectedActorId) {
+        this.selectedActorId = selectedActorId;
+    }
 
     public ArrayList<Story> getStories() {
         if (stories == null || stories.isEmpty()) {
             stories = new MediaDataWorker().getStoryData();
         }
         return stories;
+    }
+
+    public Story getSelectedStory() {
+        if (selectedStory == null) {
+            selectedStory = new Story();
+        }
+        return selectedStory;
+    }
+
+    public void setSelectedStory(Story selectedStory) {
+        this.selectedStory = selectedStory;
     }
 
     public static SingletonMD getInstance() {

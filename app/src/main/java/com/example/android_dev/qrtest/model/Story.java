@@ -5,14 +5,9 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-/**
- * Created by android_dev on 19.03.2018.
- */
-
 public class Story implements Parcelable {
     public Story() {
     }
-
     int color;
     int about;
     String name;
