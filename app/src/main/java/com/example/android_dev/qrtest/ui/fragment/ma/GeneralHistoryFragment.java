@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
@@ -49,9 +50,11 @@ public class GeneralHistoryFragment extends Fragment {
     private void processData(String type, int res) {
         if (type.equals(GlobalNames.AUDIO_RES)) {
             if (isSoundPlay) {
+                Toast.makeText(mContext, "Stop", Toast.LENGTH_SHORT).show();
                 isSoundPlay = false;
                 mediaPlayer.stop();
             } else {
+                Toast.makeText(mContext, "Play", Toast.LENGTH_SHORT).show();
                 isSoundPlay = true;
                 mediaPlayer = MediaPlayer.create(getActivity().getApplication().getApplicationContext(), res);
                 mediaPlayer.start();

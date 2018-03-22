@@ -156,9 +156,11 @@ public class QrReaderFragment extends Fragment {
     private void processData(String type, int res) {
         if (type.equals(GlobalNames.AUDIO_RES)) {
             if (isSoundPlay) {
+                Toast.makeText(mContext, "Stop", Toast.LENGTH_SHORT).show();
                 isSoundPlay = false;
                 mediaPlayer.stop();
             } else {
+                Toast.makeText(mContext, "Play", Toast.LENGTH_SHORT).show();
                 isSoundPlay = true;
                 mediaPlayer = MediaPlayer.create(getActivity().getApplication().getApplicationContext(), res);
                 mediaPlayer.start();
