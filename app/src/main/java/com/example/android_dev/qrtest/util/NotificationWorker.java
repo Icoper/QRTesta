@@ -10,10 +10,6 @@ import com.example.android_dev.qrtest.R;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-/**
- * Created by icoper on 21.03.2018.
- */
-
 public class NotificationWorker {
     private static final int NOTIFICATION_ID = 25;
     private Builder builder;

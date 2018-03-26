@@ -5,11 +5,13 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,19 +26,17 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.Story;
-import com.example.android_dev.qrtest.model.StoryMediaPath;
+import com.example.android_dev.qrtest.presenter.IAppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.presenter.qr.QRFPresenter;
+import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
+import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.StoryArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
 import com.example.android_dev.qrtest.util.IQRFragment;
 import com.example.android_dev.qrtest.util.NotificationWorker;
-import com.example.android_dev.qrtest.util.SimpleVideoPlayer;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
-import java.util.ArrayList;
 
 import static android.Manifest.permission.CAMERA;
 
@@ -46,12 +46,14 @@ public class QrReaderFragment extends Fragment {
     //view
     private ImageView openQrBtn;
     private Context mContext;
-    private InMemoryStoryRepository inMemoryStoryRepository;
     //qr code scanner object
     private IntentIntegrator qrScan;
+
+    private IAppMediaPlayerPresenter iAppMediaPlayerPresenter;
     private QRFPresenter qrfPresenter;
     private MediaPlayer mediaPlayer;
     private boolean isSoundPlay = false;
+    private Story ourStory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +61,6 @@ public class QrReaderFragment extends Fragment {
 
         qrScan = IntentIntegrator.forFragment(this);
         mContext = v.getContext();
-        inMemoryStoryRepository = new InMemoryStoryRepository();
         openQrBtn = (ImageView) v.findViewById(R.id.qrf_qr_image_view);
         openQrBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,41 +72,26 @@ public class QrReaderFragment extends Fragment {
                 }
             }
         });
-
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentapiVersion >= android.os.Build.VERSION_CODES.M) {
-            if (checkPermission()) {
-                qrScan.initiateScan();
-            } else {
+            if (!checkPermission()) {
                 requestPermission();
             }
         }
-        qrfPresenter = new QRFPresenter(mContext, new IQRFragment() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        qrfPresenter = new QRFPresenter(sp, new IQRFragment() {
             @Override
-            public void showAlertDialog(int modeScan, final int modeShow) {
+            public void showAlertDialog(int modeScan, Story story, int modeShow) {
+                ourStory = story;
                 final View view = LayoutInflater.from(mContext).inflate(R.layout.alert_qrscan, null);
                 final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.aqr_recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                 final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.aqr_progress_bar);
-                Story sendedStory = new Story();
-                if (modeShow == GlobalNames.ALERT_MODE_SMALL_INFO) {
 
-                    Story fullStory = inMemoryStoryRepository.getSelectedStory();
-                    StoryMediaPath storyMediaPath = new StoryMediaPath();
-                    storyMediaPath.setAudio(new ArrayList<Integer>());
-                    storyMediaPath.setVideo(new ArrayList<Integer>());
-                    storyMediaPath.setImages(fullStory.getMedia().getImages());
-                    sendedStory.setMedia(storyMediaPath);
-                    sendedStory.setAbout(fullStory.getAbout());
-
-                } else if (modeShow == GlobalNames.ALERT_MODE_FULL_INFO) {
-                    sendedStory = inMemoryStoryRepository.getSelectedStory();
-                }
-
-                final StoryArrayAdapter storyArrayAdapter = new StoryArrayAdapter(sendedStory, new StoryArrayAdapter.OnItemStoryClickListener() {
+                final StoryArrayAdapter storyArrayAdapter = new StoryArrayAdapter(story, new StoryArrayAdapter.OnItemStoryClickListener() {
                     @Override
-                    public void onClick(String finalItemType, int res) {
-                        processData(finalItemType, res);
+                    public void onClick(String finalItemType, String filePath) {
+                        qrfPresenter.playMediaData(finalItemType, filePath);
                     }
                 });
                 if (modeScan == GlobalNames.QR_MODE_FIRST_SCAN) {
@@ -121,55 +107,53 @@ public class QrReaderFragment extends Fragment {
 
                 } else {
                     recyclerView.setAdapter(storyArrayAdapter);
-                    storyArrayAdapter.notifyDataSetChanged();
                 }
-
 
                 AlertDialog.Builder builder = new AlertDialog
                         .Builder(new ContextThemeWrapper(view.getContext(), R.style.Theme_AppCompat_Light_Dialog_Alert));
                 builder.setView(view);
-                builder.setCancelable(false)
-                        .setNeutralButton(view.getContext().getString(R.string.more_text), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                qrfPresenter.changeAlertMode(GlobalNames.QR_MODE_SIMPLE_SCAN, GlobalNames.ALERT_MODE_FULL_INFO);
-                            }
-                        }).setNegativeButton(view.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+
+                builder.setCancelable(false).setNegativeButton(view.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
-
+                if (modeShow == GlobalNames.ALERT_MODE_SMALL_INFO) {
+                    builder.setNeutralButton(view.getContext().getString(R.string.more_text),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    qrfPresenter.changeAlertMode(
+                                            GlobalNames.QR_MODE_SIMPLE_SCAN,
+                                            GlobalNames.ALERT_MODE_FULL_INFO);
+                                }
+                            });
+                }
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+            }
+
+            @Override
+            public void startVideoPlayerActivity(String filePath) {
+                Intent intent = new Intent(mContext, SimpleVideoPlayer.class);
+                intent.putExtra("res", filePath);
+                startActivity(intent);
             }
 
             @Override
             public void showMsg(String msg) {
                 Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void startAudioPlayerActivity(String filePath) {
+                Intent intent = new Intent(mContext, SimpleAudioPlayer.class);
+                intent.putExtra("path", filePath);
+                startActivity(intent);
+            }
         });
         return v;
-    }
-
-    private void processData(String type, int res) {
-        if (type.equals(GlobalNames.AUDIO_RES)) {
-            if (isSoundPlay) {
-                Toast.makeText(mContext, "Stop", Toast.LENGTH_SHORT).show();
-                isSoundPlay = false;
-                mediaPlayer.stop();
-            } else {
-                Toast.makeText(mContext, "Play", Toast.LENGTH_SHORT).show();
-                isSoundPlay = true;
-                mediaPlayer = MediaPlayer.create(getActivity().getApplication().getApplicationContext(), res);
-                mediaPlayer.start();
-            }
-        } else if (type.equals(GlobalNames.VIDEO_RES)) {
-            Intent intent = new Intent(mContext, SimpleVideoPlayer.class);
-            intent.putExtra("res", String.valueOf(res));
-            mContext.startActivity(intent);
-        }
     }
 
     //Getting the scan results
@@ -177,6 +161,7 @@ public class QrReaderFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(LOG_TAG, "onActivityResult is called");
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        Log.d(LOG_TAG, "result code - " + result.getContents());
         if (result != null) {
             //if qr code has nothing in it
             if (result.getContents() == null) {
@@ -197,9 +182,6 @@ public class QrReaderFragment extends Fragment {
 
     private void requestPermission() {
         ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, REQUEST_CAMERA);
-        if (checkPermission()) {
-            qrScan.initiateScan();
-        }
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {

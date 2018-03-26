@@ -1,6 +1,8 @@
 package com.example.android_dev.qrtest.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android_dev.qrtest.R;
+import com.example.android_dev.qrtest.db.SingletonMD;
 import com.example.android_dev.qrtest.model.Story;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -36,15 +40,25 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
     @Override
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
         final int position = i;
-        int imgRes = stories.get(position).getMedia().getImages().get(0);
-        storyViewHolder.icon.setBackgroundResource(imgRes);
+        storyViewHolder.icon.setImageBitmap(getBitMapByPath(stories.get(position).getMedia().getImages().get(0)));
         storyViewHolder.name.setText(stories.get(position).getName());
         storyViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SingletonMD.getInstance().setSelectedStory(stories.get(position));
                 onItemClickListener.onClick(stories.get(position));
             }
         });
+    }
+
+    private Bitmap getBitMapByPath(String path) {
+        File imgFile = new File(path);
+
+        if (imgFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            return myBitmap;
+        }
+        return null;
     }
 
     @Override

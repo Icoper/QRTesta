@@ -1,65 +1,38 @@
 package com.example.android_dev.qrtest.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.ArrayList;
+import java.util.List;
 
 
-public class StoryMediaPath implements Parcelable {
+public class StoryMediaPath {
 
-    private ArrayList<Integer> images;
-    private ArrayList<Integer> video;
-    private ArrayList<Integer> audio;
+    private List<String> images;
+    private List<String> video;
+    private List<String> audio;
 
     public StoryMediaPath() {
     }
 
-    protected StoryMediaPath(Parcel in) {
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<StoryMediaPath> CREATOR = new Creator<StoryMediaPath>() {
-        @Override
-        public StoryMediaPath createFromParcel(Parcel in) {
-            return new StoryMediaPath(in);
-        }
-
-        @Override
-        public StoryMediaPath[] newArray(int size) {
-            return new StoryMediaPath[size];
-        }
-    };
-
-    public ArrayList<Integer> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(ArrayList<Integer> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
-    public ArrayList<Integer> getVideo() {
+    public List<String> getVideo() {
         return video;
     }
 
-    public void setVideo(ArrayList<Integer> video) {
+    public void setVideo(List<String> video) {
         this.video = video;
     }
 
-    public ArrayList<Integer> getAudio() {
+    public List<String> getAudio() {
         return audio;
     }
 
-    public void setAudio(ArrayList<Integer> audio) {
+    public void setAudio(List<String> audio) {
         this.audio = audio;
     }
 }

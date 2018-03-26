@@ -2,7 +2,11 @@ package com.example.android_dev.qrtest.ui.fragment.ma;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -19,6 +23,7 @@ import com.example.android_dev.qrtest.model.Story;
 import com.example.android_dev.qrtest.presenter.historyscan.HistoryScanPresenter;
 import com.example.android_dev.qrtest.util.IHistoryScanFragment;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class HistoryScanFragment extends Fragment {
@@ -36,7 +41,8 @@ public class HistoryScanFragment extends Fragment {
     }
 
     private void setupPresenter() {
-        historyScanPresenter = new HistoryScanPresenter(mContext, new IHistoryScanFragment() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        historyScanPresenter = new HistoryScanPresenter(new IHistoryScanFragment() {
             @Override
             public void showGridView(final ArrayList<Story> scannedStoryList) {
                 ArrayAdapter<Story> adapter = new ArrayAdapter<Story>(mContext, R.layout.scan_history_item, scannedStoryList) {
@@ -49,7 +55,7 @@ public class HistoryScanFragment extends Fragment {
                         }
 
                         ImageView appIcon = (ImageView) convertView.findViewById(R.id.shi_story_img);
-                        appIcon.setImageResource(scannedStoryList.get(position).getMedia().getImages().get(0));
+                        appIcon.setImageBitmap(getBitMapByPath(scannedStoryList.get(position).getMedia().getImages().get(0)));
 
                         TextView appLabel = (TextView) convertView.findViewById(R.id.shi_story_name);
                         appLabel.setText(scannedStoryList.get(position).getName());
@@ -64,7 +70,17 @@ public class HistoryScanFragment extends Fragment {
             public void showMsg(String msg) {
                 Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
             }
-        });
+        }, sp);
         historyScanPresenter.getScannedStoryList();
+    }
+
+    private Bitmap getBitMapByPath(String path) {
+        File imgFile = new File(path);
+
+        if (imgFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            return myBitmap;
+        }
+        return null;
     }
 }

@@ -30,7 +30,6 @@ public class StoriesActivity extends AppCompatActivity {
     private void setupUI() {
         storiesRv = (RecyclerView) findViewById(R.id.as_recycler_view);
         storiesRv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
         ArrayList<Story> stories = storyRepository.getStoriesList();
 
         StoryListArrayAdapter storyListArrayAdapter = new StoryListArrayAdapter(stories,
@@ -38,7 +37,6 @@ public class StoriesActivity extends AppCompatActivity {
                     @Override
                     public void onClick(Story story) {
                         Intent intent = new Intent(getApplicationContext(), ActorsActivity.class);
-                        intent.putExtra("story", story);
                         startActivity(intent);
                     }
                 });

@@ -1,53 +1,23 @@
 package com.example.android_dev.qrtest.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.List;
 
-import java.util.ArrayList;
-
-public class Story implements Parcelable {
+public class Story {
     public Story() {
     }
     int color;
-    int about;
+    String about;
     String name;
     StoryMediaPath media;
-    ArrayList<Actor> actors;
+    List<Actor> actors;
 
-
-    protected Story(Parcel in) {
-        color = in.readInt();
-        about = in.readInt();
-        name = in.readString();
-        media = in.readParcelable(StoryMediaPath.class.getClassLoader());
-        actors = in.createTypedArrayList(Actor.CREATOR);
+    public Story(int color, String about, String name, StoryMediaPath media, List<Actor> actors) {
+        this.color = color;
+        this.about = about;
+        this.name = name;
+        this.media = media;
+        this.actors = actors;
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(color);
-        dest.writeInt(about);
-        dest.writeString(name);
-        dest.writeParcelable(media, flags);
-        dest.writeTypedList(actors);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Story> CREATOR = new Creator<Story>() {
-        @Override
-        public Story createFromParcel(Parcel in) {
-            return new Story(in);
-        }
-
-        @Override
-        public Story[] newArray(int size) {
-            return new Story[size];
-        }
-    };
 
     public int getColor() {
         return color;
@@ -57,20 +27,12 @@ public class Story implements Parcelable {
         this.color = color;
     }
 
-    public int getAbout() {
+    public String getAbout() {
         return about;
     }
 
-    public void setAbout(int about) {
+    public void setAbout(String about) {
         this.about = about;
-    }
-
-    public ArrayList<Actor> getActors() {
-        return actors;
-    }
-
-    public void setActors(ArrayList<Actor> actors) {
-        this.actors = actors;
     }
 
     public String getName() {
@@ -87,5 +49,13 @@ public class Story implements Parcelable {
 
     public void setMedia(StoryMediaPath media) {
         this.media = media;
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
 }

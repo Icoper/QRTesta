@@ -5,7 +5,7 @@ import com.example.android_dev.qrtest.model.Story;
 import java.util.ArrayList;
 
 
-public class InMemoryStoryRepository implements IStoryRepository {
+public class InMemoryStoryRepository implements IMemoryStoryRepository {
     @Override
     public ArrayList<Story> getStoriesList() {
         return SingletonMD.getInstance().getStories();

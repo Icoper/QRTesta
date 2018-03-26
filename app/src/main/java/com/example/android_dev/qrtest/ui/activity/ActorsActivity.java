@@ -26,8 +26,7 @@ public class ActorsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actors);
         inMemoryStoryRepository = new InMemoryStoryRepository();
-        Intent intent = getIntent();
-        Story story = intent.getParcelableExtra("story");
+        Story story = inMemoryStoryRepository.getSelectedStory();
         initializeLv(story);
     }
 

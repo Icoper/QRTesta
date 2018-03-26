@@ -1,28 +1,30 @@
 package com.example.android_dev.qrtest.presenter.historyscan;
 
-import android.content.Context;
+import android.content.SharedPreferences;
 
+import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.SPScanStoryRepository;
 import com.example.android_dev.qrtest.model.Actor;
 import com.example.android_dev.qrtest.model.Story;
 import com.example.android_dev.qrtest.util.IHistoryScanFragment;
-import com.example.android_dev.qrtest.util.SPHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HistoryScanPresenter implements IHistoryScanPresenter {
-    private InMemoryStoryRepository inMemoryStoryRepository;
-    private Context context;
+    private IMemoryStoryRepository iStoryRepository;
+    private SPScanStoryRepository scanStoryRepository;
     private IHistoryScanFragment iHistoryScanFragment;
 
-    public HistoryScanPresenter(Context context, IHistoryScanFragment iHistoryScanFragment) {
-        this.context = context;
+    public HistoryScanPresenter(IHistoryScanFragment iHistoryScanFragment, SharedPreferences sharedPreferences) {
         this.iHistoryScanFragment = iHistoryScanFragment;
+        scanStoryRepository = new SPScanStoryRepository(sharedPreferences);
     }
 
     @Override
     public void getScannedStoryList() {
-        String scanSPData = SPHelper.getScanHistory(context);
+        List<String> scanSPData = scanStoryRepository.getAllScannedId();
         if (scanSPData.isEmpty()) {
             iHistoryScanFragment.showMsg("The list is empty");
         } else {
@@ -30,15 +32,14 @@ public class HistoryScanPresenter implements IHistoryScanPresenter {
         }
     }
 
-    private ArrayList<Story> prepareDataToSend(String spData) {
-        String[] spDataToArray = spData.split("/");
-        inMemoryStoryRepository = new InMemoryStoryRepository();
-        ArrayList<Story> storyList = inMemoryStoryRepository.getStoriesList();
+    private ArrayList<Story> prepareDataToSend(List<String> spData) {
+        iStoryRepository = new InMemoryStoryRepository();
+        ArrayList<Story> storyList = iStoryRepository.getStoriesList();
         ArrayList<Story> scanStoryList = new ArrayList<>();
 
-        for (String actorId : spDataToArray) {
+        for (String actorId : spData) {
             for (Story story : storyList) {
-                ArrayList<Actor> actors = story.getActors();
+                List<Actor> actors = story.getActors();
                 for (Actor actor : actors) {
                     if (actor.getId().equals(actorId)) {
                         scanStoryList.add(story);

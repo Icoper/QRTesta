@@ -3,7 +3,6 @@ package com.example.android_dev.qrtest.ui.fragment.ma;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,9 +14,11 @@ import android.widget.Toast;
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.presenter.general_history.GeneralHistoryFragmentPresenter;
+import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
+import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.StoryArrayAdapter;
-import com.example.android_dev.qrtest.util.GlobalNames;
-import com.example.android_dev.qrtest.util.SimpleVideoPlayer;
+import com.example.android_dev.qrtest.util.IGeneralHistoryFragment;
 
 
 public class GeneralHistoryFragment extends Fragment {
@@ -26,43 +27,42 @@ public class GeneralHistoryFragment extends Fragment {
     private StoryArrayAdapter storyArrayAdapter;
     private Story ourStory;
     private InMemoryStoryRepository inMemoryStoryRepository;
-    private MediaPlayer mediaPlayer;
-    private boolean isSoundPlay = false;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.general_history_fragment, container, false);
         mContext = v.getContext();
         inMemoryStoryRepository = new InMemoryStoryRepository();
         ourStory = inMemoryStoryRepository.getSelectedStory();
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
+
         storyArrayAdapter = new StoryArrayAdapter(ourStory, new StoryArrayAdapter.OnItemStoryClickListener() {
             @Override
-            public void onClick(String finalItemType, int res) {
-                processData(finalItemType, res);
+            public void onClick(String finalItemType, String filePath) {
+                new GeneralHistoryFragmentPresenter(new IGeneralHistoryFragment() {
+                    @Override
+                    public void showMsg(String msg) {
+                        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void startVideoPlayerActivity(String filePath) {
+                        Intent intent = new Intent(mContext, SimpleVideoPlayer.class);
+                        intent.putExtra("res", filePath);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void startAudioPlayerActivity(String filePath) {
+                        Intent intent = new Intent(mContext, SimpleAudioPlayer.class);
+                        intent.putExtra("path", filePath);
+                        startActivity(intent);
+                    }
+                }).playMediaData(finalItemType, filePath);
             }
         });
         recyclerView.setAdapter(storyArrayAdapter);
         return v;
-    }
-
-    private void processData(String type, int res) {
-        if (type.equals(GlobalNames.AUDIO_RES)) {
-            if (isSoundPlay) {
-                Toast.makeText(mContext, "Stop", Toast.LENGTH_SHORT).show();
-                isSoundPlay = false;
-                mediaPlayer.stop();
-            } else {
-                Toast.makeText(mContext, "Play", Toast.LENGTH_SHORT).show();
-                isSoundPlay = true;
-                mediaPlayer = MediaPlayer.create(getActivity().getApplication().getApplicationContext(), res);
-                mediaPlayer.start();
-            }
-        } else if (type.equals(GlobalNames.VIDEO_RES)) {
-            Intent intent = new Intent(mContext, SimpleVideoPlayer.class);
-            intent.putExtra("res", String.valueOf(res));
-            mContext.startActivity(intent);
-        }
     }
 }

@@ -1,7 +1,8 @@
 package com.example.android_dev.qrtest.ui.fragment.ma;
 
 import android.app.Fragment;
-import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +16,14 @@ import com.example.android_dev.qrtest.presenter.character_info.CharacterInfoPres
 import com.example.android_dev.qrtest.util.ICharacterInfoFragment;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 
 public class CharacterInfoFragment extends Fragment {
 
     private View view;
-    private Context mContext;
     private TextView aboutText;
     private TextView actorName;
     private ImageView actorImg;
@@ -31,27 +31,35 @@ public class CharacterInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.character_info_fragment, container, false);
-        mContext = view.getContext();
         initializeView();
         CharacterInfoPresenter characterInfoPresenter = new CharacterInfoPresenter(new ICharacterInfoFragment() {
             @Override
             public void showActorInfo(Actor actor) {
                 actorName.setText(actor.getName());
 
-                InputStream inputStream = view.getResources().openRawResource(actor.getAboutRes());
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 String about = "";
                 try {
+                    BufferedReader bufferedReader = new BufferedReader(new FileReader(actor.getAboutRes()));
                     about = bufferedReader.readLine();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 aboutText.setText(about);
-                actorImg.setImageResource(actor.getImgRes());
+                actorImg.setImageBitmap(getBitMapByPath(actor.getImgRes()));
             }
         });
         characterInfoPresenter.showActorInfo();
         return view;
+    }
+
+    private Bitmap getBitMapByPath(String path) {
+        File imgFile = new File(path);
+
+        if (imgFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            return myBitmap;
+        }
+        return null;
     }
 
     private void initializeView() {

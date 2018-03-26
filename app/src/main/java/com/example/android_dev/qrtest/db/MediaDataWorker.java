@@ -1,5 +1,6 @@
 package com.example.android_dev.qrtest.db;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.example.android_dev.qrtest.R;
@@ -17,6 +18,7 @@ public class MediaDataWorker {
     private ArrayList<Story> stories;
 
     public MediaDataWorker() {
+
     }
 
     private ArrayList<Story> initializeMedia() {
@@ -26,24 +28,32 @@ public class MediaDataWorker {
         StoryMediaPath redHoodPath = new StoryMediaPath();
 
         redHoodStory.setName("Красная Шапочка");
-        redHoodStory.setAbout(R.raw.text_redhood);
+        redHoodStory.setAbout(getFilePathById("text_redhood.txt"));
         redHoodStory.setColor(R.color.colorRed);
 
-        ArrayList<Integer> redHoodImgStore = new ArrayList<>();
-        redHoodImgStore.add(R.raw.preview_redhood);
-        redHoodImgStore.add(R.raw.redhood_img);
+        ArrayList<String> redHoodImgStore = new ArrayList<>();
+        redHoodImgStore.add(getFilePathById("preview_redhood.png"));
+        redHoodImgStore.add(getFilePathById("redhood_img.png"));
         redHoodPath.setImages(redHoodImgStore);
 
-        ArrayList<Integer> redHoodAudioStore = new ArrayList<>();
-        redHoodAudioStore.add(R.raw.redhood_audio);
+        ArrayList<String> redHoodAudioStore = new ArrayList<>();
+        redHoodAudioStore.add(getFilePathById("redhood_audio.mp3"));
         redHoodPath.setAudio(redHoodAudioStore);
 
-        ArrayList<Integer> redHoodVideo = new ArrayList<>();
-        redHoodVideo.add(R.raw.redhood_video);
+        ArrayList<String> redHoodVideo = new ArrayList<>();
+        redHoodVideo.add(getFilePathById("redhood_video.mp4"));
         redHoodPath.setVideo(redHoodVideo);
 
-        Actor actorRedHood = new Actor("Красная Шапочка", "40", R.raw.about_redhood_img, R.raw.about_redhood_text);
-        Actor actorWolf = new Actor("Волк", "45", R.raw.about_wolf_img, R.raw.about_wolf_text);
+        Actor actorRedHood = new Actor("Красная Шапочка",
+                "40",
+                getFilePathById("about_redhood_img.png"),
+                getFilePathById("about_redhood_text.txt"));
+
+        Actor actorWolf = new Actor("Волк",
+                "45",
+                getFilePathById("about_wolf_img.png"),
+                getFilePathById("about_wolf_text.txt"));
+
         ArrayList<Actor> redHoodActors = new ArrayList<>();
         redHoodActors.add(actorRedHood);
         redHoodActors.add(actorWolf);
@@ -54,25 +64,32 @@ public class MediaDataWorker {
         StoryMediaPath repkaPath = new StoryMediaPath();
 
         repkaStory.setName("Репка");
-        repkaStory.setAbout(R.raw.text_repka);
+        repkaStory.setAbout(getFilePathById("text_repka.txt"));
         repkaStory.setColor(R.color.colorYellow);
 
 
-        ArrayList<Integer> repkaImgStore = new ArrayList<>();
-        repkaImgStore.add(R.raw.preview_repka);
-        repkaImgStore.add(R.raw.repka_img);
+        ArrayList<String> repkaImgStore = new ArrayList<>();
+        repkaImgStore.add(getFilePathById("preview_repka.png"));
+        repkaImgStore.add(getFilePathById("repka_img.png"));
         repkaPath.setImages(repkaImgStore);
 
-        ArrayList<Integer> repkaAudioStore = new ArrayList<>();
-        repkaAudioStore.add(R.raw.repka_audio);
+        ArrayList<String> repkaAudioStore = new ArrayList<>();
+        repkaAudioStore.add(getFilePathById("repka_audio.mp3"));
         repkaPath.setAudio(repkaAudioStore);
 
-        ArrayList<Integer> repkaVideo = new ArrayList<>();
-        repkaVideo.add(R.raw.repka_video);
+        ArrayList<String> repkaVideo = new ArrayList<>();
+        repkaVideo.add(getFilePathById("repka_video.mp4"));
         repkaPath.setVideo(repkaVideo);
 
-        Actor actorRepka = new Actor("Репка", "50", R.raw.about_repka_img, R.raw.about_repka_text);
-        Actor actorGrMather = new Actor("Бабушка", "55", R.raw.about_gr_mather_img, R.raw.about_gr_mather_text);
+        Actor actorRepka = new Actor("Репка",
+                "50",
+                getFilePathById("about_repka_img.png"),
+                getFilePathById("about_repka_text.txt"));
+        Actor actorGrMather = new Actor("Бабушка",
+                "55",
+                getFilePathById("about_gr_mather_img.png"),
+                getFilePathById("about_gr_mather_text.txt"));
+
         ArrayList<Actor> repkaActors = new ArrayList<>();
         repkaActors.add(actorRepka);
         repkaActors.add(actorGrMather);
@@ -91,5 +108,9 @@ public class MediaDataWorker {
             stories = initializeMedia();
         }
         return stories;
+    }
+
+    private String getFilePathById(String id) {
+        return Environment.getExternalStorageDirectory() + "/qrmedia/" + id;
     }
 }

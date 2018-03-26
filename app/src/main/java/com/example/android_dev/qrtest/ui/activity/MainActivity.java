@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         mActionBarToolbar = (Toolbar) findViewById(R.id.my_toolbar);

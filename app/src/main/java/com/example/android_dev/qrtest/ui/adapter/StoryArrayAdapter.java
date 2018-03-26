@@ -2,6 +2,7 @@ package com.example.android_dev.qrtest.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
@@ -21,17 +22,18 @@ import com.example.android_dev.qrtest.model.Story;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.StoryViewHolder> {
     private static final Integer IS_HEAD = 0;
     private static final Integer IS_VIEW = 1;
 
 
-    private ArrayList<Integer> mediaData;
+    private ArrayList<String> mediaData;
     private Story changedStory;
     private Context context;
     private StoryArrayAdapter.OnItemStoryClickListener onItemClickListener;
@@ -46,9 +48,9 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
     private void createMediaData() {
         mediaData = new ArrayList<>();
         mediaData.add(changedStory.getAbout());
-        ArrayList<Integer> img = changedStory.getMedia().getImages();
-        ArrayList<Integer> video = changedStory.getMedia().getVideo();
-        ArrayList<Integer> audio = changedStory.getMedia().getAudio();
+        List<String> img = changedStory.getMedia().getImages();
+        List<String> audio = changedStory.getMedia().getAudio();
+        List<String> video = changedStory.getMedia().getVideo();
         mediaData.addAll(img);
         mediaData.addAll(video);
         mediaData.addAll(audio);
@@ -71,11 +73,9 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
         if (getItemViewType(i) == IS_HEAD) {
             storyViewHolder.imgView.setVisibility(View.GONE);
             storyViewHolder.videoView.setVisibility(View.GONE);
-
-            InputStream inputStream = view.getResources().openRawResource(changedStory.getAbout());
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String about = "";
             try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(changedStory.getAbout()));
                 about = bufferedReader.readLine();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -84,22 +84,16 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
 
         } else {
             storyViewHolder.text.setVisibility(View.GONE);
-            if (context.getResources().getResourceName(mediaData.get(position))
-                    .contains(GlobalNames.VIDEO_RES) &&
-                    !context.getResources().getResourceName(mediaData.get(position))
-                            .contains(GlobalNames.ABOUT_TAG)) {
+            if (mediaData.get(position).contains(GlobalNames.VIDEO_RES) &&
+                    !mediaData.get(position).contains(GlobalNames.ABOUT_TAG)) {
 
                 itemType = GlobalNames.VIDEO_RES;
-            } else if (context.getResources().getResourceName(mediaData.get(position))
-                    .contains(GlobalNames.AUDIO_RES) &&
-                    !context.getResources().getResourceName(mediaData.get(position))
-                            .contains(GlobalNames.ABOUT_TAG)) {
+            } else if (mediaData.get(position).contains(GlobalNames.AUDIO_RES) &&
+                    !mediaData.get(position).contains(GlobalNames.ABOUT_TAG)) {
 
                 itemType = GlobalNames.AUDIO_RES;
-            } else if (context.getResources().getResourceName(mediaData.get(position))
-                    .contains(GlobalNames.IMG_RES) &&
-                    !context.getResources().getResourceName(mediaData.get(position))
-                            .contains(GlobalNames.ABOUT_TAG)) {
+            } else if (mediaData.get(position).contains(GlobalNames.IMG_RES) &&
+                    !mediaData.get(position).contains(GlobalNames.ABOUT_TAG)) {
 
                 itemType = GlobalNames.IMG_RES;
             }
@@ -125,9 +119,7 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
         ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
         switch (type) {
             case GlobalNames.VIDEO_RES:
-
-                String filepath = "android.resource://" + context.getPackageName() + "/" +
-                        mediaData.get(position);
+                String filepath = mediaData.get(position);
                 Uri videoURI = Uri.parse(filepath);
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(context, videoURI);
@@ -145,18 +137,28 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
                 storyViewHolder.videoView.setVisibility(View.GONE);
                 storyViewHolder.imgView.setBackgroundResource(R.drawable.audio_img);
                 storyViewHolder.imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
                 storyViewHolder.imgView.setLayoutParams(
                         new LinearLayout.LayoutParams(200, 200));
                 break;
 
             case GlobalNames.IMG_RES:
                 storyViewHolder.videoView.setVisibility(View.GONE);
-                storyViewHolder.imgView.setBackgroundResource(mediaData.get(position));
+                storyViewHolder.imgView.setImageBitmap(getBitMapByPath(mediaData.get(position)));
                 storyViewHolder.imgView.setLayoutParams(layoutParams);
                 storyViewHolder.imgView.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    private Bitmap getBitMapByPath(String path) {
+        Uri uri = Uri.parse(path);
+        File imgFile = new File(uri.getPath());
+
+        if (imgFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            return myBitmap;
+        }
+        return null;
     }
 
     private Integer getMaximumWeight() {
@@ -194,7 +196,7 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
     }
 
     public interface OnItemStoryClickListener {
-        void onClick(String finalItemType, int res);
+        void onClick(String finalItemType, String filePach);
     }
 
 }
