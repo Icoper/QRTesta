@@ -19,8 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.model.json.JsonStory;
 import com.example.android_dev.qrtest.presenter.historyscan.HistoryScanPresenter;
+import com.example.android_dev.qrtest.util.GlobalNames;
 import com.example.android_dev.qrtest.util.IHistoryScanFragment;
 
 import java.io.File;
@@ -44,18 +45,24 @@ public class HistoryScanFragment extends Fragment {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         historyScanPresenter = new HistoryScanPresenter(new IHistoryScanFragment() {
             @Override
-            public void showGridView(final ArrayList<Story> scannedStoryList) {
-                ArrayAdapter<Story> adapter = new ArrayAdapter<Story>(mContext, R.layout.scan_history_item, scannedStoryList) {
+            public void showGridView(final ArrayList<JsonStory> scannedStoryList) {
+                ArrayAdapter<JsonStory> adapter = new ArrayAdapter<JsonStory>(mContext, R.layout.scan_history_item, scannedStoryList) {
                     @NonNull
                     @Override
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
                         if (convertView == null) {
                             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             convertView = inflater.inflate(R.layout.scan_history_item, null);
                         }
 
                         ImageView appIcon = (ImageView) convertView.findViewById(R.id.shi_story_img);
-                        appIcon.setImageBitmap(getBitMapByPath(scannedStoryList.get(position).getMedia().getImages().get(0)));
+                        appIcon.setImageBitmap(getBitMapByPath(
+                                GlobalNames.ENVIRONMENT_STORE +
+                                        scannedStoryList.get(position).getQrInformations().get(0).getCode() +
+                                        "/" +
+                                        scannedStoryList.get(position).getPreviewImg()
+                        ));
 
                         TextView appLabel = (TextView) convertView.findViewById(R.id.shi_story_name);
                         appLabel.setText(scannedStoryList.get(position).getName());

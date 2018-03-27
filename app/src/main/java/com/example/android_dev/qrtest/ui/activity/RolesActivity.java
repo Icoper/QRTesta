@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.model.json.JsonStory;
 
-public class ActorsActivity extends AppCompatActivity {
+public class RolesActivity extends AppCompatActivity {
     private InMemoryStoryRepository inMemoryStoryRepository;
 
     @Override
@@ -26,17 +26,15 @@ public class ActorsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actors);
         inMemoryStoryRepository = new InMemoryStoryRepository();
-        Story story = inMemoryStoryRepository.getSelectedStory();
+        JsonStory story = inMemoryStoryRepository.getSelectedStory();
         initializeLv(story);
     }
 
-    public void initializeLv(final Story story) {
+    public void initializeLv(final JsonStory story) {
         ListView lvMain = (ListView) findViewById(R.id.fal_list_view);
-        String[] actorsArray = new String[story.getActors().size()];
-        for (int i = 0; i < story.getActors().size(); i++) {
-            actorsArray[i] = story.getActors().get(i).getName() +
-                    " id : " +
-                    story.getActors().get(i).getId();
+        String[] actorsArray = new String[story.getRoles().size()];
+        for (int i = 0; i < story.getRoles().size(); i++) {
+            actorsArray[i] = story.getRoles().get(i).getName();
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, actorsArray);
@@ -45,7 +43,9 @@ public class ActorsActivity extends AppCompatActivity {
 
         lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showAlertDialog(story.getActors().get(position).getId());
+                inMemoryStoryRepository.setRolResId(story.getRoles().get(position).getInformationAssertID());
+                inMemoryStoryRepository.setSelectedRole(story.getRoles().get(position));
+                showAlertDialog(story.getRoles().get(position).getCode());
             }
         });
     }
@@ -64,7 +64,7 @@ public class ActorsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (enterId.getText().toString().equals(actorId)) {
                             inMemoryStoryRepository.setActorId(actorId);
-                            showHistoryContent(actorId);
+                            showHistoryContent();
                         } else
                             Toast.makeText(view.getContext(), getString(R.string.wrong_id), Toast.LENGTH_SHORT).show();
                     }
@@ -80,9 +80,8 @@ public class ActorsActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void showHistoryContent(String actorId) {
-        Intent intent = new Intent(ActorsActivity.this, MainActivity.class);
-        intent.putExtra("id", actorId);
+    private void showHistoryContent() {
+        Intent intent = new Intent(RolesActivity.this, MainActivity.class);
         startActivity(intent);
     }
 

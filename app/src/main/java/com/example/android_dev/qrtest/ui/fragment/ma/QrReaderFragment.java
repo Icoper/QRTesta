@@ -26,12 +26,15 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.json.JsonStory;
 import com.example.android_dev.qrtest.presenter.IAppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.presenter.qr.QRFPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
-import com.example.android_dev.qrtest.ui.adapter.StoryArrayAdapter;
+import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
 import com.example.android_dev.qrtest.util.IQRFragment;
 import com.example.android_dev.qrtest.util.NotificationWorker;
@@ -50,10 +53,11 @@ public class QrReaderFragment extends Fragment {
     private IntentIntegrator qrScan;
 
     private IAppMediaPlayerPresenter iAppMediaPlayerPresenter;
+    private IMemoryStoryRepository iMemoryStoryRepository;
     private QRFPresenter qrfPresenter;
     private MediaPlayer mediaPlayer;
     private boolean isSoundPlay = false;
-    private Story ourStory;
+    private JsonStory ourStory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,6 +65,7 @@ public class QrReaderFragment extends Fragment {
 
         qrScan = IntentIntegrator.forFragment(this);
         mContext = v.getContext();
+        iMemoryStoryRepository = new InMemoryStoryRepository();
         openQrBtn = (ImageView) v.findViewById(R.id.qrf_qr_image_view);
         openQrBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,19 +86,18 @@ public class QrReaderFragment extends Fragment {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         qrfPresenter = new QRFPresenter(sp, new IQRFragment() {
             @Override
-            public void showAlertDialog(int modeScan, Story story, int modeShow) {
-                ourStory = story;
+            public void showAlertDialog(int modeScan, String storyResId, int modeShow) {
                 final View view = LayoutInflater.from(mContext).inflate(R.layout.alert_qrscan, null);
                 final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.aqr_recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                 final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.aqr_progress_bar);
 
-                final StoryArrayAdapter storyArrayAdapter = new StoryArrayAdapter(story, new StoryArrayAdapter.OnItemStoryClickListener() {
+                final MediaArrayAdapter storyArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
                     @Override
-                    public void onClick(String finalItemType, String filePath) {
-                        qrfPresenter.playMediaData(finalItemType, filePath);
+                    public void onClick(AssertItems.Resource resource) {
+                        qrfPresenter.playMediaData(resource);
                     }
-                });
+                }, storyResId);
                 if (modeScan == GlobalNames.QR_MODE_FIRST_SCAN) {
                     progressBar.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
@@ -126,7 +130,9 @@ public class QrReaderFragment extends Fragment {
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     qrfPresenter.changeAlertMode(
                                             GlobalNames.QR_MODE_SIMPLE_SCAN,
-                                            GlobalNames.ALERT_MODE_FULL_INFO);
+                                            GlobalNames.ALERT_MODE_FULL_INFO,
+                                            iMemoryStoryRepository.getSelectedStory()
+                                    );
                                 }
                             });
                 }

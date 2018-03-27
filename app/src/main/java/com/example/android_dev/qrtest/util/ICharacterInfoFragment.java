@@ -1,7 +1,10 @@
 package com.example.android_dev.qrtest.util;
 
-import com.example.android_dev.qrtest.model.Actor;
-
 public interface ICharacterInfoFragment {
-    void showActorInfo(Actor actor);
+
+    void showMsg(String msg);
+
+    void startVideoPlayerActivity(String filepath);
+
+    void startAudioPlayerActivity(String filepath);
 }

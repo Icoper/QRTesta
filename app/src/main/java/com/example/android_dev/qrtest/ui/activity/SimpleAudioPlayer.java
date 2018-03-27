@@ -52,9 +52,14 @@ public class SimpleAudioPlayer extends AppCompatActivity implements OnClickListe
     }
 
     public void playSound() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.reset();
+        try {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.reset();
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+
         mediaPlayer = new MediaPlayer();
         mediaPlayer = MediaPlayer.create(this, Uri.parse(new File(soundPath).getPath()));
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -64,8 +69,13 @@ public class SimpleAudioPlayer extends AppCompatActivity implements OnClickListe
     }
 
     public void stopPlaySound() {
-        mediaPlayer.stop();
-        releaseMP();
+        try {
+            mediaPlayer.stop();
+            releaseMP();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

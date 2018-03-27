@@ -5,8 +5,7 @@ import android.content.SharedPreferences;
 import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.SPScanStoryRepository;
-import com.example.android_dev.qrtest.model.Actor;
-import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.model.json.JsonStory;
 import com.example.android_dev.qrtest.util.IHistoryScanFragment;
 
 import java.util.ArrayList;
@@ -32,18 +31,15 @@ public class HistoryScanPresenter implements IHistoryScanPresenter {
         }
     }
 
-    private ArrayList<Story> prepareDataToSend(List<String> spData) {
+    private ArrayList<JsonStory> prepareDataToSend(List<String> spData) {
         iStoryRepository = new InMemoryStoryRepository();
-        ArrayList<Story> storyList = iStoryRepository.getStoriesList();
-        ArrayList<Story> scanStoryList = new ArrayList<>();
+        ArrayList<JsonStory> storyList = iStoryRepository.getStoriesList();
+        ArrayList<JsonStory> scanStoryList = new ArrayList<>();
 
-        for (String actorId : spData) {
-            for (Story story : storyList) {
-                List<Actor> actors = story.getActors();
-                for (Actor actor : actors) {
-                    if (actor.getId().equals(actorId)) {
-                        scanStoryList.add(story);
-                    }
+        for (String storyId : spData) {
+            for (JsonStory story : storyList) {
+                if (story.getQrInformations().get(0).getCode().equals(storyId)) {
+                    scanStoryList.add(story);
                 }
             }
         }

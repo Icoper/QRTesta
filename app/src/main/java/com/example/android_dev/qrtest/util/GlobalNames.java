@@ -1,10 +1,16 @@
 package com.example.android_dev.qrtest.util;
 
 
+import android.os.Environment;
+
 public interface GlobalNames {
+    String ENVIRONMENT_STORE = Environment.getExternalStorageDirectory() + "/qrmedia/";
+
     String AUDIO_RES = "audio";
     String VIDEO_RES = "video";
-    String IMG_RES = "img";
+    String IMG_RES = "image";
+    String DOC_RES = "document";
+    
     String ABOUT_TAG = "about";
     int QR_MODE_FIRST_SCAN = 0;
     int QR_MODE_SIMPLE_SCAN = 1;

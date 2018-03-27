@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.MainActivity" />
-        <activity android:name=".ui.activity.ActorsActivity" />
+        <activity android:name=".ui.activity.RolesActivity" />
         <activity android:name=".ui.activity.SimpleVideoPlayer" />
         <activity android:name=".ui.activity.SimpleAudioPlayer"></activity>
     </application>

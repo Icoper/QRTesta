@@ -4,9 +4,9 @@ import android.content.SharedPreferences;
 
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.SPScanStoryRepository;
-import com.example.android_dev.qrtest.model.Actor;
-import com.example.android_dev.qrtest.model.Story;
-import com.example.android_dev.qrtest.model.StoryMediaPath;
+import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.json.QrInformation;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.util.GlobalNames;
 import com.example.android_dev.qrtest.util.IQRFragment;
@@ -34,17 +34,20 @@ public class QRFPresenter implements IQRPresenter {
     }
 
     @Override
-    public void playMediaData(String fileType, String filePath) {
+    public void playMediaData(AssertItems.Resource resource) {
+
         if (iAppMediaPlayerPresenter == null) {
             iAppMediaPlayerPresenter = new AppMediaPlayerPresenter();
         }
-        String msg = iAppMediaPlayerPresenter.processMediaData(fileType, filePath);
+        String filePath = GlobalNames.ENVIRONMENT_STORE +
+                getStoryRepo().getSelectedStory().getQrInformations().get(0).getCode() + "/" +
+                resource.getName();
+        String msg = iAppMediaPlayerPresenter.processMediaData(resource);
         if (msg.equals(GlobalNames.VIDEO_RES)) {
             iqrFragment.startVideoPlayerActivity(filePath);
             return;
-        } else if (msg.equals(GlobalNames.VIDEO_RES)) {
+        } else if (msg.equals(GlobalNames.AUDIO_RES)) {
             iqrFragment.startAudioPlayerActivity(filePath);
-            return;
         }
         iqrFragment.showMsg(msg);
     }
@@ -53,40 +56,46 @@ public class QRFPresenter implements IQRPresenter {
     public void checkCode(String code) {
         scanStoryRepository = new SPScanStoryRepository(sharedPreferences);
         int alertMode = GlobalNames.QR_MODE_FIRST_SCAN;
-        Story story = getStoryRepo().getSelectedStory();
-        for (Actor a : story.getActors()) {
-            if (a.getId().equals(code)) {
-                List<String> scannStoryArray = scanStoryRepository.getAllScannedId();
-                for (String _code : scannStoryArray) {
-                    if (_code.equals(code)) {
-                        alertMode = GlobalNames.QR_MODE_SIMPLE_SCAN;
+        ArrayList<JsonStory> stories = getStoryRepo().getStoriesList();
+
+        for (JsonStory jsonStory : stories) {
+            for (QrInformation qrInformation : jsonStory.getQrInformations()) {
+                if (qrInformation.getCode().equals(code)) {
+                    List<String> scannStoryArray = scanStoryRepository.getAllScannedId();
+                    for (String _code : scannStoryArray) {
+                        if (_code.equals(code)) {
+                            alertMode = GlobalNames.QR_MODE_SIMPLE_SCAN;
+                        }
                     }
+                    scanStoryRepository.addNewId(code);
+                    iqrFragment.showMsg("Found");
+                    changeAlertMode(alertMode, GlobalNames.ALERT_MODE_SMALL_INFO, jsonStory);
+                    return;
                 }
-                scanStoryRepository.addNewId(code);
-                iqrFragment.showMsg("Found");
-                changeAlertMode(alertMode, GlobalNames.ALERT_MODE_SMALL_INFO);
-                return;
             }
+
         }
         iqrFragment.showMsg("Not Found");
     }
 
     @Override
-    public void changeAlertMode(int modeScan, int modeShow) {
-        Story sendedStory = new Story();
+    public void changeAlertMode(int modeScan, int modeShow, JsonStory jsonStory) {
+        String storyResIdFull = "";
+        String storyResIdSmall = "";
+        String storyResId = "";
+        String roleId = jsonStory.getQrInformations().get(0).getId();
+        for (QrInformation.QrData qrData : jsonStory.getQrInformations().get(0).getQrData()) {
+            if (qrData.getRole().equals(roleId)) {
+                storyResIdFull = qrData.getQrItems().getDetailInfoAssertID();
+                storyResIdSmall = qrData.getQrItems().getShortInfoAssertID();
+            }
+        }
         if (modeShow == GlobalNames.ALERT_MODE_SMALL_INFO) {
-            Story fullStory = inMemoryStoryRepository.getSelectedStory();
-            StoryMediaPath storyMediaPath = new StoryMediaPath();
-            storyMediaPath.setAudio(new ArrayList<String>());
-            storyMediaPath.setVideo(new ArrayList<String>());
-            storyMediaPath.setImages(fullStory.getMedia().getImages());
-            sendedStory.setMedia(storyMediaPath);
-            sendedStory.setAbout(fullStory.getAbout());
-
+            storyResId = storyResIdSmall;
         } else if (modeShow == GlobalNames.ALERT_MODE_FULL_INFO) {
-            sendedStory = inMemoryStoryRepository.getSelectedStory();
+            storyResId = storyResIdFull;
         }
 
-        iqrFragment.showAlertDialog(modeScan, sendedStory, modeShow);
+        iqrFragment.showAlertDialog(modeScan, storyResId, modeShow);
     }
 }

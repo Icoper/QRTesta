@@ -17,9 +17,9 @@
 
     <RelativeLayout
         android:id="@+id/ilsi_video_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -32,8 +32,8 @@
     <ImageView
         android:id="@+id/ilsi_image_view"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:cropToPadding="false"
         android:scaleType="fitCenter"
         android:visibility="gone"

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <TextView
         android:id="@+id/cif_actor_name"
@@ -15,30 +14,11 @@
         android:textSize="18dp"
         tools:text="ACTOR" />
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+        android:paddingTop="8dp"
+        android:id="@+id/cif_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/cif_about_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <ImageView
-                android:paddingTop="4dp"
-                android:id="@+id/cif_about_img"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                app:layout_constraintTop_toBottomOf="@+id/cif_about_text"
-                tools:background="@color/colorAccent"
-                tools:layout_height="50dp"
-                tools:layout_width="match_parent" />
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
-
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

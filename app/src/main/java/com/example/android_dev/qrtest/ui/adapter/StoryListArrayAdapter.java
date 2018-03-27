@@ -12,7 +12,8 @@ import android.widget.TextView;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.SingletonMD;
-import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,11 +21,11 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAdapter.StoryViewHolder> {
-    private ArrayList<Story> stories;
+    private ArrayList<JsonStory> stories;
     private Context context;
     private OnItemClickListener onItemClickListener;
 
-    public StoryListArrayAdapter(ArrayList<Story> stories, OnItemClickListener onItemClickListener) {
+    public StoryListArrayAdapter(ArrayList<JsonStory> stories, OnItemClickListener onItemClickListener) {
         this.stories = stories;
         this.onItemClickListener = onItemClickListener;
     }
@@ -34,25 +35,30 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_list_item, viewGroup, false);
         StoryViewHolder storyViewHolder = new StoryViewHolder(v);
         context = v.getContext();
+
         return storyViewHolder;
     }
 
     @Override
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
         final int position = i;
-        storyViewHolder.icon.setImageBitmap(getBitMapByPath(stories.get(position).getMedia().getImages().get(0)));
+        String imgPath = GlobalNames.ENVIRONMENT_STORE +
+                stories.get(i).getQrInformations().get(0).getCode();
+        String imgName = stories.get(i).getPreviewImg();
+
+        storyViewHolder.icon.setImageBitmap(getBitMapByPath(imgPath, imgName));
         storyViewHolder.name.setText(stories.get(position).getName());
         storyViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SingletonMD.getInstance().setSelectedStory(stories.get(position));
-                onItemClickListener.onClick(stories.get(position));
+                onItemClickListener.onClick();
             }
         });
     }
 
-    private Bitmap getBitMapByPath(String path) {
-        File imgFile = new File(path);
+    private Bitmap getBitMapByPath(String path, String name) {
+        File imgFile = new File(path, name);
 
         if (imgFile.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -80,7 +86,7 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
     }
 
     public interface OnItemClickListener {
-        void onClick(Story story);
+        void onClick();
     }
 
 }

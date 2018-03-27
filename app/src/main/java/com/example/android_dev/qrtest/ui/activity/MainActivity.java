@@ -3,7 +3,6 @@ package com.example.android_dev.qrtest.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
@@ -19,9 +18,7 @@ import android.view.MenuItem;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.db.SingletonMD;
-import com.example.android_dev.qrtest.model.Actor;
-import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.model.json.JsonStory;
 import com.example.android_dev.qrtest.ui.fragment.ma.CharacterInfoFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.GeneralHistoryFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.HistoryScanFragment;
@@ -35,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String actorId;
     private InMemoryStoryRepository inMemoryStoryRepository;
-    private Story selectedStory;
+    private JsonStory selectedStory;
     // ui
     Toolbar mActionBarToolbar;
     BottomNavigationView navigation;
@@ -91,20 +88,10 @@ public class MainActivity extends AppCompatActivity {
         disableShiftMode(navigation);
         setSupportActionBar(mActionBarToolbar);
 
-        Intent intent = getIntent();
-        actorId = intent.getStringExtra("id");
-
         inMemoryStoryRepository = new InMemoryStoryRepository();
+        actorId = inMemoryStoryRepository.getActorId();
+        selectedStory = inMemoryStoryRepository.getSelectedStory();
 
-        for (Story story : inMemoryStoryRepository.getStoriesList()) {
-            for (Actor actor : story.getActors()) {
-                if (actor.getId().equals(actorId)) {
-                    Log.d(LOG_TAG, "Story is found - " + story.getName());
-                    selectedStory = story;
-                    SingletonMD.getInstance().setSelectedStory(selectedStory);
-                }
-            }
-        }
         changeToolBarColor();
 
         setTitle(selectedStory.getName());
@@ -113,19 +100,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeToolBarColor() {
         mActionBarToolbar.setBackgroundColor(Color.parseColor(
-                ColorUtil.changeColorHSB(
-                        this.getResources().getString(selectedStory.getColor()))));
+                ColorUtil.changeColorHSB((selectedStory.getColor()))));
         mActionBarToolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().
                     setStatusBarColor(
                             Color.parseColor(
-                                    ColorUtil.changeColorHSB(
-                                            this.getResources().getString(selectedStory.getColor()))));
+                                    ColorUtil.changeColorHSB((selectedStory.getColor()))));
         }
         navigation.setBackgroundColor(Color.parseColor(
-                ColorUtil.changeColorHSB(
-                        this.getResources().getString(selectedStory.getColor()))));
+                ColorUtil.changeColorHSB((selectedStory.getColor()))));
     }
 
     private void initializeUi() {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android_dev.qrtest.ui.activity.ActorsActivity">
+    tools:context="com.example.android_dev.qrtest.ui.activity.RolesActivity">
 
     <ListView
         android:id="@+id/fal_list_view"

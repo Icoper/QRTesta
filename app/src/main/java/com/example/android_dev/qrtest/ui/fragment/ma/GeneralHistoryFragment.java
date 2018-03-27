@@ -13,19 +13,21 @@ import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.json.JsonStory;
 import com.example.android_dev.qrtest.presenter.general_history.GeneralHistoryFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
-import com.example.android_dev.qrtest.ui.adapter.StoryArrayAdapter;
+import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.IGeneralHistoryFragment;
 
 
 public class GeneralHistoryFragment extends Fragment {
+    private static final String GENERAL_HISTORY_RES_ID = "4";
     private Context mContext;
     private RecyclerView recyclerView;
-    private StoryArrayAdapter storyArrayAdapter;
-    private Story ourStory;
+    private MediaArrayAdapter storyArrayAdapter;
+    private JsonStory ourStory;
     private InMemoryStoryRepository inMemoryStoryRepository;
 
     @Override
@@ -37,9 +39,9 @@ public class GeneralHistoryFragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
 
-        storyArrayAdapter = new StoryArrayAdapter(ourStory, new StoryArrayAdapter.OnItemStoryClickListener() {
+        storyArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
-            public void onClick(String finalItemType, String filePath) {
+            public void onClick(AssertItems.Resource resource) {
                 new GeneralHistoryFragmentPresenter(new IGeneralHistoryFragment() {
                     @Override
                     public void showMsg(String msg) {
@@ -59,9 +61,9 @@ public class GeneralHistoryFragment extends Fragment {
                         intent.putExtra("path", filePath);
                         startActivity(intent);
                     }
-                }).playMediaData(finalItemType, filePath);
+                }).playMediaData(resource);
             }
-        });
+        }, GENERAL_HISTORY_RES_ID);
         recyclerView.setAdapter(storyArrayAdapter);
         return v;
     }

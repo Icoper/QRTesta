@@ -18,7 +18,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.model.Story;
+import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.json.JsonStory;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.BufferedReader;
@@ -26,113 +29,78 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.StoryViewHolder> {
-    private static final Integer IS_HEAD = 0;
-    private static final Integer IS_VIEW = 1;
+public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.StoryViewHolder> {
 
-
-    private ArrayList<String> mediaData;
-    private Story changedStory;
+    private ArrayList<AssertItems.Resource> mediaData;
     private Context context;
-    private StoryArrayAdapter.OnItemStoryClickListener onItemClickListener;
+    private MediaArrayAdapter.OnItemStoryClickListener onItemClickListener;
+    private IMemoryStoryRepository iMemoryStoryRepository;
     private View view;
+    private JsonStory jsonStory;
 
-    public StoryArrayAdapter(Story changedStory, StoryArrayAdapter.OnItemStoryClickListener onItemClickListener) {
-        this.changedStory = changedStory;
+    public MediaArrayAdapter(MediaArrayAdapter.OnItemStoryClickListener onItemClickListener, String resId) {
         this.onItemClickListener = onItemClickListener;
-        createMediaData();
+        createMediaData(resId);
     }
 
-    private void createMediaData() {
-        mediaData = new ArrayList<>();
-        mediaData.add(changedStory.getAbout());
-        List<String> img = changedStory.getMedia().getImages();
-        List<String> audio = changedStory.getMedia().getAudio();
-        List<String> video = changedStory.getMedia().getVideo();
-        mediaData.addAll(img);
-        mediaData.addAll(video);
-        mediaData.addAll(audio);
+    private void createMediaData(String resId) {
+        iMemoryStoryRepository = new InMemoryStoryRepository();
+        mediaData = new ArrayList<>(iMemoryStoryRepository.getResourceById(resId));
+        jsonStory = iMemoryStoryRepository.getSelectedStory();
     }
 
     @Override
-    public StoryArrayAdapter.StoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public MediaArrayAdapter.StoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_story_info,
                 viewGroup, false);
-        StoryArrayAdapter.StoryViewHolder storyViewHolder = new StoryArrayAdapter.StoryViewHolder(view);
+        MediaArrayAdapter.StoryViewHolder storyViewHolder = new MediaArrayAdapter.StoryViewHolder(view);
         context = view.getContext();
         return storyViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(StoryArrayAdapter.StoryViewHolder storyViewHolder, int i) {
+    public void onBindViewHolder(MediaArrayAdapter.StoryViewHolder storyViewHolder, int i) {
         final int position = i;
-        String itemType = "";
-
-        if (getItemViewType(i) == IS_HEAD) {
-            storyViewHolder.imgView.setVisibility(View.GONE);
-            storyViewHolder.videoView.setVisibility(View.GONE);
-            String about = "";
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(changedStory.getAbout()));
-                about = bufferedReader.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            storyViewHolder.text.setText(about);
-
-        } else {
-            storyViewHolder.text.setVisibility(View.GONE);
-            if (mediaData.get(position).contains(GlobalNames.VIDEO_RES) &&
-                    !mediaData.get(position).contains(GlobalNames.ABOUT_TAG)) {
-
-                itemType = GlobalNames.VIDEO_RES;
-            } else if (mediaData.get(position).contains(GlobalNames.AUDIO_RES) &&
-                    !mediaData.get(position).contains(GlobalNames.ABOUT_TAG)) {
-
-                itemType = GlobalNames.AUDIO_RES;
-            } else if (mediaData.get(position).contains(GlobalNames.IMG_RES) &&
-                    !mediaData.get(position).contains(GlobalNames.ABOUT_TAG)) {
-
-                itemType = GlobalNames.IMG_RES;
-            }
-        }
-
-        if (!itemType.isEmpty()) {
-            showContentByType(storyViewHolder, position, itemType);
-        }
-
-        final String finalItemType = itemType;
+        showContentByType(storyViewHolder, mediaData.get(position));
         storyViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onItemClickListener.onClick(finalItemType, mediaData.get(position));
+                onItemClickListener.onClick(mediaData.get(position));
             }
         });
     }
 
-    private void showContentByType(StoryViewHolder storyViewHolder, int position, String type) {
+    private void showContentByType(StoryViewHolder storyViewHolder, AssertItems.Resource resource) {
         storyViewHolder.text.setVisibility(View.GONE);
         int width = getMaximumWeight();
         int height = width / 2 + 100;
+        String filepath = GlobalNames.ENVIRONMENT_STORE +
+                jsonStory.getQrInformations().get(0).getCode() + "/" +
+                resource.getName();
+
         ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-        switch (type) {
+        switch (resource.getType()) {
             case GlobalNames.VIDEO_RES:
-                String filepath = mediaData.get(position);
+                storyViewHolder.imgView.setVisibility(View.GONE);
+                storyViewHolder.videoView.setVisibility(View.VISIBLE);
+                storyViewHolder.text.setVisibility(View.GONE);
+
                 Uri videoURI = Uri.parse(filepath);
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(context, videoURI);
                 Bitmap bitmap = retriever
                         .getFrameAtTime(100000, MediaMetadataRetriever.OPTION_PREVIOUS_SYNC);
                 Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
-                storyViewHolder.imgView.setVisibility(View.GONE);
-                storyViewHolder.videoView.setVisibility(View.VISIBLE);
                 storyViewHolder.videoView.setBackground(drawable);
                 storyViewHolder.videoView.setLayoutParams(layoutParams);
                 break;
 
             case GlobalNames.AUDIO_RES:
+                storyViewHolder.imgView.setVisibility(View.VISIBLE);
+                storyViewHolder.videoView.setVisibility(View.GONE);
+                storyViewHolder.text.setVisibility(View.GONE);
+
                 storyViewHolder.imgView.setVisibility(View.VISIBLE);
                 storyViewHolder.videoView.setVisibility(View.GONE);
                 storyViewHolder.imgView.setBackgroundResource(R.drawable.audio_img);
@@ -142,10 +110,28 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
                 break;
 
             case GlobalNames.IMG_RES:
+                storyViewHolder.imgView.setVisibility(View.VISIBLE);
                 storyViewHolder.videoView.setVisibility(View.GONE);
-                storyViewHolder.imgView.setImageBitmap(getBitMapByPath(mediaData.get(position)));
+                storyViewHolder.text.setVisibility(View.GONE);
+
+                storyViewHolder.videoView.setVisibility(View.GONE);
+                storyViewHolder.imgView.setImageBitmap(getBitMapByPath(filepath));
                 storyViewHolder.imgView.setLayoutParams(layoutParams);
                 storyViewHolder.imgView.setVisibility(View.VISIBLE);
+                break;
+            case GlobalNames.DOC_RES:
+                storyViewHolder.imgView.setVisibility(View.GONE);
+                storyViewHolder.videoView.setVisibility(View.GONE);
+                storyViewHolder.text.setVisibility(View.VISIBLE);
+
+                String text = "";
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new FileReader(filepath));
+                    text = bufferedReader.readLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                storyViewHolder.text.setText(text);
                 break;
         }
     }
@@ -164,15 +150,6 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
     private Integer getMaximumWeight() {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         return windowManager.getDefaultDisplay().getWidth();
-    }
-
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0)
-            return IS_HEAD;
-        else
-            return IS_VIEW;
     }
 
     @Override
@@ -196,7 +173,7 @@ public class StoryArrayAdapter extends RecyclerView.Adapter<StoryArrayAdapter.St
     }
 
     public interface OnItemStoryClickListener {
-        void onClick(String finalItemType, String filePach);
+        void onClick(AssertItems.Resource resource);
     }
 
 }
