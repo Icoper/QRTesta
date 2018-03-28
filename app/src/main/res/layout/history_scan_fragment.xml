@@ -5,7 +5,14 @@
 
     <GridView
         android:numColumns="2"
+        android:gravity="center"
+        android:columnWidth="320dp"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true"
+        android:stretchMode="columnWidth"
         android:id="@+id/hs_grid_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></GridView>
+        android:layout_height="match_parent">
+
+    </GridView>
 </android.support.constraint.ConstraintLayout>

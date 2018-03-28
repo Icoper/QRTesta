@@ -41,6 +41,10 @@ import com.example.android_dev.qrtest.util.NotificationWorker;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static android.Manifest.permission.CAMERA;
 
 public class QrReaderFragment extends Fragment {
@@ -91,18 +95,20 @@ public class QrReaderFragment extends Fragment {
                 final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.aqr_recyclerView);
                 recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
                 final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.aqr_progress_bar);
-
+                List<String> resIds = new ArrayList<>();
+                resIds.add(storyResId);
                 final MediaArrayAdapter storyArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
                     @Override
                     public void onClick(AssertItems.Resource resource) {
                         qrfPresenter.playMediaData(resource);
                     }
-                }, storyResId);
+                }, resIds);
                 if (modeScan == GlobalNames.QR_MODE_FIRST_SCAN) {
                     progressBar.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
-                            new NotificationWorker(mContext).showNotification();
+                            new NotificationWorker(mContext).showNotification(getResources()
+                                    .getString(R.string.notify_service_done));
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setAdapter(storyArrayAdapter);
                             storyArrayAdapter.notifyDataSetChanged();
@@ -117,7 +123,7 @@ public class QrReaderFragment extends Fragment {
                         .Builder(new ContextThemeWrapper(view.getContext(), R.style.Theme_AppCompat_Light_Dialog_Alert));
                 builder.setView(view);
 
-                builder.setCancelable(false).setNegativeButton(view.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+                builder.setCancelable(false).setNegativeButton(view.getContext().getString(R.string.ok_text), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -157,6 +163,16 @@ public class QrReaderFragment extends Fragment {
                 Intent intent = new Intent(mContext, SimpleAudioPlayer.class);
                 intent.putExtra("path", filePath);
                 startActivity(intent);
+            }
+
+            @Override
+            public void sendNotificationMsg(final String msg) {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        new NotificationWorker(mContext).showNotification(msg);
+                    }
+                }, 5000);
+
             }
         });
         return v;

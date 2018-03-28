@@ -2,9 +2,6 @@ package com.example.android_dev.qrtest.model.json;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by icoper on 26.03.2018.
- */
 
 public class HistoryScansQRInformationsIDs {
     @SerializedName("qrInformationID")

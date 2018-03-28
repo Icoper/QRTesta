@@ -18,7 +18,7 @@ public interface IMemoryStoryRepository {
 
     JsonStory getSelectedStory();
 
-    List<AssertItems.Resource> getResourceById(String id);
+    List<AssertItems.Resource> getResourceById(List<String> id);
 
     String getRoleResId();
 
@@ -27,4 +27,10 @@ public interface IMemoryStoryRepository {
     Role getSelectedRole();
 
     void setSelectedRole(Role selectedRole);
+
+    void addNewGoalID(String id);
+
+    List<String> getAllGoalsIds();
+
+    void cleanGoalsStory();
 }

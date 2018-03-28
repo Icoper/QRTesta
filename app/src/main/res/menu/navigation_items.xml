@@ -20,4 +20,10 @@
         android:id="@+id/navigation_history_scan"
         android:icon="@drawable/ic_history_black_36dp"
         android:title="@string/title_history_scan" />
+    <item
+        android:id="@+id/navigation_goals"
+        android:icon="@drawable/ic_flag_black_36dp"
+        android:title="@string/title_goals">
+
+    </item>
 </menu>

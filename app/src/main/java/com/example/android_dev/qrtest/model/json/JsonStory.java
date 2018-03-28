@@ -26,16 +26,13 @@ public class JsonStory {
     List<HistoryScansQRInformationsIDs> historyScansQRInformationsIDs;
     @SerializedName("assertItems")
     List<AssertItems> assertItems;
+    @SerializedName("goalAssetIDs")
+    List<String> goalAssetIds;
 
     public JsonStory() {
     }
 
-    public JsonStory(String previewImg, String color, String backgroundColor, String tabbarColor, String name,
-                     List<String> assertItemsId,
-                     List<QrInformation> qrInformations,
-                     List<Role> roles,
-                     List<HistoryScansQRInformationsIDs> historyScansQRInformationsIDs,
-                     List<AssertItems> assertItems) {
+    public JsonStory(String previewImg, String color, String backgroundColor, String tabbarColor, String name, List<String> assertItemsId, List<QrInformation> qrInformations, List<Role> roles, List<HistoryScansQRInformationsIDs> historyScansQRInformationsIDs, List<AssertItems> assertItems, List<String> goalAssetIds) {
         this.previewImg = previewImg;
         this.color = color;
         this.backgroundColor = backgroundColor;
@@ -46,6 +43,7 @@ public class JsonStory {
         this.roles = roles;
         this.historyScansQRInformationsIDs = historyScansQRInformationsIDs;
         this.assertItems = assertItems;
+        this.goalAssetIds = goalAssetIds;
     }
 
     public String getPreviewImg() {
@@ -79,7 +77,6 @@ public class JsonStory {
     public void setTabbarColor(String tabbarColor) {
         this.tabbarColor = tabbarColor;
     }
-
 
     public String getName() {
         return name;
@@ -127,5 +124,13 @@ public class JsonStory {
 
     public void setAssertItems(List<AssertItems> assertItems) {
         this.assertItems = assertItems;
+    }
+
+    public List<String> getGoalAssetIds() {
+        return goalAssetIds;
+    }
+
+    public void setGoalAssetIds(List<String> goalAssetIds) {
+        this.goalAssetIds = goalAssetIds;
     }
 }

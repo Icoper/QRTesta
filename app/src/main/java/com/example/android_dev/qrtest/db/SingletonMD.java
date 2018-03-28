@@ -4,6 +4,7 @@ import com.example.android_dev.qrtest.model.json.JsonStory;
 import com.example.android_dev.qrtest.model.json.Role;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class SingletonMD {
@@ -13,6 +14,18 @@ public class SingletonMD {
     private Role selectedRole;
     private String selectedActorId;
     private String roleResId;
+    private List<String> goalsID;
+
+    public List<String> getGoalsID() {
+        if (goalsID == null) {
+            goalsID = new ArrayList<>();
+        }
+        return goalsID;
+    }
+
+    public void setGoalsID(List<String> goalsID) {
+        this.goalsID = goalsID;
+    }
 
     public Role getSelectedRole() {
         return selectedRole;

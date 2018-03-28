@@ -10,11 +10,22 @@ public class Role {
     String code;
     @SerializedName("informationAssertID")
     String informationAssertID;
+    @SerializedName("id")
+    int id;
 
-    public Role(String name, String code, String informationAssertID) {
+    public Role(String name, String code, String informationAssertID, int id) {
         this.name = name;
         this.code = code;
         this.informationAssertID = informationAssertID;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

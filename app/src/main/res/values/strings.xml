@@ -13,4 +13,8 @@
     <string name="wrong_id">id is not true</string>
     <string name="more_text">More</string>
     <string name="notify_service_done">All data is ready</string>
+    <string name="title_goals">Goals</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

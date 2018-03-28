@@ -1,55 +1,48 @@
 package com.example.android_dev.qrtest.ui.fragment.ma;
 
+
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.json.AssertItems;
-import com.example.android_dev.qrtest.presenter.character_info.CharacterInfoPresenter;
+import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.presenter.goals_fragment.GoalsFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
-import com.example.android_dev.qrtest.util.ColorUtil;
-import com.example.android_dev.qrtest.util.ICharacterInfoFragment;
+import com.example.android_dev.qrtest.util.IGoalsFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CharacterInfoFragment extends Fragment {
+public class GoalsFragment extends Fragment {
+    private MediaArrayAdapter mediaArrayAdapter;
+    private JsonStory ourStory;
     private InMemoryStoryRepository inMemoryStoryRepository;
     private View view;
-    private TextView actorName;
-    private RecyclerView recyclerView;
     private Context mContext;
+    private RecyclerView recyclerView;
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.character_info_fragment, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_goals, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.gf_recycler_view);
         mContext = view.getContext();
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         inMemoryStoryRepository = new InMemoryStoryRepository();
-        initializeView();
-        actorName.setText(inMemoryStoryRepository.getSelectedRole().getName());
-
-        actorName.setBackgroundColor(Color.parseColor(
-                ColorUtil.changeColorHSB((inMemoryStoryRepository.getSelectedStory().getColor()))));
-
-        List<String> resIds = new ArrayList<>();
-        resIds.add(inMemoryStoryRepository.getRoleResId());
-        MediaArrayAdapter mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
+        mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
             public void onClick(AssertItems.Resource resource) {
-                new CharacterInfoPresenter(new ICharacterInfoFragment() {
+                new GoalsFragmentPresenter(new IGoalsFragment() {
                     @Override
                     public void showMsg(String msg) {
                         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
@@ -70,14 +63,8 @@ public class CharacterInfoFragment extends Fragment {
                     }
                 }).playMediaData(resource);
             }
-        }, resIds);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        }, inMemoryStoryRepository.getAllGoalsIds());
         recyclerView.setAdapter(mediaArrayAdapter);
         return view;
-    }
-
-    private void initializeView() {
-        actorName = (TextView) view.findViewById(R.id.cif_actor_name);
-        recyclerView = (RecyclerView) view.findViewById(R.id.cif_recycler_view);
     }
 }

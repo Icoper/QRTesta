@@ -3,18 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="4dp">
+    android:orientation="vertical">
 
     <TextView
+        android:textColor="@color/colorWhite"
         android:id="@+id/cif_actor_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:gravity="center"
         android:textSize="18dp"
+        android:paddingBottom="2dp"
         tools:text="ACTOR" />
 
     <android.support.v7.widget.RecyclerView
+        android:padding="4dp"
         android:paddingTop="8dp"
         android:id="@+id/cif_recycler_view"
         android:layout_width="match_parent"

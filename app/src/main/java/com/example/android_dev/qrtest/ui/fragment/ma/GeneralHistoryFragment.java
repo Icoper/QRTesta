@@ -21,6 +21,9 @@ import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.IGeneralHistoryFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class GeneralHistoryFragment extends Fragment {
     private static final String GENERAL_HISTORY_RES_ID = "4";
@@ -38,7 +41,8 @@ public class GeneralHistoryFragment extends Fragment {
         ourStory = inMemoryStoryRepository.getSelectedStory();
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
-
+        List<String> resIds = new ArrayList<>();
+        resIds.add(GENERAL_HISTORY_RES_ID);
         storyArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
             public void onClick(AssertItems.Resource resource) {
@@ -63,7 +67,7 @@ public class GeneralHistoryFragment extends Fragment {
                     }
                 }).playMediaData(resource);
             }
-        }, GENERAL_HISTORY_RES_ID);
+        }, resIds);
         recyclerView.setAdapter(storyArrayAdapter);
         return v;
     }

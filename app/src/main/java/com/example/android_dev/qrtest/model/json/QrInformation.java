@@ -61,12 +61,18 @@ public class QrInformation {
             String detailInfoAssertID;
             @SerializedName("shortInfoAssertID")
             String shortInfoAssertID;
+            @SerializedName("goalDetailAssertID")
+            String goalDetailAssertID;
+            @SerializedName("goalShortAssertID")
+            String goalShortAssertID;
             @SerializedName("id")
             String id;
 
-            public QrItem(String detailInfoAssertID, String shortInfoAssertID, String id) {
+            public QrItem(String detailInfoAssertID, String shortInfoAssertID, String goalDetailAssertID, String goalShortAssertID, String id) {
                 this.detailInfoAssertID = detailInfoAssertID;
                 this.shortInfoAssertID = shortInfoAssertID;
+                this.goalDetailAssertID = goalDetailAssertID;
+                this.goalShortAssertID = goalShortAssertID;
                 this.id = id;
             }
 
@@ -84,6 +90,22 @@ public class QrInformation {
 
             public void setShortInfoAssertID(String shortInfoAssertID) {
                 this.shortInfoAssertID = shortInfoAssertID;
+            }
+
+            public String getGoalDetailAssertID() {
+                return goalDetailAssertID;
+            }
+
+            public void setGoalDetailAssertID(String goalDetailAssertID) {
+                this.goalDetailAssertID = goalDetailAssertID;
+            }
+
+            public String getGoalShortAssertID() {
+                return goalShortAssertID;
+            }
+
+            public void setGoalShortAssertID(String goalShortAssertID) {
+                this.goalShortAssertID = goalShortAssertID;
             }
 
             public String getId() {

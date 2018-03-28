@@ -6,6 +6,7 @@ import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.SPScanStoryRepository;
 import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.json.Role;
 import com.example.android_dev.qrtest.util.IHistoryScanFragment;
 
 import java.util.ArrayList;
@@ -32,18 +33,35 @@ public class HistoryScanPresenter implements IHistoryScanPresenter {
     }
 
     private ArrayList<JsonStory> prepareDataToSend(List<String> spData) {
+
         iStoryRepository = new InMemoryStoryRepository();
         ArrayList<JsonStory> storyList = iStoryRepository.getStoriesList();
         ArrayList<JsonStory> scanStoryList = new ArrayList<>();
-
-        for (String storyId : spData) {
-            for (JsonStory story : storyList) {
-                if (story.getQrInformations().get(0).getCode().equals(storyId)) {
-                    scanStoryList.add(story);
+        ArrayList<JsonStory> formatScanStoryList = new ArrayList<>();
+        for (String roleId : spData) {
+            for (JsonStory jsonStory : storyList) {
+                ArrayList<Role> roles = new ArrayList<>(jsonStory.getRoles());
+                for (Role role : roles) {
+                    if (role.getCode().equals(roleId)) {
+                        scanStoryList.add(jsonStory);
+                    }
                 }
             }
         }
-        return scanStoryList;
+
+        for (JsonStory jsonStory : scanStoryList) {
+            boolean isValueFound = false;
+            for (JsonStory _jsonStory : formatScanStoryList) {
+                if (jsonStory.getName().equals(_jsonStory.getName())) {
+                    isValueFound = true;
+                    break;
+                }
+            }
+            if (!isValueFound) {
+                formatScanStoryList.add(jsonStory);
+            }
+        }
+        return formatScanStoryList;
     }
 
 }

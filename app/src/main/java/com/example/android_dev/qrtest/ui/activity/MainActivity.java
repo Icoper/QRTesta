@@ -21,6 +21,7 @@ import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.json.JsonStory;
 import com.example.android_dev.qrtest.ui.fragment.ma.CharacterInfoFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.GeneralHistoryFragment;
+import com.example.android_dev.qrtest.ui.fragment.ma.GoalsFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.HistoryScanFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.QrReaderFragment;
 import com.example.android_dev.qrtest.util.ColorUtil;
@@ -40,37 +41,45 @@ public class MainActivity extends AppCompatActivity {
     private CharacterInfoFragment mCharacterInfoFragment;
     private GeneralHistoryFragment mGeneralHistoryFragment;
     private HistoryScanFragment mHistoryScanFragment;
+    private GoalsFragment mGoalsFragment;
 
     private FragmentTransaction mFragmentTransaction;
 
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            mFragmentTransaction = getFragmentTransaction();
+    {
+        mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-            switch (item.getItemId()) {
-                case R.id.navigation_characters_info:
-                    mFragmentTransaction.replace(R.id.ma_fragment_container, mCharacterInfoFragment).commit();
-                    return true;
-                case R.id.navigation_general_history:
-                    mFragmentTransaction.replace(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
-                    return true;
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                mFragmentTransaction = getFragmentTransaction();
 
-                case R.id.navigation_qr_reader:
-                    mFragmentTransaction.replace(R.id.ma_fragment_container, mQrReaderFragment).commit();
-                    return true;
+                switch (item.getItemId()) {
+                    case R.id.navigation_characters_info:
+                        mFragmentTransaction.replace(R.id.ma_fragment_container, mCharacterInfoFragment).commit();
+                        return true;
+                    case R.id.navigation_general_history:
+                        mFragmentTransaction.replace(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
+                        return true;
 
-                case R.id.navigation_history_scan:
-                    mFragmentTransaction.replace(R.id.ma_fragment_container, mHistoryScanFragment).commit();
-                    return true;
+                    case R.id.navigation_qr_reader:
+                        mFragmentTransaction.replace(R.id.ma_fragment_container, mQrReaderFragment).commit();
+                        return true;
+
+                    case R.id.navigation_history_scan:
+                        mFragmentTransaction.replace(R.id.ma_fragment_container, mHistoryScanFragment).commit();
+                        return true;
+                    case R.id.navigation_goals:
+                        mFragmentTransaction.replace(R.id.ma_fragment_container, mGoalsFragment).commit();
+                        return true;
+                }
+
+
+                return false;
             }
-
-            return false;
-        }
-    };
+        };
+    }
 
 
     @SuppressLint("ResourceAsColor")
@@ -113,11 +122,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeUi() {
-
         mQrReaderFragment = new QrReaderFragment();
         mCharacterInfoFragment = new CharacterInfoFragment();
         mGeneralHistoryFragment = new GeneralHistoryFragment();
         mHistoryScanFragment = new HistoryScanFragment();
+        mGoalsFragment = new GoalsFragment();
         mFragmentTransaction = getFragmentTransaction();
         mFragmentTransaction.add(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
 
@@ -145,4 +154,9 @@ public class MainActivity extends AppCompatActivity {
         return mFragmentTransaction;
     }
 
+    @Override
+    protected void onDestroy() {
+        inMemoryStoryRepository.cleanGoalsStory();
+        super.onDestroy();
+    }
 }

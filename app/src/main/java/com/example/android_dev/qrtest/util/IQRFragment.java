@@ -6,6 +6,7 @@ public interface IQRFragment {
 
     void startVideoPlayerActivity(String filePath);
     void showMsg(String msg);
-
     void startAudioPlayerActivity(String filePath);
+
+    void sendNotificationMsg(String msg);
 }

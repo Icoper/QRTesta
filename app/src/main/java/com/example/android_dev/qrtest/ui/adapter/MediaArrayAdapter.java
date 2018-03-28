@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.StoryViewHolder> {
 
@@ -39,12 +40,12 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
     private View view;
     private JsonStory jsonStory;
 
-    public MediaArrayAdapter(MediaArrayAdapter.OnItemStoryClickListener onItemClickListener, String resId) {
+    public MediaArrayAdapter(MediaArrayAdapter.OnItemStoryClickListener onItemClickListener, List<String> resId) {
         this.onItemClickListener = onItemClickListener;
         createMediaData(resId);
     }
 
-    private void createMediaData(String resId) {
+    private void createMediaData(List<String> resId) {
         iMemoryStoryRepository = new InMemoryStoryRepository();
         mediaData = new ArrayList<>(iMemoryStoryRepository.getResourceById(resId));
         jsonStory = iMemoryStoryRepository.getSelectedStory();
