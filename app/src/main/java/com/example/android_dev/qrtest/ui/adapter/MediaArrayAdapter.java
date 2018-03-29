@@ -20,8 +20,8 @@ import android.widget.TextView;
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.json.AssertItems;
-import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.AssetTypes;
+import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.BufferedReader;
@@ -33,19 +33,19 @@ import java.util.List;
 
 public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.StoryViewHolder> {
 
-    private ArrayList<AssertItems.Resource> mediaData;
+    private ArrayList<AssetTypes> mediaData;
     private Context context;
     private MediaArrayAdapter.OnItemStoryClickListener onItemClickListener;
     private IMemoryStoryRepository iMemoryStoryRepository;
     private View view;
     private JsonStory jsonStory;
 
-    public MediaArrayAdapter(MediaArrayAdapter.OnItemStoryClickListener onItemClickListener, List<String> resId) {
+    public MediaArrayAdapter(MediaArrayAdapter.OnItemStoryClickListener onItemClickListener, List<Integer> resId) {
         this.onItemClickListener = onItemClickListener;
         createMediaData(resId);
     }
 
-    private void createMediaData(List<String> resId) {
+    private void createMediaData(List<Integer> resId) {
         iMemoryStoryRepository = new InMemoryStoryRepository();
         mediaData = new ArrayList<>(iMemoryStoryRepository.getResourceById(resId));
         jsonStory = iMemoryStoryRepository.getSelectedStory();
@@ -72,16 +72,16 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
         });
     }
 
-    private void showContentByType(StoryViewHolder storyViewHolder, AssertItems.Resource resource) {
+    private void showContentByType(StoryViewHolder storyViewHolder, AssetTypes resource) {
         storyViewHolder.text.setVisibility(View.GONE);
         int width = getMaximumWeight();
         int height = width / 2 + 100;
         String filepath = GlobalNames.ENVIRONMENT_STORE +
-                jsonStory.getQrInformations().get(0).getCode() + "/" +
-                resource.getName();
+                jsonStory.getResFolderName() + "/" +
+                "Resource1/" + resource.getFileName();
 
         ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-        switch (resource.getType()) {
+        switch (resource.getFileType()) {
             case GlobalNames.VIDEO_RES:
                 storyViewHolder.imgView.setVisibility(View.GONE);
                 storyViewHolder.videoView.setVisibility(View.VISIBLE);
@@ -174,7 +174,7 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
     }
 
     public interface OnItemStoryClickListener {
-        void onClick(AssertItems.Resource resource);
+        void onClick(AssetTypes resource);
     }
 
 }

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.SingletonMD;
-import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.File;
@@ -42,12 +42,14 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
     @Override
     public void onBindViewHolder(StoryViewHolder storyViewHolder, int i) {
         final int position = i;
+
         String imgPath = GlobalNames.ENVIRONMENT_STORE +
-                stories.get(i).getQrInformations().get(0).getCode();
-        String imgName = stories.get(i).getPreviewImg();
+                stories.get(position).getResFolderName() + "/Resource1";
+
+        String imgName = stories.get(position).getPreviewImg();
 
         storyViewHolder.icon.setImageBitmap(getBitMapByPath(imgPath, imgName));
-        storyViewHolder.name.setText(stories.get(position).getName());
+        storyViewHolder.name.setText(stories.get(position).getPreviewText());
         storyViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

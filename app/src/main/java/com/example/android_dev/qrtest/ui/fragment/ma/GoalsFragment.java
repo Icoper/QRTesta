@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.json.AssertItems;
-import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.AssetTypes;
+import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.presenter.goals_fragment.GoalsFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
@@ -41,7 +41,7 @@ public class GoalsFragment extends Fragment {
         inMemoryStoryRepository = new InMemoryStoryRepository();
         mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
-            public void onClick(AssertItems.Resource resource) {
+            public void onClick(AssetTypes resource) {
                 new GoalsFragmentPresenter(new IGoalsFragment() {
                     @Override
                     public void showMsg(String msg) {
@@ -63,7 +63,7 @@ public class GoalsFragment extends Fragment {
                     }
                 }).playMediaData(resource);
             }
-        }, inMemoryStoryRepository.getAllGoalsIds());
+        }, inMemoryStoryRepository.getAddedByStoryGoals());
         recyclerView.setAdapter(mediaArrayAdapter);
         return view;
     }

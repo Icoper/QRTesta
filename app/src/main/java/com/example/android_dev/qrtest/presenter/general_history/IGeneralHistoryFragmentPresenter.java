@@ -1,7 +1,7 @@
 package com.example.android_dev.qrtest.presenter.general_history;
 
-import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.AssetTypes;
 
 public interface IGeneralHistoryFragmentPresenter {
-    void playMediaData(AssertItems.Resource resource);
+    void playMediaData(AssetTypes resource);
 }

@@ -1,7 +1,7 @@
 package com.example.android_dev.qrtest.presenter.goals_fragment;
 
-import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.AssetTypes;
 
 public interface IGoalsFragmentPresenter {
-    void playMediaData(AssertItems.Resource resource);
+    void playMediaData(AssetTypes resource);
 }

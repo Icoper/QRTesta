@@ -1,8 +1,8 @@
 package com.example.android_dev.qrtest.db;
 
-import com.example.android_dev.qrtest.model.json.AssertItems;
-import com.example.android_dev.qrtest.model.json.JsonStory;
-import com.example.android_dev.qrtest.model.json.Role;
+import com.example.android_dev.qrtest.model.AssetTypes;
+import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.model.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,27 +15,18 @@ public class InMemoryStoryRepository implements IMemoryStoryRepository {
     }
 
     @Override
-    public synchronized void setActorId(String id) {
-        SingletonMD.getInstance().setSelectedActorId(id);
-    }
-
-    @Override
-    public synchronized String getActorId() {
-        return SingletonMD.getInstance().getSelectedActorId();
-    }
-
-    @Override
     public synchronized JsonStory getSelectedStory() {
         return SingletonMD.getInstance().getSelectedStory();
     }
 
     @Override
-    public synchronized List<AssertItems.Resource> getResourceById(List<String> id) {
-        List<AssertItems.Resource> resources = new ArrayList<>();
-        for (int i = 0; i < id.size(); i++) {
-            for (AssertItems assertItems : getSelectedStory().getAssertItems()) {
-                if (assertItems.getId().equals(id.get(i))) {
-                    resources.addAll(assertItems.getResources());
+    public synchronized List<AssetTypes> getResourceById(List<Integer> ids) {
+        List<AssetTypes> resources = new ArrayList<>();
+
+        for (int i = 0; i < ids.size(); i++) {
+            for (AssetTypes assertItems : getSelectedStory().getAssetTypeList()) {
+                if (assertItems.getId() == ids.get(i)) {
+                    resources.add(assertItems);
                 }
             }
         }
@@ -43,15 +34,6 @@ public class InMemoryStoryRepository implements IMemoryStoryRepository {
         return resources;
     }
 
-    @Override
-    public synchronized String getRoleResId() {
-        return SingletonMD.getInstance().getRoleResId();
-    }
-
-    @Override
-    public synchronized void setRolResId(String id) {
-        SingletonMD.getInstance().setRoleResId(id);
-    }
 
     @Override
     public synchronized Role getSelectedRole() {
@@ -65,20 +47,50 @@ public class InMemoryStoryRepository implements IMemoryStoryRepository {
     }
 
     @Override
-    public synchronized void addNewGoalID(String id) {
-        List<String> goals = SingletonMD.getInstance().getGoalsID();
-        goals.add(id);
-        SingletonMD.getInstance().setGoalsID(goals);
-    }
-
-
-    @Override
-    public synchronized List<String> getAllGoalsIds() {
-        return SingletonMD.getInstance().getGoalsID();
+    public void addQrInformationId(int id) {
+        SingletonMD.getInstance().getScannedQrInformationId().add(id);
     }
 
     @Override
-    public void cleanGoalsStory() {
-        SingletonMD.getInstance().setGoalsID(null);
+    public List<Integer> getQrInformationId() {
+        return SingletonMD.getInstance().getScannedQrInformationId();
+    }
+
+    @Override
+    public void cleanQrInformation() {
+        SingletonMD.getInstance().cleanScannedQrInformationId();
+        JsonStory jsonStory = getSelectedStory();
+        for (int i = 0; i < jsonStory.getHistoryScansQRInformationsIDList().size(); i++) {
+            jsonStory.getHistoryScansQRInformationsIDList().get(i).setShortInfo(true);
+        }
+    }
+
+    @Override
+    public void addNewGoalToList(List<Integer> newRes) {
+        List<Integer> filteredNewRes = new ArrayList<>();
+        List<Integer> goalList = SingletonMD.getInstance().getAddedByStoryGoals();
+        for (int res : newRes) {
+            boolean alreadyAdded = false;
+            for (int _res : goalList) {
+                if (_res == res) {
+                    alreadyAdded = true;
+                }
+            }
+            if (!alreadyAdded) {
+                filteredNewRes.add(res);
+            }
+        }
+        SingletonMD.getInstance().getAddedByStoryGoals().addAll(filteredNewRes);
+
+    }
+
+    @Override
+    public List<Integer> getAddedByStoryGoals() {
+        return SingletonMD.getInstance().getAddedByStoryGoals();
+    }
+
+    @Override
+    public void cleanAddedByStoryGoals() {
+        SingletonMD.getInstance().setAddedByStoryGoals(null);
     }
 }

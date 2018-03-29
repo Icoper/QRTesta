@@ -1,9 +1,9 @@
 package com.example.android_dev.qrtest.db;
 
 
-import com.example.android_dev.qrtest.model.json.AssertItems;
-import com.example.android_dev.qrtest.model.json.JsonStory;
-import com.example.android_dev.qrtest.model.json.Role;
+import com.example.android_dev.qrtest.model.AssetTypes;
+import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.model.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,25 +12,23 @@ public interface IMemoryStoryRepository {
 
     ArrayList<JsonStory> getStoriesList();
 
-    void setActorId(String id);
-
-    String getActorId();
-
     JsonStory getSelectedStory();
 
-    List<AssertItems.Resource> getResourceById(List<String> id);
-
-    String getRoleResId();
-
-    void setRolResId(String id);
+    List<AssetTypes> getResourceById(List<Integer> ids);
 
     Role getSelectedRole();
 
     void setSelectedRole(Role selectedRole);
 
-    void addNewGoalID(String id);
+    void addQrInformationId(int id);
 
-    List<String> getAllGoalsIds();
+    List<Integer> getQrInformationId();
 
-    void cleanGoalsStory();
+    void cleanQrInformation();
+
+    void addNewGoalToList(List<Integer> res);
+
+    List<Integer> getAddedByStoryGoals();
+
+    void cleanAddedByStoryGoals();
 }

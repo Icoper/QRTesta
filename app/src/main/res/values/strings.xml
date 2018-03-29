@@ -2,7 +2,7 @@
     <string name="app_name">QR Test</string>
     <string name="title_activity_main">MainActivity</string>
     /* Bottom navigation bar */
-    <string name="title_general_history">General History</string>
+    <string name="title_general_history">History</string>
     <string name="title_qr_reader">QR reader</string>
     <string name="title_history_scan">History Scan</string>
     <string name="title_characters_info">Actor info</string>
@@ -14,7 +14,5 @@
     <string name="more_text">More</string>
     <string name="notify_service_done">All data is ready</string>
     <string name="title_goals">Goals</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="qr_code_not_found">QR code not found!</string>
 </resources>

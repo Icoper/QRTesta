@@ -2,7 +2,7 @@ package com.example.android_dev.qrtest.presenter.goals_fragment;
 
 import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.presenter.IAppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.util.GlobalNames;
@@ -19,13 +19,13 @@ public class GoalsFragmentPresenter implements IGoalsFragmentPresenter {
     }
 
     @Override
-    public void playMediaData(AssertItems.Resource resource) {
+    public void playMediaData(AssetTypes resource) {
         if (iAppMediaPlayerPresenter == null) {
             iAppMediaPlayerPresenter = new AppMediaPlayerPresenter();
         }
         String filePath = GlobalNames.ENVIRONMENT_STORE +
-                memoryStoryRepository.getSelectedStory().getQrInformations().get(0).getCode() + "/" +
-                resource.getName();
+                memoryStoryRepository.getSelectedStory().getResFolderName() + "/Resource1/" +
+                resource.getFileName();
         String msg = iAppMediaPlayerPresenter.processMediaData(resource);
         if (msg.equals(GlobalNames.VIDEO_RES)) {
             iGoalsFragment.startVideoPlayerActivity(filePath);

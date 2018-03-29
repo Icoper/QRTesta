@@ -17,7 +17,7 @@
 
         android:id="@+id/shi_story_name"
         android:layout_width="match_parent"
-        android:layout_height="47dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@color/colorGrayLight"
         android:gravity="end"

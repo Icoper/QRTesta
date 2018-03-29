@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import android.view.MenuItem;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.ui.fragment.ma.CharacterInfoFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.GeneralHistoryFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.GoalsFragment;
@@ -31,7 +32,6 @@ import java.lang.reflect.Field;
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "MainActivity";
 
-    private String actorId;
     private InMemoryStoryRepository inMemoryStoryRepository;
     private JsonStory selectedStory;
     // ui
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -98,12 +99,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mActionBarToolbar);
 
         inMemoryStoryRepository = new InMemoryStoryRepository();
-        actorId = inMemoryStoryRepository.getActorId();
         selectedStory = inMemoryStoryRepository.getSelectedStory();
 
         changeToolBarColor();
 
-        setTitle(selectedStory.getName());
+        setTitle(selectedStory.getPreviewText());
         initializeUi();
     }
 
@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("RestrictedApi")
     public static void disableShiftMode(BottomNavigationView view) {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
         try {
@@ -139,7 +140,14 @@ public class MainActivity extends AppCompatActivity {
             shiftingMode.setAccessible(true);
             shiftingMode.setBoolean(menuView, false);
             shiftingMode.setAccessible(false);
-
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                //noinspection RestrictedApi
+                item.setShiftingMode(false);
+                // set once again checked value, so view will be updated
+                //noinspection RestrictedApi
+                item.setChecked(item.getItemData().isChecked());
+            }
         } catch (NoSuchFieldException e) {
             Log.e("BNVHelper", "Unable to get shift mode field", e);
         } catch (IllegalAccessException e) {
@@ -154,9 +162,38 @@ public class MainActivity extends AppCompatActivity {
         return mFragmentTransaction;
     }
 
+
     @Override
     protected void onDestroy() {
-        inMemoryStoryRepository.cleanGoalsStory();
+        Log.d(LOG_TAG, "onDestroy");
+        inMemoryStoryRepository.cleanQrInformation();
+        inMemoryStoryRepository.cleanAddedByStoryGoals();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause");
+
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(LOG_TAG, "onResume");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(LOG_TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+
+        Log.d(LOG_TAG, "onStart");
+        super.onStart();
     }
 }

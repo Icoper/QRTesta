@@ -1,8 +1,8 @@
 package com.example.android_dev.qrtest.presenter;
 
-import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.AssetTypes;
 
 public interface IAppMediaPlayerPresenter {
 
-    String processMediaData(AssertItems.Resource resource);
+    String processMediaData(AssetTypes resource);
 }

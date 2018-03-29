@@ -11,7 +11,6 @@ public interface GlobalNames {
     String IMG_RES = "image";
     String DOC_RES = "document";
     
-    String ABOUT_TAG = "about";
     int QR_MODE_FIRST_SCAN = 0;
     int QR_MODE_SIMPLE_SCAN = 1;
     int ALERT_MODE_FULL_INFO = 2;

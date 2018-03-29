@@ -13,15 +13,14 @@ import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.json.AssertItems;
-import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.AssetTypes;
+import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.presenter.general_history.GeneralHistoryFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.IGeneralHistoryFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,11 +40,11 @@ public class GeneralHistoryFragment extends Fragment {
         ourStory = inMemoryStoryRepository.getSelectedStory();
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
-        List<String> resIds = new ArrayList<>();
-        resIds.add(GENERAL_HISTORY_RES_ID);
+        List<Integer> resIds = ourStory.getHistoryAssetTypesID();
+
         storyArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
-            public void onClick(AssertItems.Resource resource) {
+            public void onClick(AssetTypes resource) {
                 new GeneralHistoryFragmentPresenter(new IGeneralHistoryFragment() {
                     @Override
                     public void showMsg(String msg) {

@@ -1,7 +1,7 @@
 package com.example.android_dev.qrtest.db;
 
-import com.example.android_dev.qrtest.model.json.JsonStory;
-import com.example.android_dev.qrtest.model.json.Role;
+import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.model.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,19 +12,33 @@ public class SingletonMD {
     private ArrayList<JsonStory> stories;
     private JsonStory selectedStory;
     private Role selectedRole;
-    private String selectedActorId;
-    private String roleResId;
-    private List<String> goalsID;
+    private List<Integer> scannedQrInformationId;
+    private List<Integer> addedByStoryGoals;
 
-    public List<String> getGoalsID() {
-        if (goalsID == null) {
-            goalsID = new ArrayList<>();
+    public List<Integer> getAddedByStoryGoals() {
+        if (addedByStoryGoals == null) {
+            addedByStoryGoals = new ArrayList<>();
         }
-        return goalsID;
+        return addedByStoryGoals;
     }
 
-    public void setGoalsID(List<String> goalsID) {
-        this.goalsID = goalsID;
+    public void setAddedByStoryGoals(List<Integer> addedByStoryGoals) {
+        this.addedByStoryGoals = addedByStoryGoals;
+    }
+
+    public List<Integer> getScannedQrInformationId() {
+        if (scannedQrInformationId == null) {
+            scannedQrInformationId = new ArrayList<>();
+        }
+        return scannedQrInformationId;
+    }
+
+    public void cleanScannedQrInformationId() {
+        scannedQrInformationId = null;
+    }
+
+    public void setScannedQrInformationId(List<Integer> scannedQrInformationId) {
+        this.scannedQrInformationId = scannedQrInformationId;
     }
 
     public Role getSelectedRole() {
@@ -35,21 +49,6 @@ public class SingletonMD {
         this.selectedRole = selectedRole;
     }
 
-    public String getRoleResId() {
-        return roleResId;
-    }
-
-    public void setRoleResId(String roleResId) {
-        this.roleResId = roleResId;
-    }
-
-    public String getSelectedActorId() {
-        return selectedActorId;
-    }
-
-    public void setSelectedActorId(String selectedActorId) {
-        this.selectedActorId = selectedActorId;
-    }
 
     public ArrayList<JsonStory> getStories() {
         if (stories == null || stories.isEmpty()) {

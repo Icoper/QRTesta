@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.json.AssertItems;
+import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.character_info.CharacterInfoPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
@@ -44,11 +44,11 @@ public class CharacterInfoFragment extends Fragment {
         actorName.setBackgroundColor(Color.parseColor(
                 ColorUtil.changeColorHSB((inMemoryStoryRepository.getSelectedStory().getColor()))));
 
-        List<String> resIds = new ArrayList<>();
-        resIds.add(inMemoryStoryRepository.getRoleResId());
+        List<Integer> resIds = new ArrayList<>();
+        resIds.addAll(inMemoryStoryRepository.getSelectedRole().getInformationAssertIDList());
         MediaArrayAdapter mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
-            public void onClick(AssertItems.Resource resource) {
+            public void onClick(AssetTypes resource) {
                 new CharacterInfoPresenter(new ICharacterInfoFragment() {
                     @Override
                     public void showMsg(String msg) {

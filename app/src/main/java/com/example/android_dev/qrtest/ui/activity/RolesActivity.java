@@ -16,7 +16,8 @@ import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.model.Role;
 
 public class RolesActivity extends AppCompatActivity {
     private InMemoryStoryRepository inMemoryStoryRepository;
@@ -32,9 +33,9 @@ public class RolesActivity extends AppCompatActivity {
 
     public void initializeLv(final JsonStory story) {
         ListView lvMain = (ListView) findViewById(R.id.fal_list_view);
-        String[] actorsArray = new String[story.getRoles().size()];
-        for (int i = 0; i < story.getRoles().size(); i++) {
-            actorsArray[i] = story.getRoles().get(i).getName();
+        String[] actorsArray = new String[story.getRoleList().size()];
+        for (int i = 0; i < story.getRoleList().size(); i++) {
+            actorsArray[i] = story.getRoleList().get(i).getName();
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, actorsArray);
@@ -43,14 +44,13 @@ public class RolesActivity extends AppCompatActivity {
 
         lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                inMemoryStoryRepository.setRolResId(story.getRoles().get(position).getInformationAssertID());
-                inMemoryStoryRepository.setSelectedRole(story.getRoles().get(position));
-                showAlertDialog(story.getRoles().get(position).getCode());
+                inMemoryStoryRepository.setSelectedRole(story.getRoleList().get(position));
+                showAlertDialog(story.getRoleList().get(position));
             }
         });
     }
 
-    public void showAlertDialog(final String actorId) {
+    public void showAlertDialog(final Role role) {
 
         final View view = LayoutInflater.from(this).inflate(R.layout.alert_actor_validate, null);
         final EditText enterId = (EditText) view.findViewById(R.id.aav_enter_id_et);
@@ -62,8 +62,8 @@ public class RolesActivity extends AppCompatActivity {
                 .setNeutralButton(view.getContext().getString(R.string.ok_text), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (enterId.getText().toString().equals(actorId)) {
-                            inMemoryStoryRepository.setActorId(actorId);
+                        if (enterId.getText().toString().equals(role.getCode())) {
+                            inMemoryStoryRepository.setSelectedRole(role);
                             showHistoryContent();
                         } else
                             Toast.makeText(view.getContext(), getString(R.string.wrong_id), Toast.LENGTH_SHORT).show();

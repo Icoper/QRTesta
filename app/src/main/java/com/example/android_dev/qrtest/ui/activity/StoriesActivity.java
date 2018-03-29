@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
-import com.example.android_dev.qrtest.model.json.JsonStory;
+import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.ui.adapter.StoryListArrayAdapter;
 
 import java.util.ArrayList;
