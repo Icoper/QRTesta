@@ -1,5 +1,6 @@
 package com.example.android_dev.qrtest.db;
 
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.model.Role;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class SingletonMD {
     private static SingletonMD ourInstance = new SingletonMD();
-    private ArrayList<JsonStory> stories;
+    private List<IStory> stories;
     private JsonStory selectedStory;
     private Role selectedRole;
     private List<Integer> scannedQrInformationId;
@@ -50,9 +51,9 @@ public class SingletonMD {
     }
 
 
-    public ArrayList<JsonStory> getStories() {
+    public List<IStory> getStories() {
         if (stories == null || stories.isEmpty()) {
-            stories = new ArrayList<>(new MediaDataWorker().getStoryData());
+            stories = new ArrayList<>(new JsonDataInitializer().getStoryData());
         }
         return stories;
     }

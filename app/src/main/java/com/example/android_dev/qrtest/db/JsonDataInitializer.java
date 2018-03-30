@@ -9,10 +9,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaDataWorker {
+public class JsonDataInitializer {
     private List<JsonStory> stories;
 
-    public MediaDataWorker() {
+    public JsonDataInitializer() {
     }
 
     private List<JsonStory> getJsonStories() {

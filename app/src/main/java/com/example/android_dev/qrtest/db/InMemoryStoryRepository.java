@@ -1,6 +1,7 @@
 package com.example.android_dev.qrtest.db;
 
 import com.example.android_dev.qrtest.model.AssetTypes;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.model.Role;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class InMemoryStoryRepository implements IMemoryStoryRepository {
     @Override
-    public synchronized ArrayList<JsonStory> getStoriesList() {
+    public synchronized List<IStory> getStoriesList() {
         return SingletonMD.getInstance().getStories();
     }
 

@@ -2,17 +2,16 @@ package com.example.android_dev.qrtest.db;
 
 
 import com.example.android_dev.qrtest.model.AssetTypes;
-import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.Role;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IMemoryStoryRepository {
 
-    ArrayList<JsonStory> getStoriesList();
+    List<IStory> getStoriesList();
 
-    JsonStory getSelectedStory();
+    IStory getSelectedStory();
 
     List<AssetTypes> getResourceById(List<Integer> ids);
 

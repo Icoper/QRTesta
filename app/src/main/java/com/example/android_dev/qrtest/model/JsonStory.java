@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 
-public class JsonStory {
+public class JsonStory implements IStory {
     @SerializedName("previewImageName")
     String previewImg;
     @SerializedName("previewText")
@@ -49,6 +49,7 @@ public class JsonStory {
         this.assetTypeList = assetTypeList;
     }
 
+    @Override
     public String getPreviewImg() {
         return previewImg;
     }
@@ -57,6 +58,7 @@ public class JsonStory {
         this.previewImg = previewImg;
     }
 
+    @Override
     public String getPreviewText() {
         return previewText;
     }
@@ -65,6 +67,7 @@ public class JsonStory {
         this.previewText = previewText;
     }
 
+    @Override
     public String getResFolderName() {
         return resFolderName;
     }
@@ -73,6 +76,7 @@ public class JsonStory {
         this.resFolderName = resFolderName;
     }
 
+    @Override
     public String getColor() {
         return color;
     }
@@ -81,6 +85,7 @@ public class JsonStory {
         this.color = color;
     }
 
+    @Override
     public String getBackgroundColor() {
         return backgroundColor;
     }
@@ -89,6 +94,7 @@ public class JsonStory {
         this.backgroundColor = backgroundColor;
     }
 
+    @Override
     public String getTabbarColor() {
         return tabbarColor;
     }
@@ -97,6 +103,7 @@ public class JsonStory {
         this.tabbarColor = tabbarColor;
     }
 
+    @Override
     public List<Integer> getHistoryAssetTypesID() {
         return historyAssetTypesID;
     }
@@ -105,6 +112,7 @@ public class JsonStory {
         this.historyAssetTypesID = historyAssetTypesID;
     }
 
+    @Override
     public List<QrInformation> getQrInformationList() {
         return qrInformationList;
     }
@@ -113,6 +121,7 @@ public class JsonStory {
         this.qrInformationList = qrInformationList;
     }
 
+    @Override
     public List<Role> getRoleList() {
         return roleList;
     }
@@ -121,6 +130,7 @@ public class JsonStory {
         this.roleList = roleList;
     }
 
+    @Override
     public List<HistoryScansQRInformationsIDs> getHistoryScansQRInformationsIDList() {
         return historyScansQRInformationsIDList;
     }
@@ -129,6 +139,7 @@ public class JsonStory {
         this.historyScansQRInformationsIDList = historyScansQRInformationsIDList;
     }
 
+    @Override
     public List<Integer> getGoalAssetIDList() {
         return goalAssetIDList;
     }
@@ -137,6 +148,7 @@ public class JsonStory {
         this.goalAssetIDList = goalAssetIDList;
     }
 
+    @Override
     public List<AssetTypes> getAssetTypeList() {
         return assetTypeList;
     }
