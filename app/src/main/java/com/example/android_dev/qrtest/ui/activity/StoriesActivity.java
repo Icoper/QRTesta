@@ -8,10 +8,12 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.ui.adapter.StoryListArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StoriesActivity extends AppCompatActivity {
 
@@ -30,7 +32,8 @@ public class StoriesActivity extends AppCompatActivity {
     private void setupUI() {
         storiesRv = (RecyclerView) findViewById(R.id.as_recycler_view);
         storiesRv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        ArrayList<JsonStory> stories = storyRepository.getStoriesList();
+        List<IStory> stories = new ArrayList<>();
+        stories.addAll(storyRepository.getStoriesList());
 
         StoryListArrayAdapter storyListArrayAdapter = new StoryListArrayAdapter(stories,
                 new StoryListArrayAdapter.OnItemClickListener() {

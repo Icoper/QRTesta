@@ -25,6 +25,8 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.example.android_dev.qrtest.R;
+import com.example.android_dev.qrtest.db.IGoalsDataStore;
+import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.qr.QRFPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
@@ -43,6 +45,9 @@ public class QrReaderFragment extends Fragment {
     private static final int REQUEST_CAMERA = 1;
     private static final String LOG_TAG = "QrReaderFragment";
     private CodeScanner mCodeScanner;
+    // Repository
+    private IHistoryScanDataStore iHistoryScanDataStore;
+    private IGoalsDataStore iGoalsDataStore;
 
     //view
     private Context mContext;
@@ -169,7 +174,7 @@ public class QrReaderFragment extends Fragment {
             }
 
 
-        });
+        },iHistoryScanDataStore,iGoalsDataStore);
         return v;
     }
 
@@ -182,6 +187,10 @@ public class QrReaderFragment extends Fragment {
 
     }
 
+    public void setupRepository(IHistoryScanDataStore iHistoryScanDataStore,IGoalsDataStore iGoalsDataStore){
+        this.iGoalsDataStore = iGoalsDataStore;
+        this.iHistoryScanDataStore = iHistoryScanDataStore;
+    }
 
     private boolean checkPermission() {
         return (ContextCompat.checkSelfPermission(mContext, CAMERA) == PackageManager.PERMISSION_GRANTED);

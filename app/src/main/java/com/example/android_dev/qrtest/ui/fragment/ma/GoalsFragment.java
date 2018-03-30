@@ -14,8 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
+import com.example.android_dev.qrtest.db.GoalsDataStore;
+import com.example.android_dev.qrtest.db.IGoalsDataStore;
+import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.presenter.goals_fragment.GoalsFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
@@ -25,11 +29,12 @@ import com.example.android_dev.qrtest.util.IGoalsFragment;
 
 public class GoalsFragment extends Fragment {
     private MediaArrayAdapter mediaArrayAdapter;
-    private JsonStory ourStory;
+    private IStory ourStory;
     private InMemoryStoryRepository inMemoryStoryRepository;
     private View view;
     private Context mContext;
     private RecyclerView recyclerView;
+    private IGoalsDataStore iGoalsDataStore;
 
     @Nullable
     @Override
@@ -61,10 +66,13 @@ public class GoalsFragment extends Fragment {
                         intent.putExtra("path", filePath);
                         startActivity(intent);
                     }
-                }).playMediaData(resource);
+                },iGoalsDataStore).playMediaData(resource);
             }
-        }, inMemoryStoryRepository.getAddedByStoryGoals());
+        }, iGoalsDataStore.getAll());
         recyclerView.setAdapter(mediaArrayAdapter);
         return view;
+    }
+    public void setupRepository( IGoalsDataStore iGoalsDataStore){
+        this.iGoalsDataStore = iGoalsDataStore;
     }
 }

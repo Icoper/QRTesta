@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.model.Role;
 
@@ -27,11 +28,11 @@ public class RolesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actors);
         inMemoryStoryRepository = new InMemoryStoryRepository();
-        JsonStory story = inMemoryStoryRepository.getSelectedStory();
+        IStory story = inMemoryStoryRepository.getSelectedStory();
         initializeLv(story);
     }
 
-    public void initializeLv(final JsonStory story) {
+    public void initializeLv(final IStory story) {
         ListView lvMain = (ListView) findViewById(R.id.fal_list_view);
         String[] actorsArray = new String[story.getRoleList().size()];
         for (int i = 0; i < story.getRoleList().size(); i++) {

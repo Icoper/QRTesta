@@ -24,10 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
+import com.example.android_dev.qrtest.db.IStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
-import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.historyscan.HistoryScanPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
@@ -45,9 +46,9 @@ public class HistoryScanFragment extends Fragment {
     private GridView gridView;
     private HistoryScanPresenter historyScanPresenter;
     private QrInformation selectedQrInformation;
-    private IMemoryStoryRepository iMemoryStoryRepository;
-    private JsonStory jsonStory;
-
+    private IStoryRepository iStoryRepository;
+    private IStory jsonStory;
+    private IHistoryScanDataStore iHistoryScanDataStore;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,8 +64,8 @@ public class HistoryScanFragment extends Fragment {
         historyScanPresenter = new HistoryScanPresenter(new IHistoryScanFragment() {
             @Override
             public void showGridView(final ArrayList<QrInformation> scannedQrInfo) {
-                iMemoryStoryRepository = new InMemoryStoryRepository();
-                jsonStory = iMemoryStoryRepository.getSelectedStory();
+                iStoryRepository = new InMemoryStoryRepository();
+                jsonStory = iStoryRepository.getSelectedStory();
                 ArrayAdapter<QrInformation> adapter = new ArrayAdapter<QrInformation>(
                         mContext, R.layout.scan_history_item, scannedQrInfo) {
                     @NonNull
@@ -79,7 +80,7 @@ public class HistoryScanFragment extends Fragment {
 
                         ArrayList<Integer> integers = new ArrayList<>();
                         integers.add(scannedQrInfo.get(position).getPreviewImage());
-                        List<AssetTypes> assetTypes = iMemoryStoryRepository.getResourceById(integers);
+                        List<AssetTypes> assetTypes = iStoryRepository.getResourceById(integers);
 
                         String imgPath = GlobalNames.ENVIRONMENT_STORE + jsonStory.getResFolderName() +
                                 "/Resource1/" + assetTypes.get(0).getFileName();
@@ -165,7 +166,7 @@ public class HistoryScanFragment extends Fragment {
             }
 
 
-        });
+        },iHistoryScanDataStore);
         historyScanPresenter.getScannedStoryList();
     }
 
@@ -179,5 +180,9 @@ public class HistoryScanFragment extends Fragment {
             return myBitmap;
         }
         return null;
+    }
+
+    public  void setupRepository(IHistoryScanDataStore iHistoryScanDataStore){
+        this.iHistoryScanDataStore = iHistoryScanDataStore;
     }
 }

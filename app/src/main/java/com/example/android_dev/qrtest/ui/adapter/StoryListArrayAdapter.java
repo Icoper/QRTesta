@@ -11,21 +11,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.db.SingletonMD;
-import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.db.SingletonStoryData;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAdapter.StoryViewHolder> {
-    private ArrayList<JsonStory> stories;
+    private List<IStory> stories;
     private Context context;
     private OnItemClickListener onItemClickListener;
 
-    public StoryListArrayAdapter(ArrayList<JsonStory> stories, OnItemClickListener onItemClickListener) {
+    public StoryListArrayAdapter(List<IStory> stories, OnItemClickListener onItemClickListener) {
         this.stories = stories;
         this.onItemClickListener = onItemClickListener;
     }
@@ -53,7 +53,7 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
         storyViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SingletonMD.getInstance().setSelectedStory(stories.get(position));
+                SingletonStoryData.getInstance().setSelectedStory(stories.get(position));
                 onItemClickListener.onClick();
             }
         });

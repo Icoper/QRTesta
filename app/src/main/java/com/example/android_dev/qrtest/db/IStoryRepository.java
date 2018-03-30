@@ -7,7 +7,7 @@ import com.example.android_dev.qrtest.model.Role;
 
 import java.util.List;
 
-public interface IMemoryStoryRepository {
+public interface IStoryRepository {
 
     List<IStory> getStoriesList();
 
@@ -19,15 +19,4 @@ public interface IMemoryStoryRepository {
 
     void setSelectedRole(Role selectedRole);
 
-    void addQrInformationId(int id);
-
-    List<Integer> getQrInformationId();
-
-    void cleanQrInformation();
-
-    void addNewGoalToList(List<Integer> res);
-
-    List<Integer> getAddedByStoryGoals();
-
-    void cleanAddedByStoryGoals();
 }

@@ -18,10 +18,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.IStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
-import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.BufferedReader;
@@ -36,9 +36,9 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
     private ArrayList<AssetTypes> mediaData;
     private Context context;
     private MediaArrayAdapter.OnItemStoryClickListener onItemClickListener;
-    private IMemoryStoryRepository iMemoryStoryRepository;
+    private IStoryRepository iStoryRepository;
     private View view;
-    private JsonStory jsonStory;
+    private IStory jsonStory;
 
     public MediaArrayAdapter(MediaArrayAdapter.OnItemStoryClickListener onItemClickListener, List<Integer> resId) {
         this.onItemClickListener = onItemClickListener;
@@ -46,9 +46,9 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
     }
 
     private void createMediaData(List<Integer> resId) {
-        iMemoryStoryRepository = new InMemoryStoryRepository();
-        mediaData = new ArrayList<>(iMemoryStoryRepository.getResourceById(resId));
-        jsonStory = iMemoryStoryRepository.getSelectedStory();
+        iStoryRepository = new InMemoryStoryRepository();
+        mediaData = new ArrayList<>(iStoryRepository.getResourceById(resId));
+        jsonStory = iStoryRepository.getSelectedStory();
     }
 
     @Override

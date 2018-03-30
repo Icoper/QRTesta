@@ -1,7 +1,7 @@
 package com.example.android_dev.qrtest.presenter.general_history;
 
 
-import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.IStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
@@ -12,11 +12,11 @@ import com.example.android_dev.qrtest.util.IGeneralHistoryFragment;
 public class GeneralHistoryFragmentPresenter implements IGeneralHistoryFragmentPresenter {
     private IGeneralHistoryFragment iGeneralHistoryFragment;
     private IAppMediaPlayerPresenter iAppMediaPlayerPresenter;
-    private IMemoryStoryRepository iMemoryStoryRepository;
+    private IStoryRepository iStoryRepository;
 
     public GeneralHistoryFragmentPresenter(IGeneralHistoryFragment iGeneralHistoryFragment) {
         this.iGeneralHistoryFragment = iGeneralHistoryFragment;
-        iMemoryStoryRepository = new InMemoryStoryRepository();
+        iStoryRepository = new InMemoryStoryRepository();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class GeneralHistoryFragmentPresenter implements IGeneralHistoryFragmentP
             iAppMediaPlayerPresenter = new AppMediaPlayerPresenter();
         }
         String filePath = GlobalNames.ENVIRONMENT_STORE +
-                iMemoryStoryRepository.getSelectedStory().getResFolderName() + "/Resource1/" +
+                iStoryRepository.getSelectedStory().getResFolderName() + "/Resource1/" +
                 resource.getFileName();
         String msg = iAppMediaPlayerPresenter.processMediaData(resource);
         if (msg.equals(GlobalNames.VIDEO_RES)) {

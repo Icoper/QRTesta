@@ -1,8 +1,13 @@
 package com.example.android_dev.qrtest.presenter.qr;
 
+import com.example.android_dev.qrtest.db.GoalsDataStore;
+import com.example.android_dev.qrtest.db.HistoryScanDataStore;
+import com.example.android_dev.qrtest.db.IGoalsDataStore;
+import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.HistoryScansQRInformationsIDs;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
@@ -16,9 +21,13 @@ public class QRFPresenter implements IQRPresenter {
     private IQRFragment iqrFragment;
     private AppMediaPlayerPresenter iAppMediaPlayerPresenter;
     private QrInformation selectedQrInformation;
+    private IHistoryScanDataStore iHistoryScanDataStore;
+    private IGoalsDataStore iGoalsDataStore;
 
-    public QRFPresenter(IQRFragment iqrFragment) {
+    public QRFPresenter(IQRFragment iqrFragment,IHistoryScanDataStore iHistoryScanDataStore,IGoalsDataStore iGoalsDataStore) {
         this.iqrFragment = iqrFragment;
+        this.iGoalsDataStore = iGoalsDataStore;
+        this.iHistoryScanDataStore = iHistoryScanDataStore;
     }
 
     private InMemoryStoryRepository getStoryRepo() {
@@ -53,7 +62,7 @@ public class QRFPresenter implements IQRPresenter {
 
         int qrInformationId = 0;
         selectedQrInformation = null;
-        JsonStory jsonStory = getStoryRepo().getSelectedStory();
+        IStory jsonStory = getStoryRepo().getSelectedStory();
         List<Integer> resIds = null;
 
         for (QrInformation qrInformation : jsonStory.getQrInformationList()) {
@@ -70,7 +79,7 @@ public class QRFPresenter implements IQRPresenter {
                 if (historyScansQRInfor.getQrInformationID() == qrIfoId) {
                     if (historyScansQRInfor.isShortInfo()) {
                         alertScanMode = GlobalNames.QR_MODE_FIRST_SCAN;
-                        inMemoryStoryRepository.addQrInformationId(qrInformationId);
+                        iHistoryScanDataStore.update(qrInformationId);
                         historyScansQRInfor.setShortInfo(false);
 
                         QrInformation.QrData qrData = null;
@@ -79,9 +88,7 @@ public class QRFPresenter implements IQRPresenter {
                                 qrData = _qrData;
                             }
                         }
-
-                        inMemoryStoryRepository.addNewGoalToList(qrData.getQrItemList().getGoalDetailAssetIDList());
-
+                        iGoalsDataStore.update(qrData.getQrItemList().getGoalDetailAssetIDList());
                     } else {
                         alertScanMode = GlobalNames.QR_MODE_SIMPLE_SCAN;
                     }

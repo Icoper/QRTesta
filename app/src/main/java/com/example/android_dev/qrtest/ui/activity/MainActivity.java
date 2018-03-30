@@ -18,7 +18,12 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.android_dev.qrtest.R;
+import com.example.android_dev.qrtest.db.GoalsDataStore;
+import com.example.android_dev.qrtest.db.HistoryScanDataStore;
+import com.example.android_dev.qrtest.db.IGoalsDataStore;
+import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.ui.fragment.ma.CharacterInfoFragment;
 import com.example.android_dev.qrtest.ui.fragment.ma.GeneralHistoryFragment;
@@ -33,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "MainActivity";
 
     private InMemoryStoryRepository inMemoryStoryRepository;
-    private JsonStory selectedStory;
+    private IHistoryScanDataStore iHistoryScanDataStore;
+    private IGoalsDataStore iGoalsDataStore;
+
+    private IStory selectedStory;
     // ui
     Toolbar mActionBarToolbar;
     BottomNavigationView navigation;
@@ -42,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private GeneralHistoryFragment mGeneralHistoryFragment;
     private HistoryScanFragment mHistoryScanFragment;
     private GoalsFragment mGoalsFragment;
-
     private FragmentTransaction mFragmentTransaction;
 
 
@@ -99,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mActionBarToolbar);
 
         inMemoryStoryRepository = new InMemoryStoryRepository();
+        iGoalsDataStore = new GoalsDataStore();
+        iHistoryScanDataStore = new HistoryScanDataStore();
+
         selectedStory = inMemoryStoryRepository.getSelectedStory();
 
         changeToolBarColor();
@@ -123,10 +133,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeUi() {
         mQrReaderFragment = new QrReaderFragment();
+        mQrReaderFragment.setupRepository(iHistoryScanDataStore,iGoalsDataStore);
         mCharacterInfoFragment = new CharacterInfoFragment();
         mGeneralHistoryFragment = new GeneralHistoryFragment();
         mHistoryScanFragment = new HistoryScanFragment();
+        mHistoryScanFragment.setupRepository(iHistoryScanDataStore);
         mGoalsFragment = new GoalsFragment();
+        mGoalsFragment.setupRepository(iGoalsDataStore);
         mFragmentTransaction = getFragmentTransaction();
         mFragmentTransaction.add(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
 
@@ -166,8 +179,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy");
-        inMemoryStoryRepository.cleanQrInformation();
-        inMemoryStoryRepository.cleanAddedByStoryGoals();
         super.onDestroy();
     }
 

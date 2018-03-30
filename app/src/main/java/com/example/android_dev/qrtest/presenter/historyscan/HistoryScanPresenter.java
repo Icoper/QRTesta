@@ -1,9 +1,11 @@
 package com.example.android_dev.qrtest.presenter.historyscan;
 
-import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.HistoryScanDataStore;
+import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
+import com.example.android_dev.qrtest.db.IStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
-import com.example.android_dev.qrtest.model.JsonStory;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.presenter.IAppMediaPlayerPresenter;
@@ -14,21 +16,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryScanPresenter implements IHistoryScanPresenter {
-    private IMemoryStoryRepository iStoryRepository;
+    private IStoryRepository iStoryRepository;
     private IHistoryScanFragment iHistoryScanFragment;
     private IAppMediaPlayerPresenter iAppMediaPlayerPresenter;
+    private IHistoryScanDataStore iHistoryScanDataStore;
 
-    public HistoryScanPresenter(IHistoryScanFragment iHistoryScanFragment) {
+    public HistoryScanPresenter(IHistoryScanFragment iHistoryScanFragment,IHistoryScanDataStore iHistoryScanDataStore) {
         this.iHistoryScanFragment = iHistoryScanFragment;
         iStoryRepository = new InMemoryStoryRepository();
+        this.iHistoryScanDataStore = iHistoryScanDataStore;
     }
 
     @Override
     public void getScannedStoryList() {
-        if (iStoryRepository.getQrInformationId().size() == 0) {
+        if (iHistoryScanDataStore.getAll().size() == 0) {
             iHistoryScanFragment.showMsg("The list is empty");
         } else {
-            iHistoryScanFragment.showGridView(prepareDataToSend(iStoryRepository.getQrInformationId()));
+            iHistoryScanFragment.showGridView(prepareDataToSend(iHistoryScanDataStore.getAll()));
         }
     }
 
@@ -83,10 +87,10 @@ public class HistoryScanPresenter implements IHistoryScanPresenter {
 
     private ArrayList<QrInformation> prepareDataToSend(List<Integer> scanData) {
         ArrayList<QrInformation> qrInformationList = new ArrayList<>();
-        JsonStory jsonStory = iStoryRepository.getSelectedStory();
+        IStory iStory = iStoryRepository.getSelectedStory();
 
         for (int searchId : scanData) {
-            for (QrInformation qrInformation : jsonStory.getQrInformationList()) {
+            for (QrInformation qrInformation : iStory.getQrInformationList()) {
                 if (qrInformation.getId() == searchId) {
                     qrInformationList.add(qrInformation);
                 }

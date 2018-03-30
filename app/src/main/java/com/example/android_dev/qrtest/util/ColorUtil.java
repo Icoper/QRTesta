@@ -2,9 +2,6 @@ package com.example.android_dev.qrtest.util;
 
 import android.graphics.Color;
 
-/**
- * Created by icoper on 22.03.2018.
- */
 
 public class ColorUtil {
     public static String changeColorHSB(String color) {

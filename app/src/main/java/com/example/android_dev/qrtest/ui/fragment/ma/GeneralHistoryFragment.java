@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
+import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.presenter.general_history.GeneralHistoryFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
@@ -29,7 +30,7 @@ public class GeneralHistoryFragment extends Fragment {
     private Context mContext;
     private RecyclerView recyclerView;
     private MediaArrayAdapter storyArrayAdapter;
-    private JsonStory ourStory;
+    private IStory ourStory;
     private InMemoryStoryRepository inMemoryStoryRepository;
 
     @Override

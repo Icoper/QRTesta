@@ -1,6 +1,7 @@
 package com.example.android_dev.qrtest.presenter.goals_fragment;
 
-import com.example.android_dev.qrtest.db.IMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.IGoalsDataStore;
+import com.example.android_dev.qrtest.db.IStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
@@ -10,10 +11,10 @@ import com.example.android_dev.qrtest.util.IGoalsFragment;
 
 public class GoalsFragmentPresenter implements IGoalsFragmentPresenter {
     private IGoalsFragment iGoalsFragment;
-    private IMemoryStoryRepository memoryStoryRepository;
+    private IStoryRepository memoryStoryRepository;
     private IAppMediaPlayerPresenter iAppMediaPlayerPresenter;
 
-    public GoalsFragmentPresenter(IGoalsFragment iGoalsFragment) {
+    public GoalsFragmentPresenter(IGoalsFragment iGoalsFragment, IGoalsDataStore iGoalsDataStore) {
         this.iGoalsFragment = iGoalsFragment;
         memoryStoryRepository = new InMemoryStoryRepository();
     }
