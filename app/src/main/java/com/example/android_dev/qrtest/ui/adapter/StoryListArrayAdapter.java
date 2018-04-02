@@ -1,6 +1,6 @@
 package com.example.android_dev.qrtest.ui.adapter;
 
-import android.content.Context;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +22,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAdapter.StoryViewHolder> {
     private List<IStory> stories;
-    private Context context;
     private OnItemClickListener onItemClickListener;
 
     public StoryListArrayAdapter(List<IStory> stories, OnItemClickListener onItemClickListener) {
@@ -32,10 +31,8 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
 
     @Override
     public StoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_list_item, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_history_list, viewGroup, false);
         StoryViewHolder storyViewHolder = new StoryViewHolder(v);
-        context = v.getContext();
-
         return storyViewHolder;
     }
 

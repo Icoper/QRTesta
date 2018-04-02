@@ -2,7 +2,6 @@ package com.example.android_dev.qrtest.util;
 
 import android.graphics.Color;
 
-
 public class ColorUtil {
     public static String changeColorHSB(String color) {
         float[] hsv = new float[3];

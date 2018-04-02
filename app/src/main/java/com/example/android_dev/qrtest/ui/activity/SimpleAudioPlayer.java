@@ -10,15 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
 import com.example.android_dev.qrtest.R;
-
 import java.io.File;
 
 public class SimpleAudioPlayer extends AppCompatActivity implements OnClickListener, MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener {
-    private final String LOG_TAG = "SimpleAudioPlayer";
 
+    private final String LOG_TAG = "SimpleAudioPlayer";
     private String soundPath;
     private Button playBtn;
     private Button stopBtn;

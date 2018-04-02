@@ -36,8 +36,4 @@ public class GoalsDataStore implements IGoalsDataStore {
         return resIds;
     }
 
-    @Override
-    public void cleanAll() {
-        resIds = null;
-    }
 }

@@ -5,7 +5,7 @@ import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.util.GlobalNames;
-import com.example.android_dev.qrtest.util.ICharacterInfoFragment;
+import com.example.android_dev.qrtest.ui.fragment.ICharacterInfoFragment;
 
 public class CharacterInfoPresenter implements ICharacterInfoPresenter {
     InMemoryStoryRepository inMemoryStoryRepository;

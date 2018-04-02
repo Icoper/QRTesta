@@ -10,10 +10,12 @@ import android.support.v4.app.NotificationCompat.Builder;
 
 import com.example.android_dev.qrtest.R;
 
+import java.util.Random;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationWorker {
-    private static final int NOTIFICATION_ID = 25;
+
     private Builder builder;
     private Context context;
 
@@ -21,7 +23,8 @@ public class NotificationWorker {
         this.context = context;
     }
 
-    public void showNotification(String msg) {
+    public void showNotification(String msg, int id) {
+
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder = new Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -31,7 +34,7 @@ public class NotificationWorker {
         Notification notification = builder.build();
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        notificationManager.notify(id, notification);
         Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 500 milliseconds
         v.vibrate(600);

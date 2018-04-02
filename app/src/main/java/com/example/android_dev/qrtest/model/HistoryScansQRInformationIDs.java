@@ -3,14 +3,14 @@ package com.example.android_dev.qrtest.model;
 import com.google.gson.annotations.SerializedName;
 
 
-public class HistoryScansQRInformationsIDs {
+public class HistoryScansQRInformationIDs {
     @SerializedName("qrInformationID")
     int qrInformationID;
 
     @SerializedName("isShortInfo")
     boolean isShortInfo;
 
-    public HistoryScansQRInformationsIDs(int qrInformationID, boolean isShortInfo) {
+    public HistoryScansQRInformationIDs(int qrInformationID, boolean isShortInfo) {
         this.qrInformationID = qrInformationID;
         this.isShortInfo = isShortInfo;
     }

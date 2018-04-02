@@ -7,7 +7,7 @@ import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.presenter.IAppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.util.GlobalNames;
-import com.example.android_dev.qrtest.util.IGoalsFragment;
+import com.example.android_dev.qrtest.ui.fragment.IGoalsFragment;
 
 public class GoalsFragmentPresenter implements IGoalsFragmentPresenter {
     private IGoalsFragment iGoalsFragment;

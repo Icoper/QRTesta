@@ -1,6 +1,5 @@
-package com.example.android_dev.qrtest.presenter.historyscan;
+package com.example.android_dev.qrtest.presenter.history_scan;
 
-import com.example.android_dev.qrtest.db.HistoryScanDataStore;
 import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.IStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
@@ -10,8 +9,7 @@ import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.presenter.IAppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.util.GlobalNames;
-import com.example.android_dev.qrtest.util.IHistoryScanFragment;
-
+import com.example.android_dev.qrtest.ui.fragment.IHistoryScanFragment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +41,6 @@ public class HistoryScanPresenter implements IHistoryScanPresenter {
         for (QrInformation.QrData qrData : qrInformation.getQrDataList()) {
             if (qrData.getRoleId() == iStoryRepository.getSelectedRole().getId()) {
                 resIds = qrData.getQrItemList().getShortInfoAssetIDList();
-
             }
         }
         iHistoryScanFragment.showAlertDialog(resIds, GlobalNames.ALERT_MODE_SMALL_INFO);
@@ -51,7 +48,6 @@ public class HistoryScanPresenter implements IHistoryScanPresenter {
 
     @Override
     public void playMediaData(AssetTypes resource) {
-
         if (iAppMediaPlayerPresenter == null) {
             iAppMediaPlayerPresenter = new AppMediaPlayerPresenter();
         }

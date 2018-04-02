@@ -25,7 +25,7 @@ public class JsonStory implements IStory {
     @SerializedName("roles")
     List<Role> roleList;
     @SerializedName("historyScansQRInformationsIDs")
-    List<HistoryScansQRInformationsIDs> historyScansQRInformationsIDList;
+    List<HistoryScansQRInformationIDs> historyScansQRInformationsIDList;
     @SerializedName("goalAssetIDs")
     List<Integer> goalAssetIDList;
     @SerializedName("assetTypes")
@@ -34,7 +34,7 @@ public class JsonStory implements IStory {
     public JsonStory() {
     }
 
-    public JsonStory(String previewImg, String previewText, String resFolderName, String color, String backgroundColor, String tabbarColor, List<Integer> historyAssetTypesID, List<QrInformation> qrInformationList, List<Role> roleList, List<HistoryScansQRInformationsIDs> historyScansQRInformationsIDList, List<Integer> goalAssetIDList, List<AssetTypes> assetTypeList) {
+    public JsonStory(String previewImg, String previewText, String resFolderName, String color, String backgroundColor, String tabbarColor, List<Integer> historyAssetTypesID, List<QrInformation> qrInformationList, List<Role> roleList, List<HistoryScansQRInformationIDs> historyScansQRInformationsIDList, List<Integer> goalAssetIDList, List<AssetTypes> assetTypeList) {
         this.previewImg = previewImg;
         this.previewText = previewText;
         this.resFolderName = resFolderName;
@@ -131,11 +131,11 @@ public class JsonStory implements IStory {
     }
 
     @Override
-    public List<HistoryScansQRInformationsIDs> getHistoryScansQRInformationsIDList() {
+    public List<HistoryScansQRInformationIDs> getHistoryScansQRInformationsIDList() {
         return historyScansQRInformationsIDList;
     }
 
-    public void setHistoryScansQRInformationsIDList(List<HistoryScansQRInformationsIDs> historyScansQRInformationsIDList) {
+    public void setHistoryScansQRInformationsIDList(List<HistoryScansQRInformationIDs> historyScansQRInformationsIDList) {
         this.historyScansQRInformationsIDList = historyScansQRInformationsIDList;
     }
 

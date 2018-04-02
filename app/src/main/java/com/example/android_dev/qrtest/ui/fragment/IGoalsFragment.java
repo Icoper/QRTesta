@@ -1,7 +1,7 @@
-package com.example.android_dev.qrtest.util;
+package com.example.android_dev.qrtest.ui.fragment;
 
-public interface ICharacterInfoFragment {
 
+public interface IGoalsFragment {
     void showMsg(String msg);
 
     void startVideoPlayerActivity(String filepath);

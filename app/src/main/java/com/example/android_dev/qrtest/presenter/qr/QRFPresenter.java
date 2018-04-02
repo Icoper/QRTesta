@@ -1,18 +1,15 @@
 package com.example.android_dev.qrtest.presenter.qr;
 
-import com.example.android_dev.qrtest.db.GoalsDataStore;
-import com.example.android_dev.qrtest.db.HistoryScanDataStore;
 import com.example.android_dev.qrtest.db.IGoalsDataStore;
 import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
-import com.example.android_dev.qrtest.model.HistoryScansQRInformationsIDs;
+import com.example.android_dev.qrtest.model.HistoryScansQRInformationIDs;
 import com.example.android_dev.qrtest.model.IStory;
-import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.util.GlobalNames;
-import com.example.android_dev.qrtest.util.IQRFragment;
+import com.example.android_dev.qrtest.ui.fragment.IQRFragment;
 
 import java.util.List;
 
@@ -75,12 +72,12 @@ public class QRFPresenter implements IQRPresenter {
         }
         if (selectedQrInformation != null) {
             int qrIfoId = selectedQrInformation.getId();
-            for (HistoryScansQRInformationsIDs historyScansQRInfor : jsonStory.getHistoryScansQRInformationsIDList()) {
-                if (historyScansQRInfor.getQrInformationID() == qrIfoId) {
-                    if (historyScansQRInfor.isShortInfo()) {
+            for (HistoryScansQRInformationIDs historyScansQRInfo : jsonStory.getHistoryScansQRInformationsIDList()) {
+                if (historyScansQRInfo.getQrInformationID() == qrIfoId) {
+                    if (historyScansQRInfo.isShortInfo()) {
                         alertScanMode = GlobalNames.QR_MODE_FIRST_SCAN;
                         iHistoryScanDataStore.update(qrInformationId);
-                        historyScansQRInfor.setShortInfo(false);
+                        historyScansQRInfo.setShortInfo(false);
 
                         QrInformation.QrData qrData = null;
                         for (QrInformation.QrData _qrData : selectedQrInformation.getQrDataList()) {

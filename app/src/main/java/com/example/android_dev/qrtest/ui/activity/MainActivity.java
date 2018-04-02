@@ -16,20 +16,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.GoalsDataStore;
 import com.example.android_dev.qrtest.db.HistoryScanDataStore;
 import com.example.android_dev.qrtest.db.IGoalsDataStore;
 import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.model.HistoryScansQRInformationIDs;
 import com.example.android_dev.qrtest.model.IStory;
-import com.example.android_dev.qrtest.model.JsonStory;
-import com.example.android_dev.qrtest.ui.fragment.ma.CharacterInfoFragment;
-import com.example.android_dev.qrtest.ui.fragment.ma.GeneralHistoryFragment;
-import com.example.android_dev.qrtest.ui.fragment.ma.GoalsFragment;
-import com.example.android_dev.qrtest.ui.fragment.ma.HistoryScanFragment;
-import com.example.android_dev.qrtest.ui.fragment.ma.QrReaderFragment;
+import com.example.android_dev.qrtest.ui.fragment.CharacterInfoFragment;
+import com.example.android_dev.qrtest.ui.fragment.GeneralHistoryFragment;
+import com.example.android_dev.qrtest.ui.fragment.GoalsFragment;
+import com.example.android_dev.qrtest.ui.fragment.HistoryScanFragment;
+import com.example.android_dev.qrtest.ui.fragment.QrReaderFragment;
 import com.example.android_dev.qrtest.util.ColorUtil;
 
 import java.lang.reflect.Field;
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeUi() {
         mQrReaderFragment = new QrReaderFragment();
-        mQrReaderFragment.setupRepository(iHistoryScanDataStore,iGoalsDataStore);
+        mQrReaderFragment.setupRepository(iHistoryScanDataStore, iGoalsDataStore);
         mCharacterInfoFragment = new CharacterInfoFragment();
         mGeneralHistoryFragment = new GeneralHistoryFragment();
         mHistoryScanFragment = new HistoryScanFragment();
@@ -175,11 +174,18 @@ public class MainActivity extends AppCompatActivity {
         return mFragmentTransaction;
     }
 
+    private void updateJson() {
+        // Need to clean scan history from all stories
+        for (HistoryScansQRInformationIDs historyScansQRInfo : selectedStory.getHistoryScansQRInformationsIDList()) {
+            historyScansQRInfo.setShortInfo(true);
+        }
+    }
 
     @Override
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy");
         super.onDestroy();
+        updateJson();
     }
 
     @Override
@@ -203,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-
         Log.d(LOG_TAG, "onStart");
         super.onStart();
     }

@@ -15,6 +15,7 @@
         android:paddingBottom="2dp"
         tools:text="ACTOR" />
 
+
     <android.support.v7.widget.RecyclerView
         android:padding="4dp"
         android:paddingTop="8dp"

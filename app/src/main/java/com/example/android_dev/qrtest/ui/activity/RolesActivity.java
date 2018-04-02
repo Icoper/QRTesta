@@ -13,11 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.IStory;
-import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.model.Role;
 
 public class RolesActivity extends AppCompatActivity {
@@ -38,7 +36,7 @@ public class RolesActivity extends AppCompatActivity {
         for (int i = 0; i < story.getRoleList().size(); i++) {
             actorsArray[i] = story.getRoleList().get(i).getName();
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, actorsArray);
         // присваиваем адаптер списку
         lvMain.setAdapter(adapter);

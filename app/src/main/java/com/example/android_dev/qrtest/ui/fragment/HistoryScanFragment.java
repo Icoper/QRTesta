@@ -1,4 +1,4 @@
-package com.example.android_dev.qrtest.ui.fragment.ma;
+package com.example.android_dev.qrtest.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -22,7 +22,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.IStoryRepository;
@@ -30,12 +29,11 @@ import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
-import com.example.android_dev.qrtest.presenter.historyscan.HistoryScanPresenter;
+import com.example.android_dev.qrtest.presenter.history_scan.HistoryScanPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
-import com.example.android_dev.qrtest.util.IHistoryScanFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,7 +50,7 @@ public class HistoryScanFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.history_scan_fragment, container, false);
+        View v = inflater.inflate(R.layout.fragment_history_scan, container, false);
         mContext = v.getContext();
 
         gridView = (GridView) v.findViewById(R.id.hs_grid_view);
@@ -67,7 +65,7 @@ public class HistoryScanFragment extends Fragment {
                 iStoryRepository = new InMemoryStoryRepository();
                 jsonStory = iStoryRepository.getSelectedStory();
                 ArrayAdapter<QrInformation> adapter = new ArrayAdapter<QrInformation>(
-                        mContext, R.layout.scan_history_item, scannedQrInfo) {
+                        mContext, R.layout.item_scan_history, scannedQrInfo) {
                     @NonNull
                     @Override
                     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -75,7 +73,7 @@ public class HistoryScanFragment extends Fragment {
                         if (convertView == null) {
                             LayoutInflater inflater = (LayoutInflater) mContext
                                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            convertView = inflater.inflate(R.layout.scan_history_item, null);
+                            convertView = inflater.inflate(R.layout.item_scan_history, null);
                         }
 
                         ArrayList<Integer> integers = new ArrayList<>();

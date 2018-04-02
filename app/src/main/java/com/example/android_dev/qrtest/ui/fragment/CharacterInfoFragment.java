@@ -1,4 +1,4 @@
-package com.example.android_dev.qrtest.ui.fragment.ma;
+package com.example.android_dev.qrtest.ui.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
@@ -21,7 +20,6 @@ import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.ColorUtil;
-import com.example.android_dev.qrtest.util.ICharacterInfoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,7 @@ public class CharacterInfoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.character_info_fragment, container, false);
+        view = inflater.inflate(R.layout.fragment_character_info, container, false);
         mContext = view.getContext();
         inMemoryStoryRepository = new InMemoryStoryRepository();
         initializeView();

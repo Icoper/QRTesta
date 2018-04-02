@@ -21,7 +21,7 @@ public interface IStory {
 
     List<Role> getRoleList();
 
-    List<HistoryScansQRInformationsIDs> getHistoryScansQRInformationsIDList();
+    List<HistoryScansQRInformationIDs> getHistoryScansQRInformationsIDList();
 
     List<Integer> getGoalAssetIDList();
 

@@ -1,4 +1,4 @@
-package com.example.android_dev.qrtest.util;
+package com.example.android_dev.qrtest.ui.fragment;
 
 import java.util.List;
 

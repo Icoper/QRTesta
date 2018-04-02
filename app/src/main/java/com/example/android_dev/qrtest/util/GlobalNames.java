@@ -16,4 +16,7 @@ public interface GlobalNames {
     int ALERT_MODE_FULL_INFO = 2;
     int ALERT_MODE_SMALL_INFO = 3;
 
+    int NOTIFICATION_LOAD_DATA_ID = 1;
+    int NOTIFICATION_NEW_GOAL_ID = 2;
+
 }

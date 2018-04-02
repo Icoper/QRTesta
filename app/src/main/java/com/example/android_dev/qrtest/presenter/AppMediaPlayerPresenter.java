@@ -1,7 +1,6 @@
 package com.example.android_dev.qrtest.presenter;
 
 import android.util.Log;
-
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.util.GlobalNames;
 

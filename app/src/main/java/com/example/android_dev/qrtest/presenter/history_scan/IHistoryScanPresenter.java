@@ -1,4 +1,4 @@
-package com.example.android_dev.qrtest.presenter.historyscan;
+package com.example.android_dev.qrtest.presenter.history_scan;
 
 
 import com.example.android_dev.qrtest.model.AssetTypes;

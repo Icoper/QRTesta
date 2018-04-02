@@ -1,4 +1,4 @@
-package com.example.android_dev.qrtest.ui.fragment.ma;
+package com.example.android_dev.qrtest.ui.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,6 @@ import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
-import com.example.android_dev.qrtest.util.IQRFragment;
 import com.example.android_dev.qrtest.util.NotificationWorker;
 import com.google.zxing.Result;
 
@@ -52,46 +52,29 @@ public class QrReaderFragment extends Fragment {
     //view
     private Context mContext;
     private QRFPresenter qrfPresenter;
+    private CodeScannerView scannerView;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.qr_reader_fragment, container, false);
-        final Activity activity = getActivity();
-
-        CodeScannerView scannerView = v.findViewById(R.id.scanner_view);
-        mCodeScanner = new CodeScanner(activity, scannerView);
-        mCodeScanner.setAutoFocusEnabled(true);
-        mCodeScanner.setDecodeCallback(new DecodeCallback() {
-            @Override
-            public void onDecoded(@NonNull final Result result) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (result.getText() == null) {
-                            Toast.makeText(mContext, "Result Not Found", Toast.LENGTH_LONG).show();
-                        } else {
-                            //if qr contains data
-                            String code = result.getText();
-                            qrfPresenter.checkCode(code);
-                        }
-                    }
-                });
-            }
-        });
-        scannerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCodeScanner.startPreview();
-            }
-        });
+        View v = inflater.inflate(R.layout.fragment_qr_reader, container, false);
         mContext = v.getContext();
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.M) {
+        scannerView = v.findViewById(R.id.scanner_view);
+
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
             if (!checkPermission()) {
                 requestPermission();
+            } else {
+                setupPresenter();
             }
         }
+
+        return v;
+    }
+
+    private void setupPresenter() {
+        setupScanner();
         qrfPresenter = new QRFPresenter(new IQRFragment() {
             @Override
             public void showAlertDialog(int modeScan, List<Integer> resIds, int modeShow) {
@@ -111,12 +94,12 @@ public class QrReaderFragment extends Fragment {
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
                             new NotificationWorker(mContext).showNotification(getResources()
-                                    .getString(R.string.notify_service_done));
+                                    .getString(R.string.notify_service_done),GlobalNames.NOTIFICATION_LOAD_DATA_ID);
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
                             recyclerView.setAdapter(storyArrayAdapter);
                             storyArrayAdapter.notifyDataSetChanged();
-                            notifiAboutGoal();
+                            notifyAboutGoal();
                         }
                     }, 3000);
                 } else {
@@ -129,6 +112,7 @@ public class QrReaderFragment extends Fragment {
 
                 AlertDialog.Builder builder = new AlertDialog
                         .Builder(new ContextThemeWrapper(view.getContext(), R.style.Theme_AppCompat_Light_Dialog_Alert));
+
                 builder.setView(view);
 
                 builder.setCancelable(false).setNegativeButton(view.getContext().getString(R.string.ok_text), new DialogInterface.OnClickListener() {
@@ -174,20 +158,49 @@ public class QrReaderFragment extends Fragment {
             }
 
 
-        },iHistoryScanDataStore,iGoalsDataStore);
-        return v;
+        }, iHistoryScanDataStore, iGoalsDataStore);
     }
 
-    public void notifiAboutGoal() {
+    private void setupScanner() {
+        final Activity activity = getActivity();
+        mCodeScanner = new CodeScanner(activity, scannerView);
+        mCodeScanner.setAutoFocusEnabled(true);
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (result.getText() == null) {
+                            Toast.makeText(mContext, "Result Not Found", Toast.LENGTH_LONG).show();
+                        } else {
+                            //if qr contains data
+                            String code = result.getText();
+                            qrfPresenter.checkCode(code);
+                        }
+                    }
+                });
+            }
+        });
+        scannerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCodeScanner.startPreview();
+            }
+        });
+        mCodeScanner.startPreview();
+    }
+
+    public void notifyAboutGoal() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                new NotificationWorker(mContext).showNotification(getString(R.string.title_goals));
+                new NotificationWorker(mContext).showNotification(getString(R.string.notify_new_goal),GlobalNames.NOTIFICATION_NEW_GOAL_ID);
             }
-        }, 1000);
+        }, 2000);
 
     }
 
-    public void setupRepository(IHistoryScanDataStore iHistoryScanDataStore,IGoalsDataStore iGoalsDataStore){
+    public void setupRepository(IHistoryScanDataStore iHistoryScanDataStore, IGoalsDataStore iGoalsDataStore) {
         this.iGoalsDataStore = iGoalsDataStore;
         this.iHistoryScanDataStore = iHistoryScanDataStore;
     }
@@ -200,15 +213,51 @@ public class QrReaderFragment extends Fragment {
         ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, REQUEST_CAMERA);
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        boolean allowed = true;
+
+        switch (requestCode) {
+            case REQUEST_CAMERA:
+                for (int res : grantResults) {
+                    // if user granted all permissions.
+                    allowed = allowed && (res == PackageManager.PERMISSION_GRANTED);
+                }
+                break;
+            default:
+                // if user not granted permissions.
+                allowed = false;
+                break;
+        }
+        if (allowed) {
+            //user granted all permissions we can perform our task.
+            setupPresenter();
+        } else {
+            Toast.makeText(mContext, "Camera Permissions denied.\nCan't open QR code reader.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        mCodeScanner.startPreview();
+        if (mCodeScanner != null) {
+            Log.d(LOG_TAG, "onResume | mCodeScanner  != null");
+            mCodeScanner.startPreview();
+        } else {
+            Log.d(LOG_TAG, "onResume | mCodeScanner  == null");
+        }
     }
 
     @Override
     public void onPause() {
-        mCodeScanner.releaseResources();
+        if (mCodeScanner != null) {
+            Log.d(LOG_TAG, "onPause | mCodeScanner  != null");
+            mCodeScanner.releaseResources();
+        } else {
+            Log.d(LOG_TAG, "onPause | mCodeScanner  == null");
+        }
         super.onPause();
     }
 }

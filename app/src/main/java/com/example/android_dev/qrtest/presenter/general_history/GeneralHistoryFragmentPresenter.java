@@ -7,7 +7,7 @@ import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.presenter.IAppMediaPlayerPresenter;
 import com.example.android_dev.qrtest.util.GlobalNames;
-import com.example.android_dev.qrtest.util.IGeneralHistoryFragment;
+import com.example.android_dev.qrtest.ui.fragment.IGeneralHistoryFragment;
 
 public class GeneralHistoryFragmentPresenter implements IGeneralHistoryFragmentPresenter {
     private IGeneralHistoryFragment iGeneralHistoryFragment;
