@@ -7,13 +7,13 @@ import java.util.List;
 
 public class Role {
     @SerializedName("name")
-    String name;
+    private String name;
     @SerializedName("code")
-    String code;
+    private String code;
     @SerializedName("informationAssetID")
-    List<Integer> informationAssertIDList;
+    private List<Integer> informationAssertIDList;
     @SerializedName("id")
-    int id;
+    private int id;
 
     public Role(String name, String code, List<Integer> informationAssertIDList, int id) {
         this.name = name;

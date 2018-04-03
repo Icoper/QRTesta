@@ -7,17 +7,17 @@ import java.util.List;
 public class QrInformation {
 
     @SerializedName("code")
-    String code;
+    private String code;
     @SerializedName("previewImage")
-    int previewImage;
+    private int previewImage;
     @SerializedName("timer")
-    String timer;
+    private String timer;
     @SerializedName("itemName")
-    String itemName;
+    private String itemName;
     @SerializedName("id")
-    int id;
+    private int id;
     @SerializedName("qrData")
-    List<QrData> qrDataList;
+    private List<QrData> qrDataList;
 
     public QrInformation(String code, int previewImage, String timer, String itemName, int id, List<QrData> qrDataList) {
         this.code = code;

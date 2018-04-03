@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class AssetTypes {
     @SerializedName("id")
-    int id;
+    private int id;
     @SerializedName("name")
-    String fileName;
+    private String fileName;
     @SerializedName("type")
-    String fileType;
+    private String fileType;
 
     public AssetTypes(int id, String fileName, String fileType) {
         this.id = id;

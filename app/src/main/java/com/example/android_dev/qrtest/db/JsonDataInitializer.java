@@ -9,10 +9,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonDataInitializer {
+class JsonDataInitializer {
     private List<JsonStory> stories;
 
-    public JsonDataInitializer() {
+    JsonDataInitializer() {
     }
 
     private List<JsonStory> getJsonStories() {

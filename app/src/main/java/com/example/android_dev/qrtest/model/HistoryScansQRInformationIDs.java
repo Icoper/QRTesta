@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class HistoryScansQRInformationIDs {
     @SerializedName("qrInformationID")
-    int qrInformationID;
+    private int qrInformationID;
 
     @SerializedName("isShortInfo")
-    boolean isShortInfo;
+    private boolean isShortInfo;
 
     public HistoryScansQRInformationIDs(int qrInformationID, boolean isShortInfo) {
         this.qrInformationID = qrInformationID;
