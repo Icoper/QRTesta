@@ -16,9 +16,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -73,6 +77,42 @@ public class QrReaderFragment extends Fragment {
         return v;
     }
 
+    private void forceWrapContent(View v) {
+        // Start with the provided view
+        View current = v;
+
+        // Travel up the tree until fail, modifying the LayoutParams
+        do {
+            // Get the parent
+            ViewParent parent = current.getParent();
+
+            // Check if the parent exists
+            if (parent != null) {
+                // Get the view
+                try {
+                    current = (View) parent;
+                    ViewGroup.LayoutParams layoutParams = current.getLayoutParams();
+                    if (layoutParams instanceof FrameLayout.LayoutParams) {
+                        ((FrameLayout.LayoutParams) layoutParams).
+                                gravity = Gravity.CENTER_HORIZONTAL;
+                    } else if (layoutParams instanceof WindowManager.LayoutParams) {
+                        ((WindowManager.LayoutParams) layoutParams).
+                                gravity = Gravity.CENTER_HORIZONTAL;
+                    }
+                } catch (ClassCastException e) {
+                    // This will happen when at the top view, it cannot be cast to a View
+                    break;
+                }
+
+                // Modify the layout
+                current.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            }
+        } while (current.getParent() != null);
+
+        // Request a layout to be re-done
+        current.requestLayout();
+    }
+
     private void setupPresenter() {
         setupScanner();
         qrfPresenter = new QRFPresenter(new IQRFragment() {
@@ -88,31 +128,42 @@ public class QrReaderFragment extends Fragment {
                         qrfPresenter.playMediaData(resource);
                     }
                 }, resIds);
-                if (modeScan == GlobalNames.QR_MODE_FIRST_SCAN) {
-                    progressBar.setVisibility(View.VISIBLE);
+                try {
+                    if (modeScan == GlobalNames.QR_MODE_FIRST_SCAN) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(new Runnable() {
+                            public void run() {
+                                try {
+                                    new NotificationWorker(mContext).showNotification(getResources()
+                                            .getString(R.string.notify_service_done), GlobalNames.NOTIFICATION_LOAD_DATA_ID);
+                                    progressBar.setVisibility(View.GONE);
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+                                    recyclerView.setAdapter(storyArrayAdapter);
+                                    storyArrayAdapter.notifyDataSetChanged();
+                                    notifyAboutGoal();
+                                    forceWrapContent(view);
+                                } catch (IllegalStateException e) {
+                                    e.printStackTrace();
+                                    return;
+                                }
+                            }
+                        }, 3000);
+                    } else {
+                        if (recyclerView != null) {
 
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            new NotificationWorker(mContext).showNotification(getResources()
-                                    .getString(R.string.notify_service_done),GlobalNames.NOTIFICATION_LOAD_DATA_ID);
-                            progressBar.setVisibility(View.GONE);
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
                             recyclerView.setAdapter(storyArrayAdapter);
-                            storyArrayAdapter.notifyDataSetChanged();
-                            notifyAboutGoal();
                         }
-                    }, 3000);
-                } else {
-                    if (recyclerView != null) {
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-                        recyclerView.setAdapter(storyArrayAdapter);
-                    }
 
+                    }
+                    // if scanner get result, but user is go to another fragment
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    return;
                 }
 
                 AlertDialog.Builder builder = new AlertDialog
                         .Builder(new ContextThemeWrapper(view.getContext(), R.style.Theme_AppCompat_Light_Dialog_Alert));
-
                 builder.setView(view);
 
                 builder.setCancelable(false).setNegativeButton(view.getContext().getString(R.string.ok_text), new DialogInterface.OnClickListener() {
@@ -135,6 +186,7 @@ public class QrReaderFragment extends Fragment {
                 }
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+                forceWrapContent(view);
 
             }
 
@@ -146,8 +198,8 @@ public class QrReaderFragment extends Fragment {
             }
 
             @Override
-            public void showMsg(String msg) {
-                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+            public void showMsg(int msg) {
+                Toast.makeText(mContext, getString(msg), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -172,7 +224,7 @@ public class QrReaderFragment extends Fragment {
                     @Override
                     public void run() {
                         if (result.getText() == null) {
-                            Toast.makeText(mContext, "Result Not Found", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, getString(R.string.qr_code_not_found), Toast.LENGTH_LONG).show();
                         } else {
                             //if qr contains data
                             String code = result.getText();
@@ -194,7 +246,7 @@ public class QrReaderFragment extends Fragment {
     public void notifyAboutGoal() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                new NotificationWorker(mContext).showNotification(getString(R.string.notify_new_goal),GlobalNames.NOTIFICATION_NEW_GOAL_ID);
+                new NotificationWorker(mContext).showNotification(getString(R.string.notify_new_goal), GlobalNames.NOTIFICATION_NEW_GOAL_ID);
             }
         }, 2000);
 

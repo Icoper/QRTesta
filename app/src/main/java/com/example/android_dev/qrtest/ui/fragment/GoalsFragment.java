@@ -16,26 +16,23 @@ import android.widget.Toast;
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.IGoalsDataStore;
 import com.example.android_dev.qrtest.model.AssetTypes;
-import com.example.android_dev.qrtest.presenter.goals_fragment.GoalsFragmentPresenter;
+import com.example.android_dev.qrtest.presenter.goals.GoalsFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 
 public class GoalsFragment extends Fragment {
-    private MediaArrayAdapter mediaArrayAdapter;
-    private View view;
     private Context mContext;
-    private RecyclerView recyclerView;
     private IGoalsDataStore iGoalsDataStore;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_goals, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.gf_recycler_view);
+        View view = inflater.inflate(R.layout.fragment_goals, container, false);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.gf_recycler_view);
         mContext = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
+        MediaArrayAdapter mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
             public void onClick(AssetTypes resource) {
                 new GoalsFragmentPresenter(new IGoalsFragment() {
@@ -57,7 +54,7 @@ public class GoalsFragment extends Fragment {
                         intent.putExtra("path", filePath);
                         startActivity(intent);
                     }
-                },iGoalsDataStore).playMediaData(resource);
+                }, iGoalsDataStore).playMediaData(resource);
             }
         }, iGoalsDataStore.getAll());
         recyclerView.setAdapter(mediaArrayAdapter);

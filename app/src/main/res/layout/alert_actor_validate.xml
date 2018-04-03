@@ -5,6 +5,7 @@
 
     <EditText
         android:inputType="number"
+        android:focusable="true"
         android:layout_margin="16dp"
         android:id="@+id/aav_enter_id_et"
         android:layout_width="match_parent"

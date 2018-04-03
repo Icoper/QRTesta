@@ -22,6 +22,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.IStoryRepository;
@@ -29,7 +30,7 @@ import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
-import com.example.android_dev.qrtest.presenter.history_scan.HistoryScanPresenter;
+import com.example.android_dev.qrtest.presenter.historyScan.HistoryScanPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
@@ -174,8 +175,7 @@ public class HistoryScanFragment extends Fragment {
         File imgFile = new File(uri.getPath());
 
         if (imgFile.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            return myBitmap;
+            return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
         }
         return null;
     }

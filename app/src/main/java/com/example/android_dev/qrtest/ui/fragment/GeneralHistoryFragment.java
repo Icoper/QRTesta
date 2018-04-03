@@ -10,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.IStory;
-import com.example.android_dev.qrtest.presenter.general_history.GeneralHistoryFragmentPresenter;
+import com.example.android_dev.qrtest.presenter.generalHistory.GeneralHistoryFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
@@ -23,22 +24,18 @@ import java.util.List;
 
 public class GeneralHistoryFragment extends Fragment {
     private Context mContext;
-    private RecyclerView recyclerView;
-    private MediaArrayAdapter storyArrayAdapter;
-    private IStory ourStory;
-    private InMemoryStoryRepository inMemoryStoryRepository;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_general_history, container, false);
         mContext = v.getContext();
-        inMemoryStoryRepository = new InMemoryStoryRepository();
-        ourStory = inMemoryStoryRepository.getSelectedStory();
-        recyclerView = (RecyclerView) v.findViewById(R.id.gh_recyclerView);
+        InMemoryStoryRepository inMemoryStoryRepository = new InMemoryStoryRepository();
+        IStory ourStory = inMemoryStoryRepository.getSelectedStory();
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.gh_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
         List<Integer> resIds = ourStory.getHistoryAssetTypesID();
 
-        storyArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
+        MediaArrayAdapter storyArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
             public void onClick(AssetTypes resource) {
                 new GeneralHistoryFragmentPresenter(new IGeneralHistoryFragment() {

@@ -17,11 +17,8 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:padding="4dp"
-        android:paddingTop="8dp"
         android:id="@+id/cif_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>
