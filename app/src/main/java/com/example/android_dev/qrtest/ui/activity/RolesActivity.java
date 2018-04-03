@@ -8,11 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.IStory;
@@ -50,7 +52,6 @@ public class RolesActivity extends AppCompatActivity {
     }
 
     public void showAlertDialog(final Role role) {
-
         final View view = LayoutInflater.from(this).inflate(R.layout.alert_actor_validate, null);
         final EditText enterId = (EditText) view.findViewById(R.id.aav_enter_id_et);
 
@@ -76,7 +77,9 @@ public class RolesActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.setTitle(R.string.validate_actor);
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
+
     }
 
     private void showHistoryContent() {

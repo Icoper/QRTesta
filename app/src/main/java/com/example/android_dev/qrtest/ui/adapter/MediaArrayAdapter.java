@@ -1,6 +1,5 @@
 package com.example.android_dev.qrtest.ui.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,6 +64,26 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
                 viewGroup, false);
         MediaArrayAdapter.StoryViewHolder storyViewHolder = new MediaArrayAdapter.StoryViewHolder(view);
         context = view.getContext();
+        // Travel up the tree until fail, modifying the LayoutParams
+        do {
+            // Get the parent
+            ViewParent parent = view.getParent();
+            // Check if the parent exists
+            if (parent != null) {
+                // Get the view
+                try {
+                    view = (View) parent;
+                } catch (ClassCastException e) {
+                    // This will happen when at the top view, it cannot be cast to a View
+                    break;
+                }
+
+                // Modify the layout
+                view.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            }
+        } while (view.getParent() != null);
+        view.requestLayout();
+
         return storyViewHolder;
     }
 
@@ -85,7 +105,7 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
 
         int width = getMaximumWeight();
         int height = width / 2 + 100;
-        ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+        ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
 
         String filepath = GlobalNames.ENVIRONMENT_STORE +
                 jsonStory.getResFolderName() + "/" + "Resource1/" + resource.getFileName();
@@ -148,24 +168,23 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
         File imgFile = new File(uri.getPath());
 
         if (imgFile.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            return myBitmap;
+            return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
         }
         return null;
     }
 
     private Integer getMaximumWeight() {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        assert windowManager != null;
         return windowManager.getDefaultDisplay().getWidth();
     }
-
 
     @Override
     public int getItemCount() {
         return mediaData.size();
     }
 
-    public class StoryViewHolder extends RecyclerView.ViewHolder {
+    class StoryViewHolder extends RecyclerView.ViewHolder {
 
         TextView text;
         ImageView imgView;
@@ -187,7 +206,7 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
         private StoryViewHolder storyViewHolder;
         private Drawable drawable;
 
-        public VideoPreviewDrawableTaskParams(Uri uri, Context context, StoryViewHolder storyViewHolder) {
+        VideoPreviewDrawableTaskParams(Uri uri, Context context, StoryViewHolder storyViewHolder) {
             this.uri = uri;
             this.context = context;
             this.storyViewHolder = storyViewHolder;
@@ -218,7 +237,6 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
         @Override
         protected VideoPreviewDrawableTaskParams doInBackground(VideoPreviewDrawableTaskParams... params) {
             Log.d(LOG_TAG, " doInBackground is called ");
-
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(params[0].getContext(), params[0].getUri());
             Bitmap bitmap = retriever

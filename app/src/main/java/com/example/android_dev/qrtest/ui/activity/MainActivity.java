@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.GoalsDataStore;
 import com.example.android_dev.qrtest.db.HistoryScanDataStore;
@@ -42,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     private IStory selectedStory;
     // ui
-    Toolbar mActionBarToolbar;
-    BottomNavigationView navigation;
+    private Toolbar mActionBarToolbar;
+    private BottomNavigationView navigation;
     private QrReaderFragment mQrReaderFragment;
     private CharacterInfoFragment mCharacterInfoFragment;
     private GeneralHistoryFragment mGeneralHistoryFragment;

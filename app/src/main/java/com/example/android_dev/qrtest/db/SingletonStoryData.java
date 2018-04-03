@@ -3,6 +3,7 @@ package com.example.android_dev.qrtest.db;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.JsonStory;
 import com.example.android_dev.qrtest.model.Role;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +15,16 @@ public class SingletonStoryData {
     private IStory selectedStory;
     private Role selectedRole;
 
-    public Role getSelectedRole() {
+    Role getSelectedRole() {
         return selectedRole;
     }
 
-    public void setSelectedRole(Role selectedRole) {
+    void setSelectedRole(Role selectedRole) {
         this.selectedRole = selectedRole;
     }
 
 
-    public List<IStory> getStories() {
+    List<IStory> getStories() {
         if (stories == null || stories.isEmpty()) {
             stories = new ArrayList<>();
             stories.addAll(new JsonDataInitializer().getStoryData());

@@ -1,5 +1,6 @@
 package com.example.android_dev.qrtest.presenter.qr;
 
+import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.IGoalsDataStore;
 import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
@@ -8,8 +9,8 @@ import com.example.android_dev.qrtest.model.HistoryScansQRInformationIDs;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.AppMediaPlayerPresenter;
-import com.example.android_dev.qrtest.util.GlobalNames;
 import com.example.android_dev.qrtest.ui.fragment.IQRFragment;
+import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.util.List;
 
@@ -50,7 +51,6 @@ public class QRFPresenter implements IQRPresenter {
         } else if (msg.equals(GlobalNames.AUDIO_RES)) {
             iqrFragment.startAudioPlayerActivity(filePath);
         }
-        iqrFragment.showMsg(msg);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class QRFPresenter implements IQRPresenter {
 
             iqrFragment.showAlertDialog(alertScanMode, resIds, GlobalNames.ALERT_MODE_SMALL_INFO);
         } else {
-            iqrFragment.showMsg("QR code not found!");
+            iqrFragment.showMsg(R.string.qr_code_not_found);
         }
 
 
