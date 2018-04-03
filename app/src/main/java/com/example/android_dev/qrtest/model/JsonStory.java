@@ -7,23 +7,23 @@ import java.util.List;
 
 public class JsonStory implements IStory {
     @SerializedName("previewImageName")
-    String previewImg;
+    private String previewImg;
     @SerializedName("previewText")
-    String previewText;
+    private String previewText;
     @SerializedName("resFolderName")
-    String resFolderName;
+    private String resFolderName;
     @SerializedName("color")
-    String color;
+    private String color;
     @SerializedName("backgoundColor")
-    String backgroundColor;
+    private String backgroundColor;
     @SerializedName("tabbarColor")
-    String tabbarColor;
+    private String tabbarColor;
     @SerializedName("historyAssetTypesID")
-    List<Integer> historyAssetTypesID;
+    private List<Integer> historyAssetTypesID;
     @SerializedName("qrInformations")
-    List<QrInformation> qrInformationList;
+    private List<QrInformation> qrInformationList;
     @SerializedName("roles")
-    List<Role> roleList;
+    private List<Role> roleList;
     @SerializedName("historyScansQRInformationsIDs")
     List<HistoryScansQRInformationIDs> historyScansQRInformationsIDList;
     @SerializedName("goalAssetIDs")
