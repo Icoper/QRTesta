@@ -2,10 +2,11 @@ package com.example.android_dev.qrtest.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 
-public class Role {
+public class Role implements Serializable {
     @SerializedName("name")
     private String name;
     @SerializedName("code")
@@ -14,6 +15,9 @@ public class Role {
     private List<Integer> informationAssertIDList;
     @SerializedName("id")
     private int id;
+
+    public Role() {
+    }
 
     public Role(String name, String code, List<Integer> informationAssertIDList, int id) {
         this.name = name;

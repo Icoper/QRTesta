@@ -2,10 +2,11 @@ package com.example.android_dev.qrtest.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 
-public class JsonStory implements IStory {
+public class JsonStory implements IStory, Serializable {
     @SerializedName("previewImageName")
     private String previewImg;
     @SerializedName("previewText")

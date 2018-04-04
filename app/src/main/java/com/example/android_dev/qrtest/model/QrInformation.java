@@ -2,9 +2,10 @@ package com.example.android_dev.qrtest.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class QrInformation {
+public class QrInformation implements Serializable {
 
     @SerializedName("code")
     private String code;
@@ -76,7 +77,7 @@ public class QrInformation {
         this.qrDataList = qrDataList;
     }
 
-    public class QrData {
+    public class QrData implements Serializable {
         @SerializedName("roleID")
         int roleId;
         @SerializedName("qrItem")
@@ -103,7 +104,7 @@ public class QrInformation {
             this.qrItemList = qrItemList;
         }
 
-        public class QrItem {
+        public class QrItem implements Serializable {
             @SerializedName("detailInfoAssetID")
             List<Integer> detailInfoAssetIDList;
             @SerializedName("goalDetailAssetID")

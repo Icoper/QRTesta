@@ -8,4 +8,5 @@ public interface IGoalsDataStore {
 
     List<Integer> getAll();
 
+    void setList(List<Integer> list);
 }

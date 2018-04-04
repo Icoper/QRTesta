@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,13 @@ import com.example.android_dev.qrtest.model.Role;
 
 public class RolesActivity extends AppCompatActivity {
     private InMemoryStoryRepository inMemoryStoryRepository;
+    private final static String LOG_TAG = "RolesActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "onCreate");
+
         setContentView(R.layout.activity_actors);
         inMemoryStoryRepository = new InMemoryStoryRepository();
         IStory story = inMemoryStoryRepository.getSelectedStory();
@@ -45,7 +49,6 @@ public class RolesActivity extends AppCompatActivity {
 
         lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                inMemoryStoryRepository.setSelectedRole(story.getRoleList().get(position));
                 showAlertDialog(story.getRoleList().get(position));
             }
         });
@@ -85,6 +88,30 @@ public class RolesActivity extends AppCompatActivity {
     private void showHistoryContent() {
         Intent intent = new Intent(RolesActivity.this, MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, " onResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TAG, "onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy");
     }
 
 }

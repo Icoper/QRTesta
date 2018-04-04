@@ -7,4 +7,6 @@ public interface IHistoryScanDataStore {
 
     List<Integer> getAll();
 
+    void setList(List<Integer> list);
+
 }

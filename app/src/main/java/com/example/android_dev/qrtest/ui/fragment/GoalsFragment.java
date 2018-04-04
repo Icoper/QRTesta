@@ -23,14 +23,25 @@ import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
 
 public class GoalsFragment extends Fragment {
     private Context mContext;
+    private RecyclerView recyclerView;
+    private View view;
     private IGoalsDataStore iGoalsDataStore;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_goals, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.gf_recycler_view);
+        view = inflater.inflate(R.layout.fragment_goals, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.gf_recycler_view);
         mContext = view.getContext();
+        setupRecyclerView();
+        return view;
+    }
+
+    public void setupRepository(IGoalsDataStore iGoalsDataStore) {
+        this.iGoalsDataStore = iGoalsDataStore;
+    }
+
+    public void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         MediaArrayAdapter mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
@@ -58,9 +69,5 @@ public class GoalsFragment extends Fragment {
             }
         }, iGoalsDataStore.getAll());
         recyclerView.setAdapter(mediaArrayAdapter);
-        return view;
-    }
-    public void setupRepository( IGoalsDataStore iGoalsDataStore){
-        this.iGoalsDataStore = iGoalsDataStore;
     }
 }

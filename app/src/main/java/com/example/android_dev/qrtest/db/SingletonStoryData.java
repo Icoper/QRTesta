@@ -10,17 +10,39 @@ import java.util.List;
 
 public class SingletonStoryData {
     private static SingletonStoryData ourInstance = new SingletonStoryData();
+    private SavedDataStore savedDataStore;
     private List<IStory> stories;
 
     private IStory selectedStory;
     private Role selectedRole;
 
+    public SavedDataStore getSavedDataStore() {
+        if (savedDataStore == null) {
+            savedDataStore = new SavedDataStore();
+            savedDataStore.readDataFromFile();
+        }
+        return savedDataStore;
+    }
+
     Role getSelectedRole() {
+        if (selectedRole == null) {
+            try {
+                if (getSavedDataStore().loadSelectedRole() != null) {
+                    selectedRole = getSavedDataStore().loadSelectedRole();
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                selectedRole = new Role();
+            }
+
+        }
+
         return selectedRole;
     }
 
     void setSelectedRole(Role selectedRole) {
         this.selectedRole = selectedRole;
+        getSavedDataStore().saveSelectedRole(selectedRole);
     }
 
 
@@ -34,13 +56,22 @@ public class SingletonStoryData {
 
     public IStory getSelectedStory() {
         if (selectedStory == null) {
-            selectedStory = new JsonStory();
+            try {
+                if (getSavedDataStore().loadSelectedStory().getResFolderName() != null) {
+                    selectedStory = getSavedDataStore().loadSelectedStory();
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                selectedStory = new JsonStory();
+            }
         }
         return selectedStory;
     }
 
     public void setSelectedStory(IStory selectedStory) {
         this.selectedStory = selectedStory;
+
+        getSavedDataStore().saveSelectedStory(selectedStory);
     }
 
     public static SingletonStoryData getInstance() {

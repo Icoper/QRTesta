@@ -1,6 +1,5 @@
 package com.example.android_dev.qrtest.db;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -11,6 +10,7 @@ public class HistoryScanDataStore implements IHistoryScanDataStore {
     public void update(int id) {
         resIds = getList();
         resIds.add(id);
+        getSavedDataStore().saveScanQrCodes(resIds);
     }
 
     @Override
@@ -18,10 +18,19 @@ public class HistoryScanDataStore implements IHistoryScanDataStore {
         return getList();
     }
 
+    private SavedDataStore getSavedDataStore() {
+        return SingletonStoryData.getInstance().getSavedDataStore();
+    }
+
+    @Override
+    public void setList(List<Integer> list) {
+        this.resIds = list;
+        getSavedDataStore().saveScanQrCodes(resIds);
+    }
 
     private List<Integer> getList() {
         if (resIds == null) {
-            resIds = new ArrayList<>();
+            resIds = getSavedDataStore().loadScanQrCodes();
         }
         return resIds;
     }

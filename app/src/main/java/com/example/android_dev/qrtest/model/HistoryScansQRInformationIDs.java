@@ -2,8 +2,10 @@ package com.example.android_dev.qrtest.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 
-public class HistoryScansQRInformationIDs {
+
+public class HistoryScansQRInformationIDs implements Serializable {
     @SerializedName("qrInformationID")
     private int qrInformationID;
 

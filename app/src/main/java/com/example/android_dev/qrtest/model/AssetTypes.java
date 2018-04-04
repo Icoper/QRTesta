@@ -3,7 +3,9 @@ package com.example.android_dev.qrtest.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AssetTypes {
+import java.io.Serializable;
+
+public class AssetTypes implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("name")

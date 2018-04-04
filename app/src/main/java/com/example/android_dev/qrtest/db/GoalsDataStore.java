@@ -22,6 +22,7 @@ public class GoalsDataStore implements IGoalsDataStore {
             }
         }
         resIds.addAll(filteredNewRes);
+        getSavedDataStore().saveKnowGoals(resIds);
     }
 
     @Override
@@ -29,11 +30,28 @@ public class GoalsDataStore implements IGoalsDataStore {
         return getList();
     }
 
+    @Override
+    public void setList(List<Integer> list) {
+        this.resIds = list;
+        getSavedDataStore().saveKnowGoals(list);
+    }
+
     private List<Integer> getList() {
         if (resIds == null) {
-            resIds = new ArrayList<>();
+            try {
+                if (getSavedDataStore().loadKnowGoals() != null) {
+                    resIds = getSavedDataStore().loadKnowGoals();
+                } else resIds = new ArrayList<>();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                resIds = new ArrayList<>();
+            }
         }
         return resIds;
+    }
+
+    private SavedDataStore getSavedDataStore() {
+        return SingletonStoryData.getInstance().getSavedDataStore();
     }
 
 }

@@ -9,17 +9,21 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
+
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.ui.adapter.StoryListArrayAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 public class StoriesActivity extends AppCompatActivity {
+    private static final String LOG_TAG = "StoriesActivity";
     private static final int REQUEST_STORAGE = 1;
 
     private RecyclerView storiesRv;
@@ -28,21 +32,40 @@ public class StoriesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "onCreate");
         setContentView(R.layout.activity_stories);
+        storyRepository = new InMemoryStoryRepository();
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
             if (!checkPermission()) {
                 requestPermission();
             } else {
                 // setup all view elements
-                setupUI();
+                if (itsFirstLaunch()) {
+                    setupUI();
+                } else {
+                    goToStory();
+                }
+
             }
         }
 
     }
 
+    private void goToStory() {
+        Intent intent = new Intent(StoriesActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private boolean itsFirstLaunch() {
+        IStory iStory = storyRepository.getSelectedStory();
+        if (iStory.getResFolderName() == null) {
+            return true;
+        }
+        return false;
+    }
+
     private void setupUI() {
-        storyRepository = new InMemoryStoryRepository();
         storiesRv = (RecyclerView) findViewById(R.id.as_recycler_view);
         storiesRv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         List<IStory> stories = new ArrayList<>();
@@ -99,5 +122,28 @@ public class StoriesActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, " onResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TAG, "onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy");
+    }
 }
 

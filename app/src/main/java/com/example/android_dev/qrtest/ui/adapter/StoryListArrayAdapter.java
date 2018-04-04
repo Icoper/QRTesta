@@ -3,6 +3,7 @@ package com.example.android_dev.qrtest.ui.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.SingletonStoryData;
 import com.example.android_dev.qrtest.model.IStory;
+import com.example.android_dev.qrtest.util.ColorUtil;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.File;
@@ -54,6 +56,8 @@ public class StoryListArrayAdapter extends RecyclerView.Adapter<StoryListArrayAd
                 onItemClickListener.onClick();
             }
         });
+        storyViewHolder.linearLayout.setBackgroundColor(Color.parseColor(
+                ColorUtil.changeColorHSB((stories.get(position).getColor()))));
     }
 
     private Bitmap getBitMapByPath(String path, String name) {
