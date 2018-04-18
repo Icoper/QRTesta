@@ -9,4 +9,9 @@ public interface IGoalsDataStore {
     List<Integer> getAll();
 
     void setList(List<Integer> list);
+
+
+    void setNotificationCount(int count);
+
+    int getNotificationCount();
 }

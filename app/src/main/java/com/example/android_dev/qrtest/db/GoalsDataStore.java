@@ -54,4 +54,13 @@ public class GoalsDataStore implements IGoalsDataStore {
         return SingletonStoryData.getInstance().getSavedDataStore();
     }
 
+    @Override
+    public void setNotificationCount(int count) {
+        SingletonStoryData.getInstance().setNotificationCount(count);
+    }
+
+    @Override
+    public int getNotificationCount() {
+        return SingletonStoryData.getInstance().getNotificationCount();
+    }
 }

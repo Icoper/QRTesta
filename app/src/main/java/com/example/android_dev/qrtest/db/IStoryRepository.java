@@ -19,4 +19,6 @@ public interface IStoryRepository {
 
     void setSelectedRole(Role selectedRole);
 
+    void setSelectedStory(IStory story);
+
 }

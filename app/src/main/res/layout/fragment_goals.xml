@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/padding_left_right"
+    android:paddingRight="@dimen/padding_left_right"
     tools:context=".ui.fragment.GoalsFragment">
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gf_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent" />
 
 </FrameLayout>

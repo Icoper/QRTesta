@@ -19,4 +19,5 @@ public interface GlobalNames {
     int NOTIFICATION_LOAD_DATA_ID = 1;
     int NOTIFICATION_NEW_GOAL_ID = 2;
 
+    int DEFAULT_GRID_COLUMN_COUNT = 3;
 }

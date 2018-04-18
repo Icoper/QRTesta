@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.budiyev.android:code-scanner-1.8.3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/code-scanner-1.8.3.aar/2a117ca4139fe921f23261dd29c736a1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/code-scanner-1.8.3.aar/2a117ca4139fe921f23261dd29c736a1/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.budiyev.android/code-scanner/1.8.3/738b6097d6e99e20802b7cd6e86ecd07b1c11a8e/code-scanner-1.8.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

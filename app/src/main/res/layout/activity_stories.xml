@@ -3,11 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/padding_left_right"
+    android:paddingRight="@dimen/padding_left_right"
     tools:context="com.example.android_dev.qrtest.ui.activity.StoriesActivity">
 
     <android.support.v7.widget.RecyclerView
+        android:paddingTop="8dp"
         android:id="@+id/as_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
+
+
 </android.support.constraint.ConstraintLayout>

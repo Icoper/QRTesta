@@ -31,9 +31,8 @@ import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.historyScan.HistoryScanPresenter;
-import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
-import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
+import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 import java.io.File;
@@ -159,8 +158,9 @@ public class HistoryScanFragment extends Fragment {
 
             @Override
             public void startAudioPlayerActivity(String filePath) {
-                Intent intent = new Intent(mContext, SimpleAudioPlayer.class);
-                intent.putExtra("path", filePath);
+                Intent intent = new Intent();
+                intent.setAction(android.content.Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(filePath), "audio/*");
                 startActivity(intent);
             }
 

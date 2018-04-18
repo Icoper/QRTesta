@@ -12,9 +12,17 @@ public class SingletonStoryData {
     private static SingletonStoryData ourInstance = new SingletonStoryData();
     private SavedDataStore savedDataStore;
     private List<IStory> stories;
-
     private IStory selectedStory;
     private Role selectedRole;
+    private int notificationCount;
+
+    public int getNotificationCount() {
+        return notificationCount;
+    }
+
+    public void setNotificationCount(int notificationCount) {
+        this.notificationCount = notificationCount;
+    }
 
     public SavedDataStore getSavedDataStore() {
         if (savedDataStore == null) {

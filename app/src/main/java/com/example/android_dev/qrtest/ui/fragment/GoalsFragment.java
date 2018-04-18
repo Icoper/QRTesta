@@ -4,6 +4,7 @@ package com.example.android_dev.qrtest.ui.fragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,17 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.IGoalsDataStore;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.goals.GoalsFragmentPresenter;
-import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
-import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
+import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 
 public class GoalsFragment extends Fragment {
     private Context mContext;
     private RecyclerView recyclerView;
+    private AHBottomNavigation bottomNavigationView;
     private View view;
     private IGoalsDataStore iGoalsDataStore;
 
@@ -40,6 +42,12 @@ public class GoalsFragment extends Fragment {
     public void setupRepository(IGoalsDataStore iGoalsDataStore) {
         this.iGoalsDataStore = iGoalsDataStore;
     }
+
+    public void setBottomNavigationView(AHBottomNavigation bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
+    }
+
+
 
     public void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -61,8 +69,9 @@ public class GoalsFragment extends Fragment {
 
                     @Override
                     public void startAudioPlayerActivity(String filePath) {
-                        Intent intent = new Intent(mContext, SimpleAudioPlayer.class);
-                        intent.putExtra("path", filePath);
+                        Intent intent = new Intent();
+                        intent.setAction(android.content.Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(filePath), "audio/*");
                         startActivity(intent);
                     }
                 }, iGoalsDataStore).playMediaData(resource);

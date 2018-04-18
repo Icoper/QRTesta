@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -24,8 +25,10 @@ import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
@@ -34,9 +37,8 @@ import com.example.android_dev.qrtest.db.IGoalsDataStore;
 import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.qr.QRFPresenter;
-import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
-import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
+import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
 import com.example.android_dev.qrtest.util.NotificationWorker;
 import com.google.zxing.Result;
@@ -53,10 +55,19 @@ public class QrReaderFragment extends Fragment {
     private IHistoryScanDataStore iHistoryScanDataStore;
     private IGoalsDataStore iGoalsDataStore;
 
+    private OnCloseQrReaderButtonClickListener onCloseQrReaderButtonClickListener;
     //view
     private Context mContext;
     private QRFPresenter qrfPresenter;
     private CodeScannerView scannerView;
+    private AHBottomNavigation bottomNavigationView;
+    private RelativeLayout closeQrReaderButton;
+
+
+    public void setupOnCloseQrListener(OnCloseQrReaderButtonClickListener onCloseQrReaderButtonClickListener) {
+        this.onCloseQrReaderButtonClickListener = onCloseQrReaderButtonClickListener;
+    }
+
 
 
     @Override
@@ -64,7 +75,13 @@ public class QrReaderFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_qr_reader, container, false);
         mContext = v.getContext();
         scannerView = v.findViewById(R.id.scanner_view);
-
+        closeQrReaderButton = (RelativeLayout) v.findViewById(R.id.fqr_close);
+        closeQrReaderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCloseQrReaderButtonClickListener.onClick();
+            }
+        });
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
             if (!checkPermission()) {
@@ -74,13 +91,13 @@ public class QrReaderFragment extends Fragment {
             }
         }
 
+
         return v;
     }
 
     private void forceWrapContent(View v) {
         // Start with the provided view
         View current = v;
-
         // Travel up the tree until fail, modifying the LayoutParams
         do {
             // Get the parent
@@ -204,8 +221,9 @@ public class QrReaderFragment extends Fragment {
 
             @Override
             public void startAudioPlayerActivity(String filePath) {
-                Intent intent = new Intent(mContext, SimpleAudioPlayer.class);
-                intent.putExtra("path", filePath);
+                Intent intent = new Intent();
+                intent.setAction(android.content.Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(filePath), "audio/*");
                 startActivity(intent);
             }
 
@@ -249,7 +267,15 @@ public class QrReaderFragment extends Fragment {
                 new NotificationWorker(mContext).showNotification(getString(R.string.notify_new_goal), GlobalNames.NOTIFICATION_NEW_GOAL_ID);
             }
         }, 2000);
+        int countNotification = iGoalsDataStore.getNotificationCount();
+        countNotification++;
+        iGoalsDataStore.setNotificationCount(countNotification);
+        bottomNavigationView.setNotification(String.valueOf(countNotification), 2);
 
+    }
+
+    public void setBottomNavigationView(AHBottomNavigation bottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView;
     }
 
     public void setupRepository(IHistoryScanDataStore iHistoryScanDataStore, IGoalsDataStore iGoalsDataStore) {
@@ -311,5 +337,9 @@ public class QrReaderFragment extends Fragment {
             Log.d(LOG_TAG, "onPause | mCodeScanner  == null");
         }
         super.onPause();
+    }
+
+    public interface OnCloseQrReaderButtonClickListener {
+        void onClick();
     }
 }

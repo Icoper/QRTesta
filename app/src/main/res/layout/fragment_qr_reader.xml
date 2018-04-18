@@ -4,20 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scanner_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:autoFocusButtonColor="@android:color/white"
-        app:autoFocusButtonVisible="true"
-        app:flashButtonColor="@android:color/white"
-        app:flashButtonVisible="true"
-        app:frameColor="@android:color/white"
+        app:frameColor="@color/colorRed"
         app:frameCornersSize="50dp"
         app:frameAspectRatioWidth="1"
+        app:flashButtonVisible="false"
+        app:autoFocusButtonVisible="false"
         app:frameAspectRatioHeight="1"
         app:frameSize="0.75"
         app:frameThickness="2dp"
         app:maskColor="#77000000" />
 
+    <RelativeLayout
+        android:id="@+id/fqr_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

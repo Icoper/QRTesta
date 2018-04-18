@@ -46,6 +46,10 @@ public class InMemoryStoryRepository implements IStoryRepository {
 
     }
 
+    @Override
+    public void setSelectedStory(IStory story) {
+        SingletonStoryData.getInstance().setSelectedStory(story);
+    }
 
 
 }

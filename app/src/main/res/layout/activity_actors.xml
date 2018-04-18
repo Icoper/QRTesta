@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android_dev.qrtest.ui.activity.RolesActivity">
 
-    <ListView
-        android:id="@+id/fal_list_view"
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/aa_my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:elevation="8dp"
+        android:minHeight="?attr/actionBarSize" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/aa_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/aa_my_toolbar" />
 
 </android.support.constraint.ConstraintLayout>

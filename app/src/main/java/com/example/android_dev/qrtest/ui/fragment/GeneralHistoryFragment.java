@@ -3,6 +3,7 @@ package com.example.android_dev.qrtest.ui.fragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +17,8 @@ import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.presenter.generalHistory.GeneralHistoryFragmentPresenter;
-import com.example.android_dev.qrtest.ui.activity.SimpleAudioPlayer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
-import com.example.android_dev.qrtest.ui.adapter.MediaArrayAdapter;
+import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 
 import java.util.List;
 
@@ -31,7 +31,9 @@ public class GeneralHistoryFragment extends Fragment {
         mContext = v.getContext();
         InMemoryStoryRepository inMemoryStoryRepository = new InMemoryStoryRepository();
         IStory ourStory = inMemoryStoryRepository.getSelectedStory();
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.gh_recyclerView);
+
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.gh_media_recycler_view);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
         List<Integer> resIds = ourStory.getHistoryAssetTypesID();
 
@@ -53,14 +55,16 @@ public class GeneralHistoryFragment extends Fragment {
 
                     @Override
                     public void startAudioPlayerActivity(String filePath) {
-                        Intent intent = new Intent(mContext, SimpleAudioPlayer.class);
-                        intent.putExtra("path", filePath);
+                        Intent intent = new Intent();
+                        intent.setAction(android.content.Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(filePath), "audio/*");
                         startActivity(intent);
                     }
                 }).playMediaData(resource);
             }
         }, resIds);
         recyclerView.setAdapter(storyArrayAdapter);
+
         return v;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -18,10 +19,22 @@ public class SimpleVideoPlayer extends AppCompatActivity {
         setContentView(R.layout.activity_video_shower);
         videoView = (VideoView) findViewById(R.id.avs_video_view);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.avs_my_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setTitle("");
         Intent intent = getIntent();
         String filepath = intent.getStringExtra("res");
 
         startPlay(filepath);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void startPlay(String filePath) {

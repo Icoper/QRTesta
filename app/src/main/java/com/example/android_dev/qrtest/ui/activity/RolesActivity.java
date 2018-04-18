@@ -3,55 +3,68 @@ package com.example.android_dev.qrtest.ui.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.Role;
+import com.example.android_dev.qrtest.ui.adapter.RolesRVAdapter;
 
 public class RolesActivity extends AppCompatActivity {
     private InMemoryStoryRepository inMemoryStoryRepository;
     private final static String LOG_TAG = "RolesActivity";
+    private IStory story;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "onCreate");
-
         setContentView(R.layout.activity_actors);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        setTitle(R.string.character_text);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.aa_my_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         inMemoryStoryRepository = new InMemoryStoryRepository();
-        IStory story = inMemoryStoryRepository.getSelectedStory();
-        initializeLv(story);
+        Intent intent = getIntent();
+        story = (IStory) intent.getSerializableExtra("story");
+        initializeRv(story);
     }
 
-    public void initializeLv(final IStory story) {
-        ListView lvMain = (ListView) findViewById(R.id.fal_list_view);
-        String[] actorsArray = new String[story.getRoleList().size()];
-        for (int i = 0; i < story.getRoleList().size(); i++) {
-            actorsArray[i] = story.getRoleList().get(i).getName();
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, actorsArray);
-        // присваиваем адаптер списку
-        lvMain.setAdapter(adapter);
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
-        lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showAlertDialog(story.getRoleList().get(position));
+    public void initializeRv(final IStory story) {
+        RecyclerView rolesRV = (RecyclerView) findViewById(R.id.aa_recycler_view);
+        rolesRV.setLayoutManager(new LinearLayoutManager(this));
+        RolesRVAdapter rolesRVAdapter = new RolesRVAdapter(story, new RolesRVAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(Role role) {
+                showAlertDialog(role);
             }
-        });
+        }, inMemoryStoryRepository);
+
+        rolesRV.setAdapter(rolesRVAdapter);
+
     }
 
     public void showAlertDialog(final Role role) {
@@ -59,19 +72,20 @@ public class RolesActivity extends AppCompatActivity {
         final EditText enterId = (EditText) view.findViewById(R.id.aav_enter_id_et);
 
         AlertDialog.Builder builder = new AlertDialog
-                .Builder(new ContextThemeWrapper(view.getContext(), R.style.Theme_AppCompat_Light_Dialog_Alert));
+                .Builder(new ContextThemeWrapper(view.getContext(), R.style.MyAlertDialogTheme));
         builder.setView(view);
         builder.setCancelable(false)
-                .setNeutralButton(view.getContext().getString(R.string.ok_text), new DialogInterface.OnClickListener() {
+                .setNegativeButton(view.getContext().getString(R.string.ok_text), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (enterId.getText().toString().equals(role.getCode())) {
                             inMemoryStoryRepository.setSelectedRole(role);
+                            inMemoryStoryRepository.setSelectedStory(story);
                             showHistoryContent();
                         } else
                             Toast.makeText(view.getContext(), getString(R.string.wrong_id), Toast.LENGTH_SHORT).show();
                     }
-                }).setNegativeButton(view.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+                }).setNeutralButton(view.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -80,7 +94,6 @@ public class RolesActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.setTitle(R.string.validate_actor);
-        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
 
     }
@@ -91,27 +104,7 @@ public class RolesActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(LOG_TAG, " onResume");
+    public void onBackPressed() {
+        super.onBackPressed();
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(LOG_TAG, "onStart");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(LOG_TAG, "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(LOG_TAG, "onDestroy");
-    }
-
 }

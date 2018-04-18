@@ -1,13 +1,14 @@
 package com.example.android_dev.qrtest.ui.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,8 +16,9 @@ import android.widget.Toast;
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.IStory;
-import com.example.android_dev.qrtest.ui.adapter.StoryListArrayAdapter;
+import com.example.android_dev.qrtest.ui.adapter.StoryListRVAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,10 @@ public class StoriesActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "onCreate");
         setContentView(R.layout.activity_stories);
         storyRepository = new InMemoryStoryRepository();
+        setTitle(R.string.title_scripts);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
             if (!checkPermission()) {
@@ -67,19 +73,21 @@ public class StoriesActivity extends AppCompatActivity {
 
     private void setupUI() {
         storiesRv = (RecyclerView) findViewById(R.id.as_recycler_view);
-        storiesRv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        storiesRv.setLayoutManager(mLayoutManager);
         List<IStory> stories = new ArrayList<>();
         stories.addAll(storyRepository.getStoriesList());
 
-        StoryListArrayAdapter storyListArrayAdapter = new StoryListArrayAdapter(stories,
-                new StoryListArrayAdapter.OnItemClickListener() {
+        StoryListRVAdapter storyListRVAdapter = new StoryListRVAdapter(stories,
+                new StoryListRVAdapter.OnItemClickListener() {
                     @Override
-                    public void onClick() {
+                    public void onClick(IStory iStory) {
                         Intent intent = new Intent(getApplicationContext(), RolesActivity.class);
+                        intent.putExtra("story", (Serializable) iStory);
                         startActivity(intent);
                     }
                 });
-        storiesRv.setAdapter(storyListArrayAdapter);
+        storiesRv.setAdapter(storyListRVAdapter);
     }
 
 

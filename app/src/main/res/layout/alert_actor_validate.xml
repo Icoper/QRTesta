@@ -4,7 +4,9 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:inputType="number"
+        android:backgroundTintMode="multiply"
+        android:textColor="@color/colorWhite"
+        android:paddingTop="16dp"
         android:focusable="true"
         android:layout_margin="16dp"
         android:id="@+id/aav_enter_id_et"

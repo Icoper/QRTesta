@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.CardView
+        android:layout_margin="4dp"
+        android:id="@+id/ipvt_photo_video_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <ImageView
+            tools:background="@color/colorGrayLight"
+            tools:layout_height="100dp"
+            tools:layout_width="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:id="@+id/ipvt_background_iv" />
+
+        <ImageView
+            android:id="@+id/ipvt_play_btn"
+            android:layout_gravity="center"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/play_button" />
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>
