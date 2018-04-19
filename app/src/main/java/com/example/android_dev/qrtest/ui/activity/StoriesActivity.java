@@ -3,6 +3,7 @@ package com.example.android_dev.qrtest.ui.activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -40,9 +41,8 @@ public class StoriesActivity extends AppCompatActivity {
         setTitle(R.string.title_scripts);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
         int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
             if (!checkPermission()) {
                 requestPermission();
             } else {

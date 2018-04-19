@@ -29,7 +29,6 @@ public class AppMenuFragmentPresenter implements IAppMenuFragmentPresenter {
 
         String imgPath = GlobalNames.ENVIRONMENT_STORE +
                 iStory.getResFolderName() + "/Resource1";
-
         String imgName = "";
         for (int id : role.getInformationAssertIDList()) {
             if (imgName.isEmpty()) {
@@ -43,10 +42,7 @@ public class AppMenuFragmentPresenter implements IAppMenuFragmentPresenter {
 
                 }
             }
-
         }
-
-
         return getBitMapByPath(imgPath, imgName);
     }
 

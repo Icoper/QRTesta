@@ -86,15 +86,12 @@ public class QrReaderFragment extends Fragment {
                 onCloseQrReaderButtonClickListener.onClick();
             }
         });
-        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentApiVersion >= android.os.Build.VERSION_CODES.M) {
-            if (!checkPermission()) {
-                requestPermission();
-            } else {
-                setupPresenter();
-            }
-        }
 
+        if (!checkPermission()) {
+            requestPermission();
+        } else {
+            setupPresenter();
+        }
 
         return v;
     }
@@ -283,7 +280,8 @@ public class QrReaderFragment extends Fragment {
     public void notifyAboutGoal() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                new NotificationWorker(mContext).showNotification(getString(R.string.notify_new_goal), GlobalNames.NOTIFICATION_NEW_GOAL_ID);
+                new NotificationWorker(mContext).showNotification(getString(R.string.notify_new_goal),
+                        GlobalNames.NOTIFICATION_NEW_GOAL_ID);
                 showAnimation();
             }
         }, 2000);
@@ -315,7 +313,6 @@ public class QrReaderFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         boolean allowed = true;
-
         switch (requestCode) {
             case REQUEST_CAMERA:
                 for (int res : grantResults) {
@@ -334,7 +331,6 @@ public class QrReaderFragment extends Fragment {
         } else {
             Toast.makeText(mContext, "Camera Permissions denied.\nCan't open QR code reader.", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override

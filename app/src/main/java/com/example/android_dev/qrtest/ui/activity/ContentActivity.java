@@ -36,7 +36,6 @@ public class ContentActivity extends AppCompatActivity {
 
         if (menuItem.getItemName().equals("Files")) {
             setContentView(R.layout.activity_content_tabs);
-
             // Set up the ViewPager with the sections adapter.
             mViewPager = (ViewPager) findViewById(R.id.ac_viewPager_layout);
             setupViewPager(mViewPager);

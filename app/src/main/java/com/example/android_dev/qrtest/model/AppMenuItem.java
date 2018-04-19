@@ -3,13 +3,7 @@ package com.example.android_dev.qrtest.model;
 import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 
-import java.io.Serializable;
-
-/**
- * Created by user on 11-Apr-18.
- */
-
-public class AppMenuItem implements Serializable {
+public class AppMenuItem {
     private Fragment fragment;
     private Drawable itemIcon;
     private String itemName;

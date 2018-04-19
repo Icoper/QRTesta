@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.android_dev.qrtest.R;
@@ -93,7 +94,7 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
                 holder.viewLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String[] imgs = {Uri.parse(filepath).toString()};
+                        Toast.makeText(context, "In Develop", Toast.LENGTH_SHORT).show();
                     }
                 });
                 holder.playButton.setVisibility(View.GONE);

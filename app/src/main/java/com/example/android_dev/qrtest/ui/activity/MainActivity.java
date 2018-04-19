@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.action_settings:
                 logoutUser();
                 return true;
@@ -241,6 +240,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mainContentLayout.setVisibility(View.GONE);
                     iTempDataRepository.setAppMenuItem(appMenuItem);
                     startActivity(new Intent(MainActivity.this, ContentActivity.class));
+                }
+                if (!appMenuItem.isActive()) {
+                    Toast.makeText(MainActivity.this, R.string.not_aviable_text, Toast.LENGTH_SHORT).show();
                 }
             }
         });
