@@ -52,18 +52,19 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo_video_type_list,
                 parent, false);
         context = view.getContext();
+
         return new PhotoVideoTypeViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PhotoVideoTypeViewHolder holder, int i) {
+    public void onBindViewHolder(final PhotoVideoTypeViewHolder holder, int i) {
         final int position = i;
 
         if (deafLayoutParams == null) {
             calculateLayoutParams(holder);
         }
 
-        String filepath = resFolderFilePath + assetTypes.get(position).getFileName();
+        final String filepath = resFolderFilePath + assetTypes.get(position).getFileName();
 
         switch (assetTypes.get(position).getFileType()) {
             case GlobalNames.VIDEO_RES:
@@ -89,6 +90,12 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
                     e.printStackTrace();
                 }
                 Glide.with(view).load(bitmap).into(holder.backgroundImage);
+                holder.viewLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String[] imgs = {Uri.parse(filepath).toString()};
+                    }
+                });
                 holder.playButton.setVisibility(View.GONE);
                 break;
         }

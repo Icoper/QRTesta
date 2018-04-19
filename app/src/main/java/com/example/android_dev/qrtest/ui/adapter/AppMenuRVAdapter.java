@@ -65,7 +65,7 @@ public class AppMenuRVAdapter extends RecyclerView.Adapter<AppMenuRVAdapter.Menu
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.layout.setElevation(0);
-
+                holder.name.setTextColor(R.color.colorGrey);
             }
         } else {
             holder.layout.setOnClickListener(new View.OnClickListener() {

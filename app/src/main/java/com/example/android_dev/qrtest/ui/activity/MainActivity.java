@@ -54,6 +54,7 @@ import com.example.android_dev.qrtest.ui.fragment.RoleInfoFragment;
 import com.example.android_dev.qrtest.ui.fragment.RolesFragment;
 import com.example.android_dev.qrtest.ui.fragment.TasksFragment;
 import com.example.android_dev.qrtest.ui.fragment.filesFragment.FilesFragmentFound;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         iHistoryScanDataStore = new HistoryScanDataStore();
         iTempDataRepository = new TempDataRepository();
         selectedStory = inMemoryStoryRepository.getSelectedStory();
+        Fresco.initialize(this);
 
         progressLayout = (RelativeLayout) findViewById(R.id.ma_progress_bar);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.ma_fab);
@@ -139,19 +141,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupBottomNavigationView() {
         ahBottomNavigationView = (AHBottomNavigation) findViewById(R.id.ma_bottom_navigation);
-        AHBottomNavigationItem itemMenu = new AHBottomNavigationItem(R.string.title_menu, R.drawable.ic_menu, R.color.colorWhite);
-        AHBottomNavigationItem itemQrReader = new AHBottomNavigationItem(R.string.title_qr_reader, R.drawable.ic_qr_scan, R.color.colorWhite);
-        AHBottomNavigationItem itemGoals = new AHBottomNavigationItem(R.string.title_history_scan, R.drawable.ic_hist_scan, R.color.colorWhite);
+        AHBottomNavigationItem itemMenu = new AHBottomNavigationItem(R.string.title_menu, R.drawable.ic_menu, R.color.colorGrey);
+        AHBottomNavigationItem itemQrReader = new AHBottomNavigationItem(R.string.title_qr_reader, R.drawable.ic_qr, R.color.colorGrey);
+        AHBottomNavigationItem itemGoals = new AHBottomNavigationItem(R.string.title_history_scan, R.drawable.ic_hist_scan, R.color.colorGrey);
         ahBottomNavigationView.addItem(itemMenu);
         ahBottomNavigationView.addItem(itemQrReader);
         ahBottomNavigationView.addItem(itemGoals);
 
         ahBottomNavigationView.setNotificationAnimationDuration(3000);
         ahBottomNavigationView.setColored(true);
-        ahBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        ahBottomNavigationView.setForceTint(true);
+        ahBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
         ahBottomNavigationView.setInactiveColor(getResources().getColor(R.color.colorGrayLight));
         ahBottomNavigationView.setAccentColor(getResources().getColor(R.color.colorBlue));
-        ahBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.colorGrayLight));
         ahBottomNavigationView.setNotificationTextColor(getResources().getColor(R.color.colorWhite));
         ahBottomNavigationView.setNotificationBackgroundColor(getResources().getColor(R.color.colorNotification));
         ahBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
