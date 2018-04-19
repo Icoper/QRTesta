@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:paddingLeft="@dimen/padding_left_right"
-    android:paddingRight="@dimen/padding_left_right"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content">
 
-    <GridView
-        android:numColumns="2"
-        android:gravity="center"
-        android:columnWidth="320dp"
-        android:clipToPadding="true"
-        android:fitsSystemWindows="true"
-        android:stretchMode="columnWidth"
-        android:id="@+id/hs_grid_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </GridView>
+    <android.support.v7.widget.RecyclerView
+        android:padding="16dp"
+        android:id="@+id/fhs_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

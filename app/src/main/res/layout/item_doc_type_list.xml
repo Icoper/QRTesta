@@ -23,8 +23,7 @@
         <com.bluejamesbond.text.DocumentView
             ext:documentView_text="@string/test_text"
             ext:documentView_textAlignment="justified"
-            ext:documentView_textSize="16sp"
-            ext:documentView_textStyle="bold"
+            ext:documentView_textSize="14sp"
             android:gravity="center"
             tools:padding="8dp"
             tools:text="@string/test_text"

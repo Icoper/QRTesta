@@ -20,7 +20,7 @@ import com.example.android_dev.qrtest.util.GlobalNames;
 import java.util.List;
 
 public class AppMenuRVAdapter extends RecyclerView.Adapter<AppMenuRVAdapter.MenuViewHolder> {
-    private final double calculationPercent = 9.4;
+    private final double calculationPercent = 6;
     private ViewGroup.LayoutParams deafLayoutParams;
     private List<AppMenuItem> appMenuItemList;
     private OnItemClickListener onItemClickListener;
@@ -62,9 +62,10 @@ public class AppMenuRVAdapter extends RecyclerView.Adapter<AppMenuRVAdapter.Menu
         holder.icon.setBackground(appMenuItemList.get(position).getItemIcon());
         holder.name.setText(appMenuItemList.get(position).getItemName());
         if (!appMenuItemList.get(position).isActive()) {
-            holder.layout.setBackgroundResource(R.drawable.menu_border_disable);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.layout.setElevation(0);
+
             }
         } else {
             holder.layout.setOnClickListener(new View.OnClickListener() {

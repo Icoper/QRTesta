@@ -5,22 +5,15 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
@@ -32,31 +25,35 @@ import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.historyScan.HistoryScanPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
+import com.example.android_dev.qrtest.ui.adapter.StoryListRVAdapter;
 import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryScanFragment extends Fragment {
     private Context mContext;
-    private GridView gridView;
+    private RecyclerView recyclerView;
     private HistoryScanPresenter historyScanPresenter;
     private QrInformation selectedQrInformation;
     private IStoryRepository iStoryRepository;
     private IStory jsonStory;
     private IHistoryScanDataStore iHistoryScanDataStore;
+    private final double calculationPercent = 5.4;
+    private ViewGroup.LayoutParams deafLayoutParams;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_history_scan, container, false);
-        mContext = v.getContext();
+        view = inflater.inflate(R.layout.fragment_history_scan, container, false);
+        mContext = view.getContext();
 
-        gridView = (GridView) v.findViewById(R.id.hs_grid_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.fhs_recycler_view);
         setupPresenter();
-        return v;
+        return view;
     }
+
 
     private void setupPresenter() {
         historyScanPresenter = new HistoryScanPresenter(new IHistoryScanFragment() {
@@ -64,42 +61,20 @@ public class HistoryScanFragment extends Fragment {
             public void showGridView(final ArrayList<QrInformation> scannedQrInfo) {
                 iStoryRepository = new InMemoryStoryRepository();
                 jsonStory = iStoryRepository.getSelectedStory();
-                ArrayAdapter<QrInformation> adapter = new ArrayAdapter<QrInformation>(
-                        mContext, R.layout.item_scan_history, scannedQrInfo) {
-                    @NonNull
-                    @Override
-                    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
+                recyclerView.setLayoutManager(mLayoutManager);
+                List<IStory> stories = new ArrayList<>();
+                stories.add(jsonStory);
 
-                        if (convertView == null) {
-                            LayoutInflater inflater = (LayoutInflater) mContext
-                                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            convertView = inflater.inflate(R.layout.item_scan_history, null);
-                        }
-
-                        ArrayList<Integer> integers = new ArrayList<>();
-                        integers.add(scannedQrInfo.get(position).getPreviewImage());
-                        List<AssetTypes> assetTypes = iStoryRepository.getResourceById(integers);
-
-                        String imgPath = GlobalNames.ENVIRONMENT_STORE + jsonStory.getResFolderName() +
-                                "/Resource1/" + assetTypes.get(0).getFileName();
-
-                        ImageView appIcon = (ImageView) convertView.findViewById(R.id.shi_story_img);
-                        TextView appLabel = (TextView) convertView.findViewById(R.id.shi_story_name);
-
-                        appIcon.setImageBitmap(getBitMapByPath(imgPath));
-                        appLabel.setText(jsonStory.getPreviewText() + " : " + scannedQrInfo.get(position).getCode());
-
-                        convertView.setOnClickListener(new View.OnClickListener() {
+                StoryListRVAdapter storyListRVAdapter = new StoryListRVAdapter(stories,
+                        new StoryListRVAdapter.OnItemClickListener() {
                             @Override
-                            public void onClick(View view) {
-                                selectedQrInformation = scannedQrInfo.get(position);
+                            public void onClick(IStory iStory) {
+                                selectedQrInformation = iStory.getQrInformationList().get(0);
                                 historyScanPresenter.showStoryContent(selectedQrInformation);
                             }
                         });
-                        return convertView;
-                    }
-                };
-                gridView.setAdapter(adapter);
+                recyclerView.setAdapter(storyListRVAdapter);
             }
 
             @Override
@@ -165,22 +140,12 @@ public class HistoryScanFragment extends Fragment {
             }
 
 
-        },iHistoryScanDataStore);
+        }, iHistoryScanDataStore);
         historyScanPresenter.getScannedStoryList();
     }
 
 
-    private Bitmap getBitMapByPath(String path) {
-        Uri uri = Uri.parse(path);
-        File imgFile = new File(uri.getPath());
-
-        if (imgFile.exists()) {
-            return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-        }
-        return null;
-    }
-
-    public  void setupRepository(IHistoryScanDataStore iHistoryScanDataStore){
+    public void setupRepository(IHistoryScanDataStore iHistoryScanDataStore) {
         this.iHistoryScanDataStore = iHistoryScanDataStore;
     }
 }

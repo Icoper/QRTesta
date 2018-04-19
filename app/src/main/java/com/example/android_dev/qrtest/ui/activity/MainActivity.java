@@ -139,17 +139,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupBottomNavigationView() {
         ahBottomNavigationView = (AHBottomNavigation) findViewById(R.id.ma_bottom_navigation);
-        AHBottomNavigationItem itemMenu = new AHBottomNavigationItem(R.string.title_menu, R.drawable.ic_apps_white_36dp, R.color.colorWhite);
-        AHBottomNavigationItem itemQrReader = new AHBottomNavigationItem(R.string.title_qr_reader, R.drawable.qr_reader_ic, R.color.colorWhite);
-        AHBottomNavigationItem itemGoals = new AHBottomNavigationItem(R.string.title_goals, R.drawable.task_ic, R.color.colorWhite);
+        AHBottomNavigationItem itemMenu = new AHBottomNavigationItem(R.string.title_menu, R.drawable.ic_menu, R.color.colorWhite);
+        AHBottomNavigationItem itemQrReader = new AHBottomNavigationItem(R.string.title_qr_reader, R.drawable.ic_qr_scan, R.color.colorWhite);
+        AHBottomNavigationItem itemGoals = new AHBottomNavigationItem(R.string.title_history_scan, R.drawable.ic_hist_scan, R.color.colorWhite);
         ahBottomNavigationView.addItem(itemMenu);
         ahBottomNavigationView.addItem(itemQrReader);
         ahBottomNavigationView.addItem(itemGoals);
 
+        ahBottomNavigationView.setNotificationAnimationDuration(3000);
         ahBottomNavigationView.setColored(true);
         ahBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        ahBottomNavigationView.setInactiveColor(getResources().getColor(R.color.colorGrayLight));
         ahBottomNavigationView.setAccentColor(getResources().getColor(R.color.colorBlue));
-        ahBottomNavigationView.setInactiveColor(getResources().getColor(R.color.colorIconInactive));
         ahBottomNavigationView.setDefaultBackgroundColor(getResources().getColor(R.color.colorGrayLight));
         ahBottomNavigationView.setNotificationTextColor(getResources().getColor(R.color.colorWhite));
         ahBottomNavigationView.setNotificationBackgroundColor(getResources().getColor(R.color.colorNotification));
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case 2:
                         if (!wasSelected) {
-                            getFragmentTransaction().replace(R.id.ma_fragment_container, mGoalsFragment).commit();
+                            getFragmentTransaction().replace(R.id.ma_fragment_container, mHistoryScanFragment).commit();
                             showFab(false);
                         }
                         break;
@@ -203,21 +204,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHistoryScanFragment = new HistoryScanFragment();
         mHistoryScanFragment.setupRepository(iHistoryScanDataStore);
         mGoalsFragment = new GoalsFragment();
-        mGoalsFragment.setupRepository(iGoalsDataStore);
-        mGoalsFragment.setBottomNavigationView(ahBottomNavigationView);
+        mTasksFragment.setupRepository(iGoalsDataStore);
+        mTasksFragment.setBottomNavigationView(ahBottomNavigationView);
         mAppMenuFragment = new AppMenuFragment();
 
         List<AppMenuItem> appMenuItemList = new ArrayList<>();
 
-        AppMenuItem menuItemRole = new AppMenuItem(mRoleInfoFragment, getResources().getDrawable(R.drawable.actor_ic), getString(R.string.title_characters_info), true);
-        AppMenuItem menuItemGhistory = new AppMenuItem(mGeneralHistoryFragment, getResources().getDrawable(R.drawable.history_ic), getString(R.string.title_general_history), true);
-        AppMenuItem menuItemRoles = new AppMenuItem(mRolesFragment, getResources().getDrawable(R.drawable.ic_alarm_black_36dp), getString(R.string.title_roles), true);
-        AppMenuItem menuItemGoal = new AppMenuItem(mGoalsFragment, getResources().getDrawable(R.drawable.task_ic), getString(R.string.title_goals), true);
-        AppMenuItem menuItemFiles = new AppMenuItem(new Fragment(), getResources().getDrawable(R.drawable.file_ic), getString(R.string.title_files), true);
-        AppMenuItem menuItemTasks = new AppMenuItem(mTasksFragment, getResources().getDrawable(R.drawable.file_ic), getString(R.string.title_tasks), true);
-        AppMenuItem menuItemTimer = new AppMenuItem(null, getResources().getDrawable(R.drawable.ic_alarm_black_36dp), getString(R.string.title_timer), false);
-        AppMenuItem menuItemTips = new AppMenuItem(null, getResources().getDrawable(R.drawable.ic_help_outline_black_36dp), getString(R.string.title_tips), false);
-        AppMenuItem menuItemLocation = new AppMenuItem(mLocationFragment, getResources().getDrawable(R.drawable.ic_place_black_36dp), getString(R.string.title_location), true);
+        AppMenuItem menuItemRole = new AppMenuItem(mRoleInfoFragment, getResources().getDrawable(R.drawable.ic_character), getString(R.string.title_characters_info), true);
+        AppMenuItem menuItemGhistory = new AppMenuItem(mGeneralHistoryFragment, getResources().getDrawable(R.drawable.ic_history), getString(R.string.title_general_history), true);
+        AppMenuItem menuItemRoles = new AppMenuItem(mRolesFragment, getResources().getDrawable(R.drawable.ic_participants), getString(R.string.title_roles), true);
+        AppMenuItem menuItemGoal = new AppMenuItem(mGoalsFragment, getResources().getDrawable(R.drawable.ic_purpose), getString(R.string.title_goals), true);
+        AppMenuItem menuItemFiles = new AppMenuItem(new Fragment(), getResources().getDrawable(R.drawable.ic_file), getString(R.string.title_files), true);
+        AppMenuItem menuItemTasks = new AppMenuItem(mTasksFragment, getResources().getDrawable(R.drawable.ic_tasks), getString(R.string.title_tasks), true);
+        AppMenuItem menuItemTimer = new AppMenuItem(null, getResources().getDrawable(R.drawable.ic_time_n), getString(R.string.title_timer), false);
+        AppMenuItem menuItemTips = new AppMenuItem(null, getResources().getDrawable(R.drawable.ic_tips_n), getString(R.string.title_tips), false);
+        AppMenuItem menuItemLocation = new AppMenuItem(null, getResources().getDrawable(R.drawable.ic_location_n), getString(R.string.title_location), false);
 
         appMenuItemList.add(menuItemRole);
         appMenuItemList.add(menuItemGhistory);
@@ -353,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
             case R.id.ma_fab:
                 // update data
-                mGoalsFragment.setupRecyclerView();
+                mTasksFragment.setupRecyclerView();
                 break;
         }
     }

@@ -12,6 +12,7 @@
     </android.support.v7.widget.RecyclerView>
 
     <ProgressBar
+        android:padding="64dp"
         android:visibility="gone"
         android:id="@+id/aqr_progress_bar"
         android:layout_width="match_parent"

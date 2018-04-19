@@ -42,6 +42,8 @@ import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
 import com.example.android_dev.qrtest.util.NotificationWorker;
 import com.google.zxing.Result;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.util.List;
 
@@ -62,12 +64,12 @@ public class QrReaderFragment extends Fragment {
     private CodeScannerView scannerView;
     private AHBottomNavigation bottomNavigationView;
     private RelativeLayout closeQrReaderButton;
+    private FrameLayout pnlFlash;
 
 
     public void setupOnCloseQrListener(OnCloseQrReaderButtonClickListener onCloseQrReaderButtonClickListener) {
         this.onCloseQrReaderButtonClickListener = onCloseQrReaderButtonClickListener;
     }
-
 
 
     @Override
@@ -76,6 +78,8 @@ public class QrReaderFragment extends Fragment {
         mContext = v.getContext();
         scannerView = v.findViewById(R.id.scanner_view);
         closeQrReaderButton = (RelativeLayout) v.findViewById(R.id.fqr_close);
+        pnlFlash = (FrameLayout) v.findViewById(R.id.pnlFlash);
+
         closeQrReaderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,10 +265,26 @@ public class QrReaderFragment extends Fragment {
         mCodeScanner.startPreview();
     }
 
+    private void showAnimation() {
+        pnlFlash.setVisibility(View.VISIBLE);
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(
+                ObjectAnimator.ofFloat(pnlFlash, "translationX", 0, 90),
+                ObjectAnimator.ofFloat(pnlFlash, "translationY", 0, 90),
+                ObjectAnimator.ofFloat(pnlFlash, "scaleX", 1, 1.5f),
+                ObjectAnimator.ofFloat(pnlFlash, "scaleY", 1, 0.5f),
+                ObjectAnimator.ofFloat(pnlFlash, "alpha", 1, 0.25f, 1),
+                ObjectAnimator.ofFloat(pnlFlash, "Y", 2500)
+        );
+        set.setDuration(1500).start();
+
+    }
+
     public void notifyAboutGoal() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 new NotificationWorker(mContext).showNotification(getString(R.string.notify_new_goal), GlobalNames.NOTIFICATION_NEW_GOAL_ID);
+                showAnimation();
             }
         }, 2000);
         int countNotification = iGoalsDataStore.getNotificationCount();

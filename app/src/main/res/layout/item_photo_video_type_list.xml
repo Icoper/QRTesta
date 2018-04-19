@@ -22,13 +22,13 @@
             android:id="@+id/ipvt_background_iv" />
 
         <ImageView
+            android:layout_gravity="start"
             android:id="@+id/ipvt_play_btn"
-            android:layout_gravity="center"
             tools:visibility="visible"
             android:visibility="gone"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:background="@drawable/play_button" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ic_videocam_white_36dp" />
     </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>

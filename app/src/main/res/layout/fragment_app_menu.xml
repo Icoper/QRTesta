@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:background="@color/colorGrayLight"
-    android:layout_gravity="center">
+    android:orientation="vertical"
+    tools:background="@color/colorGrayLight">
 
 
     <LinearLayout
-        android:elevation="4dp"
         android:id="@+id/irl_item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/menu_border_enable"
+        android:background="@color/colorWhite"
+        android:elevation="2dp"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/fam_role_icon"
@@ -61,13 +55,13 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fam_recycler_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/irl_item_layout" />
+
 
 </android.support.constraint.ConstraintLayout>

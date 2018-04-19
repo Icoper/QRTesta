@@ -1,8 +1,6 @@
 package com.example.android_dev.qrtest.ui.fragment;
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,8 +17,8 @@ import com.example.android_dev.qrtest.model.AppMenuItem;
 import com.example.android_dev.qrtest.model.Role;
 import com.example.android_dev.qrtest.presenter.appMenu.AppMenuFragmentPresenter;
 import com.example.android_dev.qrtest.ui.adapter.AppMenuRVAdapter;
+import com.example.android_dev.qrtest.util.GlobalNames;
 
-import java.io.File;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,7 +54,9 @@ public class AppMenuFragment extends Fragment {
         String personText = getString(R.string.your_person_name_text) + role.getName();
         personName.setText(personText);
         iconPerson.setImageBitmap(appMenuFragmentPresenter.getIconBitmap());
-        recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 3));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), GlobalNames.DEFAULT_GRID_COLUMN_COUNT);
+        gridLayoutManager.generateLayoutParams(container.getLayoutParams());
+
         AppMenuRVAdapter appMenuRVAdapter = new AppMenuRVAdapter(itemList, new AppMenuRVAdapter.OnItemClickListener() {
             @Override
             public void onClick(AppMenuItem menuItem) {
@@ -64,17 +64,10 @@ public class AppMenuFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(appMenuRVAdapter);
+        recyclerView.setLayoutManager(gridLayoutManager);
         return view;
     }
 
-    private Bitmap getBitMapByPath(String path, String name) {
-        File imgFile = new File(path, name);
-        if (imgFile.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            return myBitmap;
-        }
-        return null;
-    }
 
     public interface OnFragmentItemClickListener {
         void onClick(AppMenuItem appMenuItem);

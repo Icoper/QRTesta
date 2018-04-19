@@ -5,7 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-
     android:orientation="vertical">
 
     <RelativeLayout
@@ -23,13 +22,13 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:layout_margin="16dp"
                 android:id="@+id/iaml_fragment_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/ic_place_black_36dp"
+                android:background="@drawable/ic_character"
                 app:layout_constraintBottom_toTopOf="@+id/iaml_fragment_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +41,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="8dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
