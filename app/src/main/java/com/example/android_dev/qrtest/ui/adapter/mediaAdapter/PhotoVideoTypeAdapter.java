@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.android_dev.qrtest.R;
@@ -70,7 +69,7 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
         switch (assetTypes.get(position).getFileType()) {
             case GlobalNames.VIDEO_RES:
                 Uri videoURI = Uri.parse(filepath);
-                VideoPreviewDrawableTaskParams taskParams = new VideoPreviewDrawableTaskParams(videoURI, context, holder);
+                DrawableTaskParams taskParams = new DrawableTaskParams(videoURI, context, holder);
                 GetVideoPreviewDrawable getVideoPreviewDrawable = new GetVideoPreviewDrawable();
                 getVideoPreviewDrawable.execute(taskParams);
                 holder.viewLayout.setOnClickListener(new View.OnClickListener() {
@@ -82,26 +81,21 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
                 holder.playButton.setVisibility(View.VISIBLE);
                 break;
             case GlobalNames.IMG_RES:
-                Bitmap bitmap = getBitMapByPath(filepath);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 1, baos);
-                try {
-                    baos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Glide.with(view).load(bitmap).into(holder.backgroundImage);
+
+                DrawableTaskParams drawableTaskParams = new DrawableTaskParams(Uri.parse(filepath), context, holder);
+                GetBitmapDrawable getBitmapDrawable = new GetBitmapDrawable();
+                getBitmapDrawable.execute(drawableTaskParams);
+
                 holder.viewLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, "In Develop", Toast.LENGTH_SHORT).show();
+                        onItemStoryClickListener.onClick(assetTypes.get(position));
                     }
                 });
                 holder.playButton.setVisibility(View.GONE);
                 break;
         }
         holder.viewLayout.setLayoutParams(deafLayoutParams);
-
     }
 
     @Override
@@ -122,23 +116,14 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
         }
     }
 
-    private Bitmap getBitMapByPath(String path) {
-        Uri uri = Uri.parse(path);
-        File imgFile = new File(uri.getPath());
 
-        if (imgFile.exists()) {
-            return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-        }
-        return null;
-    }
-
-    private class VideoPreviewDrawableTaskParams {
+    private class DrawableTaskParams {
         private Uri uri;
         private Context context;
         private PhotoVideoTypeViewHolder storyViewHolder;
         private Drawable drawable;
 
-        VideoPreviewDrawableTaskParams(Uri uri, Context context, PhotoVideoTypeViewHolder storyViewHolder) {
+        DrawableTaskParams(Uri uri, Context context, PhotoVideoTypeViewHolder storyViewHolder) {
             this.uri = uri;
             this.context = context;
             this.storyViewHolder = storyViewHolder;
@@ -165,9 +150,37 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
         }
     }
 
-    public static class GetVideoPreviewDrawable extends AsyncTask<VideoPreviewDrawableTaskParams, Void, VideoPreviewDrawableTaskParams> {
+    public static class GetBitmapDrawable extends AsyncTask<DrawableTaskParams, Void, DrawableTaskParams> {
         @Override
-        protected VideoPreviewDrawableTaskParams doInBackground(VideoPreviewDrawableTaskParams... params) {
+        protected DrawableTaskParams doInBackground(DrawableTaskParams... params) {
+            DrawableTaskParams drawableTaskParams = params[0];
+            Uri uri = drawableTaskParams.getUri();
+            File imgFile = new File(String.valueOf(uri));
+            if (imgFile.exists()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);
+                Drawable drawable = new BitmapDrawable(params[0].getContext().getResources(), bitmap);
+                drawableTaskParams.setDrawable(drawable);
+            }
+
+            return drawableTaskParams;
+        }
+
+        @Override
+        protected void onPostExecute(DrawableTaskParams videoPreviewDrawableTaskParams) {
+            Drawable drawable = videoPreviewDrawableTaskParams.getDrawable();
+            try {
+                Glide.with(videoPreviewDrawableTaskParams.context).load(drawable).into(videoPreviewDrawableTaskParams.getStoryViewHolder().backgroundImage);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static class GetVideoPreviewDrawable extends AsyncTask<DrawableTaskParams, Void, DrawableTaskParams> {
+        @Override
+        protected DrawableTaskParams doInBackground(DrawableTaskParams... params) {
             Log.d(LOG_TAG, " doInBackground is called ");
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(params[0].getContext(), params[0].getUri());
@@ -176,7 +189,7 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);
             Drawable drawable = new BitmapDrawable(params[0].getContext().getResources(), bitmap);
-            VideoPreviewDrawableTaskParams taskParams = params[0];
+            DrawableTaskParams taskParams = params[0];
             taskParams.setDrawable(drawable);
 
             try {
@@ -188,7 +201,7 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
         }
 
         @Override
-        protected void onPostExecute(VideoPreviewDrawableTaskParams videoPreviewDrawableTaskParams) {
+        protected void onPostExecute(DrawableTaskParams videoPreviewDrawableTaskParams) {
             Drawable drawable = videoPreviewDrawableTaskParams.getDrawable();
             try {
                 Glide.with(videoPreviewDrawableTaskParams.context).load(drawable).into(videoPreviewDrawableTaskParams.getStoryViewHolder().backgroundImage);

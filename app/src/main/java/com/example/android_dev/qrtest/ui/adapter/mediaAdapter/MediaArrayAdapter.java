@@ -75,8 +75,6 @@ public class MediaArrayAdapter extends RecyclerView.Adapter<MediaArrayAdapter.St
         sortedMediaData.add(docData);
         sortedMediaData.add(audioData);
         sortedMediaData.add(photoVideoData);
-
-
         resPath = GlobalNames.ENVIRONMENT_STORE + jsonStory.getResFolderName() + "/" + "Resource1/";
 
     }

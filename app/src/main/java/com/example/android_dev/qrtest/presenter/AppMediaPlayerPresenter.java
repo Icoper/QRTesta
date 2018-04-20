@@ -1,6 +1,7 @@
 package com.example.android_dev.qrtest.presenter;
 
 import android.util.Log;
+
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
@@ -19,6 +20,9 @@ public class AppMediaPlayerPresenter implements IAppMediaPlayerPresenter {
             msg = GlobalNames.AUDIO_RES;
         } else if (resource.getFileType().equals(GlobalNames.VIDEO_RES)) {
             msg = GlobalNames.VIDEO_RES;
+        }
+        if (resource.getFileType().equals(GlobalNames.IMG_RES)) {
+            msg = GlobalNames.IMG_RES;
         }
         return msg;
     }

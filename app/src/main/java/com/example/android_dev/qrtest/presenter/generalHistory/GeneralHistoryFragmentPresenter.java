@@ -33,7 +33,9 @@ public class GeneralHistoryFragmentPresenter implements IGeneralHistoryFragmentP
             return;
         } else if (msg.equals(GlobalNames.AUDIO_RES)) {
             iGeneralHistoryFragment.startAudioPlayerActivity(filePath);
+        } else if (msg.equals(GlobalNames.IMG_RES)) {
+            iGeneralHistoryFragment.startImageViewerActivity(filePath);
+            return;
         }
-        iGeneralHistoryFragment.showMsg(msg);
     }
 }

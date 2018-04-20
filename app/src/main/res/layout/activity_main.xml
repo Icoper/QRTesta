@@ -44,26 +44,27 @@
             app:layout_constraintBottom_toTopOf="@id/ma_bottom_navigation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/my_toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/my_toolbar">
 
-        <RelativeLayout
-            android:visibility="gone"
-            android:background="@color/colorGrayLight"
-            android:id="@+id/ma_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="@+id/ma_bottom_navigation"
-            app:layout_constraintTop_toTopOf="@+id/ma_fragment_container"
-            tools:layout_height="100dp">
+            <RelativeLayout
+                android:id="@+id/ma_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorGrayLight"
+                android:gravity="center"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/ma_bottom_navigation"
+                app:layout_constraintTop_toTopOf="@+id/ma_fragment_container"
+                tools:layout_height="100dp">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent" />
-        </RelativeLayout>
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+            </RelativeLayout>
+        </FrameLayout>
 
 
         <android.support.design.widget.FloatingActionButton
@@ -75,6 +76,7 @@
             android:layout_marginRight="16dp"
             android:padding="16dp"
             android:visibility="invisible"
+            app:rippleColor="@color/colorWhite"
             app:layout_constraintBottom_toTopOf="@+id/ma_bottom_navigation"
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible" />

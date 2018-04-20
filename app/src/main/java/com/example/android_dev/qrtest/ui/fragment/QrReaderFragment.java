@@ -3,6 +3,7 @@ package com.example.android_dev.qrtest.ui.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -222,10 +223,14 @@ public class QrReaderFragment extends Fragment {
 
             @Override
             public void startAudioPlayerActivity(String filePath) {
-                Intent intent = new Intent();
-                intent.setAction(android.content.Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(filePath), "audio/*");
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent();
+                    intent.setAction(android.content.Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(filePath), "audio/*");
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -288,7 +293,7 @@ public class QrReaderFragment extends Fragment {
         int countNotification = iGoalsDataStore.getNotificationCount();
         countNotification++;
         iGoalsDataStore.setNotificationCount(countNotification);
-        bottomNavigationView.setNotification(String.valueOf(countNotification), 2);
+        bottomNavigationView.setNotification(String.valueOf(countNotification), 4);
 
     }
 

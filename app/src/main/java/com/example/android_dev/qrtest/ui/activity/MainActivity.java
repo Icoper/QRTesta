@@ -39,25 +39,13 @@ import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.SavedDataStore;
 import com.example.android_dev.qrtest.db.SingletonStoryData;
-import com.example.android_dev.qrtest.db.tempData.ITempDataRepository;
-import com.example.android_dev.qrtest.db.tempData.TempDataRepository;
-import com.example.android_dev.qrtest.model.AppMenuItem;
 import com.example.android_dev.qrtest.model.HistoryScansQRInformationIDs;
 import com.example.android_dev.qrtest.model.IStory;
-import com.example.android_dev.qrtest.ui.fragment.AppMenuFragment;
 import com.example.android_dev.qrtest.ui.fragment.GeneralHistoryFragment;
 import com.example.android_dev.qrtest.ui.fragment.GoalsFragment;
 import com.example.android_dev.qrtest.ui.fragment.HistoryScanFragment;
-import com.example.android_dev.qrtest.ui.fragment.LocationFragment;
 import com.example.android_dev.qrtest.ui.fragment.QrReaderFragment;
 import com.example.android_dev.qrtest.ui.fragment.RoleInfoFragment;
-import com.example.android_dev.qrtest.ui.fragment.RolesFragment;
-import com.example.android_dev.qrtest.ui.fragment.TasksFragment;
-import com.example.android_dev.qrtest.ui.fragment.filesFragment.FilesFragmentFound;
-import com.facebook.drawee.backends.pipeline.Fresco;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String LOG_TAG = "MainActivity";
@@ -66,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private IHistoryScanDataStore iHistoryScanDataStore;
     private IGoalsDataStore iGoalsDataStore;
     private IStory selectedStory;
-    private ITempDataRepository iTempDataRepository;
     // ui
     private Toolbar mActionBarToolbar;
     private boolean doubleBackToExitPressedOnce = false;
@@ -82,12 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private GeneralHistoryFragment mGeneralHistoryFragment;
     private HistoryScanFragment mHistoryScanFragment;
     private GoalsFragment mGoalsFragment;
-    private AppMenuFragment mAppMenuFragment;
     private FragmentTransaction mFragmentTransaction;
-    private RolesFragment mRolesFragment;
-    private TasksFragment mTasksFragment;
-    private LocationFragment mLocationFragment;
-    private FilesFragmentFound mFilesFragmentFound;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,16 +100,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         inMemoryStoryRepository = new InMemoryStoryRepository();
         iGoalsDataStore = new GoalsDataStore();
         iHistoryScanDataStore = new HistoryScanDataStore();
-        iTempDataRepository = new TempDataRepository();
         selectedStory = inMemoryStoryRepository.getSelectedStory();
-        Fresco.initialize(this);
-
         progressLayout = (RelativeLayout) findViewById(R.id.ma_progress_bar);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.ma_fab);
         loadContentLayout = (RelativeLayout) findViewById(R.id.ma_load_content_layout);
         mainContentLayout = (ConstraintLayout) findViewById(R.id.ma_main_content_layout);
         loadContentLayout.setVisibility(View.GONE);
         floatingActionButton.setOnClickListener(this);
+        floatingActionButton.setBackgroundResource(R.drawable.ic_tasks);
         mActionBarToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(mActionBarToolbar);
         setTitle(selectedStory.getPreviewText());
@@ -140,17 +120,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupBottomNavigationView() {
         ahBottomNavigationView = (AHBottomNavigation) findViewById(R.id.ma_bottom_navigation);
-        AHBottomNavigationItem itemMenu = new AHBottomNavigationItem(R.string.title_menu, R.drawable.ic_menu, R.color.colorGrey);
+        AHBottomNavigationItem itemGeneralHistory = new AHBottomNavigationItem(R.string.title_general_history, R.drawable.ic_history, R.color.colorGrey);
+        AHBottomNavigationItem itemActorInfo = new AHBottomNavigationItem(R.string.title_characters_info, R.drawable.ic_character, R.color.colorGrey);
+        AHBottomNavigationItem itemHistoryScan = new AHBottomNavigationItem(R.string.title_history_scan, R.drawable.ic_hist_scan, R.color.colorGrey);
         AHBottomNavigationItem itemQrReader = new AHBottomNavigationItem(R.string.title_qr_reader, R.drawable.ic_qr, R.color.colorGrey);
-        AHBottomNavigationItem itemGoals = new AHBottomNavigationItem(R.string.title_history_scan, R.drawable.ic_hist_scan, R.color.colorGrey);
-        ahBottomNavigationView.addItem(itemMenu);
+        AHBottomNavigationItem itemGoals = new AHBottomNavigationItem(R.string.title_goals, R.drawable.ic_tasks, R.color.colorGrey);
+
+        ahBottomNavigationView.addItem(itemGeneralHistory);
+        ahBottomNavigationView.addItem(itemActorInfo);
         ahBottomNavigationView.addItem(itemQrReader);
+        ahBottomNavigationView.addItem(itemHistoryScan);
         ahBottomNavigationView.addItem(itemGoals);
 
-        ahBottomNavigationView.setNotificationAnimationDuration(3000);
+        ahBottomNavigationView.setNotificationAnimationDuration(700);
         ahBottomNavigationView.setColored(true);
         ahBottomNavigationView.setForceTint(true);
-        ahBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
+        ahBottomNavigationView.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         ahBottomNavigationView.setInactiveColor(getResources().getColor(R.color.colorGrayLight));
         ahBottomNavigationView.setAccentColor(getResources().getColor(R.color.colorBlue));
         ahBottomNavigationView.setNotificationTextColor(getResources().getColor(R.color.colorWhite));
@@ -158,45 +143,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ahBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
+                Fragment fragment = null;
                 switch (position) {
                     case 0:
                         if (!wasSelected) {
-                            getFragmentTransaction().replace(R.id.ma_fragment_container, mAppMenuFragment).commit();
+                            fragment = mGeneralHistoryFragment;
                             showFab(false);
                         }
                         break;
                     case 1:
                         if (!wasSelected) {
-                            getFragmentTransaction().replace(R.id.ma_fragment_container, mQrReaderFragment).commit();
+                            fragment = mRoleInfoFragment;
                             showFab(false);
                         }
                         break;
                     case 2:
                         if (!wasSelected) {
-                            getFragmentTransaction().replace(R.id.ma_fragment_container, mHistoryScanFragment).commit();
+                            fragment = mQrReaderFragment;
                             showFab(false);
                         }
                         break;
+                    case 3:
+                        if (!wasSelected) {
+                            fragment = mHistoryScanFragment;
+                            showFab(false);
+                        }
+                        break;
+                    case 4:
+                        if (!wasSelected) {
+                            fragment = mGoalsFragment;
+                            showFab(true);
+                        }
+                        break;
+                }
+                if (fragment != null) {
+                    getFragmentTransaction().replace(R.id.ma_fragment_container, fragment).commit();
                 }
                 return true;
             }
         });
     }
 
-
     private void initializeFragment() {
-        mFilesFragmentFound = new FilesFragmentFound();
-        mTasksFragment = new TasksFragment();
-        mRolesFragment = new RolesFragment();
-        mLocationFragment = new LocationFragment();
-        mRolesFragment.setiStoryRepository(inMemoryStoryRepository);
         mQrReaderFragment = new QrReaderFragment();
         mQrReaderFragment.setupRepository(iHistoryScanDataStore, iGoalsDataStore);
         mQrReaderFragment.setBottomNavigationView(ahBottomNavigationView);
         mQrReaderFragment.setupOnCloseQrListener(new QrReaderFragment.OnCloseQrReaderButtonClickListener() {
             @Override
             public void onClick() {
-                getFragmentTransaction().replace(R.id.ma_fragment_container, mAppMenuFragment).commit();
+                getFragmentTransaction().replace(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
                 ahBottomNavigationView.setCurrentItem(0);
             }
         });
@@ -205,50 +200,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHistoryScanFragment = new HistoryScanFragment();
         mHistoryScanFragment.setupRepository(iHistoryScanDataStore);
         mGoalsFragment = new GoalsFragment();
-        mTasksFragment.setupRepository(iGoalsDataStore);
-        mTasksFragment.setBottomNavigationView(ahBottomNavigationView);
-        mAppMenuFragment = new AppMenuFragment();
+        mGoalsFragment.setupRepository(iGoalsDataStore);
+        mGoalsFragment.setBottomNavigationView(ahBottomNavigationView);
 
-        List<AppMenuItem> appMenuItemList = new ArrayList<>();
-
-        AppMenuItem menuItemRole = new AppMenuItem(mRoleInfoFragment, getResources().getDrawable(R.drawable.ic_character), getString(R.string.title_characters_info), true);
-        AppMenuItem menuItemGhistory = new AppMenuItem(mGeneralHistoryFragment, getResources().getDrawable(R.drawable.ic_history), getString(R.string.title_general_history), true);
-        AppMenuItem menuItemRoles = new AppMenuItem(mRolesFragment, getResources().getDrawable(R.drawable.ic_participants), getString(R.string.title_roles), true);
-        AppMenuItem menuItemGoal = new AppMenuItem(mGoalsFragment, getResources().getDrawable(R.drawable.ic_purpose), getString(R.string.title_goals), true);
-        AppMenuItem menuItemFiles = new AppMenuItem(new Fragment(), getResources().getDrawable(R.drawable.ic_file), getString(R.string.title_files), true);
-        AppMenuItem menuItemTasks = new AppMenuItem(mTasksFragment, getResources().getDrawable(R.drawable.ic_tasks), getString(R.string.title_tasks), true);
-        AppMenuItem menuItemTimer = new AppMenuItem(null, getResources().getDrawable(R.drawable.ic_time_n), getString(R.string.title_timer), false);
-        AppMenuItem menuItemTips = new AppMenuItem(null, getResources().getDrawable(R.drawable.ic_tips_n), getString(R.string.title_tips), false);
-        AppMenuItem menuItemLocation = new AppMenuItem(null, getResources().getDrawable(R.drawable.ic_location_n), getString(R.string.title_location), false);
-
-        appMenuItemList.add(menuItemRole);
-        appMenuItemList.add(menuItemGhistory);
-        appMenuItemList.add(menuItemRoles);
-        appMenuItemList.add(menuItemGoal);
-        appMenuItemList.add(menuItemFiles);
-        appMenuItemList.add(menuItemTasks);
-        appMenuItemList.add(menuItemTimer);
-        appMenuItemList.add(menuItemTips);
-        appMenuItemList.add(menuItemLocation);
-
-        mAppMenuFragment.setItemList(appMenuItemList);
-        mAppMenuFragment.setFragmentItemClickListener(new AppMenuFragment.OnFragmentItemClickListener() {
-            @Override
-            public void onClick(AppMenuItem appMenuItem) {
-                if (appMenuItem.getFragment() != null) {
-                    loadContentLayout.setVisibility(View.VISIBLE);
-                    mainContentLayout.setVisibility(View.GONE);
-                    iTempDataRepository.setAppMenuItem(appMenuItem);
-                    startActivity(new Intent(MainActivity.this, ContentActivity.class));
-                }
-                if (!appMenuItem.isActive()) {
-                    Toast.makeText(MainActivity.this, R.string.not_aviable_text, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        mFragmentTransaction = getFragmentTransaction();
-        mFragmentTransaction.add(R.id.ma_fragment_container, mAppMenuFragment).commit();
+        getFragmentTransaction().add(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
     }
 
     private FragmentTransaction getFragmentTransaction() {
@@ -299,13 +254,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showFab(boolean needToShow) {
         if (needToShow) {
             Animation anim = AnimationUtils.loadAnimation(floatingActionButton.getContext(), R.anim.scale_up);
-            anim.setDuration(200L);
+            anim.setDuration(500);
             floatingActionButton.startAnimation(anim);
             floatingActionButton.setVisibility(View.VISIBLE);
         } else {
             if (floatingActionButton.getVisibility() == View.VISIBLE) {
                 Animation anim = AnimationUtils.loadAnimation(floatingActionButton.getContext(), R.anim.scale_down);
-                anim.setDuration(200L);
+                anim.setDuration(500);
                 floatingActionButton.startAnimation(anim);
                 floatingActionButton.setVisibility(View.GONE);
             }
@@ -358,7 +313,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
             case R.id.ma_fab:
                 // update data
-                mTasksFragment.setupRecyclerView();
                 break;
         }
     }

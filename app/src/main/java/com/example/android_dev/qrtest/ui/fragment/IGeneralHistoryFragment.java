@@ -7,4 +7,6 @@ public interface IGeneralHistoryFragment {
     void startVideoPlayerActivity(String filepath);
 
     void startAudioPlayerActivity(String filepath);
+
+    void startImageViewerActivity(String filepath);
 }
