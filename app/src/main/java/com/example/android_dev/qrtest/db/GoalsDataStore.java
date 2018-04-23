@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoalsDataStore implements IGoalsDataStore {
-    private List<Integer> resIds;
+    private List<Integer> allGoalsResIds;
+    private List<Integer> newGoalsResIds;
 
     @Override
     public void update(List<Integer> ids) {
         List<Integer> filteredNewRes = new ArrayList<>();
-        resIds = getAll();
+        allGoalsResIds = getAll();
         for (int res : ids) {
             boolean alreadyAdded = false;
-            for (int _res : resIds) {
+            for (int _res : allGoalsResIds) {
                 if (_res == res) {
                     alreadyAdded = true;
                 }
@@ -21,8 +22,8 @@ public class GoalsDataStore implements IGoalsDataStore {
                 filteredNewRes.add(res);
             }
         }
-        resIds.addAll(filteredNewRes);
-        getSavedDataStore().saveKnowGoals(resIds);
+        allGoalsResIds.addAll(filteredNewRes);
+        getSavedDataStore().saveKnowGoals(allGoalsResIds);
     }
 
     @Override
@@ -32,23 +33,45 @@ public class GoalsDataStore implements IGoalsDataStore {
 
     @Override
     public void setList(List<Integer> list) {
-        this.resIds = list;
+        this.allGoalsResIds = list;
         getSavedDataStore().saveKnowGoals(list);
     }
 
+    @Override
+    public void saveNewGoals(List<Integer> list) {
+        if (newGoalsResIds == null) {
+            newGoalsResIds = new ArrayList<>();
+        }
+        newGoalsResIds.addAll(list);
+    }
+
+    @Override
+    public List<Integer> loadNewGoals() {
+        if (newGoalsResIds == null) {
+            newGoalsResIds = new ArrayList<>();
+        }
+        return newGoalsResIds;
+    }
+
+    @Override
+    public void cleanNewGoals() {
+        newGoalsResIds = null;
+    }
+
     private List<Integer> getList() {
-        if (resIds == null) {
+        if (allGoalsResIds == null) {
             try {
                 if (getSavedDataStore().loadKnowGoals() != null) {
-                    resIds = getSavedDataStore().loadKnowGoals();
-                } else resIds = new ArrayList<>();
+                    allGoalsResIds = getSavedDataStore().loadKnowGoals();
+                } else allGoalsResIds = new ArrayList<>();
             } catch (NullPointerException e) {
                 e.printStackTrace();
-                resIds = new ArrayList<>();
+                allGoalsResIds = new ArrayList<>();
             }
         }
-        return resIds;
+        return allGoalsResIds;
     }
+
 
     private SavedDataStore getSavedDataStore() {
         return SingletonStoryData.getInstance().getSavedDataStore();

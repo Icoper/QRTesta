@@ -71,9 +71,9 @@ public class QRFPresenter implements IQRPresenter {
             }
         }
         if (selectedQrInformation != null) {
-            int qrIfoId = selectedQrInformation.getId();
+            int qrInfoId = selectedQrInformation.getId();
             for (HistoryScansQRInformationIDs historyScansQRInfo : jsonStory.getHistoryScansQRInformationsIDList()) {
-                if (historyScansQRInfo.getQrInformationID() == qrIfoId) {
+                if (historyScansQRInfo.getQrInformationID() == qrInfoId) {
                     if (historyScansQRInfo.isShortInfo()) {
                         alertScanMode = GlobalNames.QR_MODE_FIRST_SCAN;
                         iHistoryScanDataStore.update(qrInformationId);
@@ -85,7 +85,7 @@ public class QRFPresenter implements IQRPresenter {
                                 qrData = _qrData;
                             }
                         }
-                        iGoalsDataStore.update(qrData.getQrItemList().getGoalDetailAssetIDList());
+                        iGoalsDataStore.saveNewGoals(qrData.getQrItemList().getGoalDetailAssetIDList());
                     } else {
                         alertScanMode = GlobalNames.QR_MODE_SIMPLE_SCAN;
                     }
@@ -97,7 +97,6 @@ public class QRFPresenter implements IQRPresenter {
                     resIds = qrData.getQrItemList().getShortInfoAssetIDList();
                 }
             }
-
             iqrFragment.showAlertDialog(alertScanMode, resIds, GlobalNames.ALERT_MODE_SMALL_INFO);
         } else {
             iqrFragment.showMsg(R.string.qr_code_not_found);

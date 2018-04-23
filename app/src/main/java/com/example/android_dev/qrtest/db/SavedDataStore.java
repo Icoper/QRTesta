@@ -62,6 +62,16 @@ public class SavedDataStore implements ISavedDataStore {
     }
 
     @Override
+    public void saveNewGoals(List<Integer> list) {
+
+    }
+
+    @Override
+    public List<Integer> loadNewGoals() {
+        return null;
+    }
+
+    @Override
     public void saveScanQrCodes(List<Integer> list) {
         savedData = getSavedData();
         savedData.setScanQRStoreList(list);

@@ -46,6 +46,7 @@ import com.example.android_dev.qrtest.ui.fragment.GoalsFragment;
 import com.example.android_dev.qrtest.ui.fragment.HistoryScanFragment;
 import com.example.android_dev.qrtest.ui.fragment.QrReaderFragment;
 import com.example.android_dev.qrtest.ui.fragment.RoleInfoFragment;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String LOG_TAG = "MainActivity";
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        Fresco.initialize(this);
         inMemoryStoryRepository = new InMemoryStoryRepository();
         iGoalsDataStore = new GoalsDataStore();
         iHistoryScanDataStore = new HistoryScanDataStore();

@@ -13,19 +13,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.example.android_dev.qrtest.R;
+import com.example.android_dev.qrtest.db.GoalsDataStore;
 import com.example.android_dev.qrtest.db.IGoalsDataStore;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.goals.GoalsFragmentPresenter;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GoalsFragment extends Fragment {
     private Context mContext;
-    private RecyclerView recyclerView;
+    private RecyclerView oldGoalsRecyclerView;
+    private RecyclerView newGoalsRecyclerView;
     private AHBottomNavigation bottomNavigationView;
     private View view;
     private IGoalsDataStore iGoalsDataStore;
@@ -36,10 +42,31 @@ public class GoalsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_goals, container, false);
         mContext = view.getContext();
-        recyclerView = (RecyclerView) view.findViewById(R.id.gf_recycler_view);
-        setupRecyclerView();
+        iGoalsDataStore = new GoalsDataStore();
+        setupNewGoals();
+        setupOldGoals();
+
         bottomNavigationView.setNotification("", 4);
         return view;
+    }
+
+    private void setupOldGoals() {
+        oldGoalsRecyclerView = (RecyclerView) view.findViewById(R.id.gf_recycler_view);
+        List<Integer> oldGoalsRes = iGoalsDataStore.getAll();
+        setupRecyclerView(oldGoalsRecyclerView, oldGoalsRes);
+    }
+
+    private void setupNewGoals() {
+        List<Integer> newGoalsRes = new ArrayList<>();
+
+        if (iGoalsDataStore.loadNewGoals().size() > 0) {
+            newGoalsRes = iGoalsDataStore.loadNewGoals();
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.gf_new_goals_layout);
+            linearLayout.setVisibility(View.VISIBLE);
+            newGoalsRecyclerView = (RecyclerView) view.findViewById(R.id.gf_recycler_view_new_goals);
+            setupRecyclerView(newGoalsRecyclerView, newGoalsRes);
+        }
+
     }
 
     public void setupRepository(IGoalsDataStore iGoalsDataStore) {
@@ -50,7 +77,7 @@ public class GoalsFragment extends Fragment {
         this.bottomNavigationView = bottomNavigationView;
     }
 
-    public void setupRecyclerView() {
+    public void setupRecyclerView(RecyclerView recyclerView, final List<Integer> resources) {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         MediaArrayAdapter mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
             @Override
@@ -79,9 +106,9 @@ public class GoalsFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                }, iGoalsDataStore).playMediaData(resource);
+                }).playMediaData(resource);
             }
-        }, iGoalsDataStore.getAll());
+        }, resources);
         recyclerView.setAdapter(mediaArrayAdapter);
     }
 }

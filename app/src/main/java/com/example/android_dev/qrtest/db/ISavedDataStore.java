@@ -18,6 +18,10 @@ public interface ISavedDataStore {
 
     List<Integer> loadKnowGoals();
 
+    void saveNewGoals(List<Integer> list);
+
+    List<Integer> loadNewGoals();
+
     void saveScanQrCodes(List<Integer> list);
 
     List<Integer> loadScanQrCodes();

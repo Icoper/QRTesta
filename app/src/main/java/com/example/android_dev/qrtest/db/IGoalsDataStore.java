@@ -10,6 +10,11 @@ public interface IGoalsDataStore {
 
     void setList(List<Integer> list);
 
+    void saveNewGoals(List<Integer> list);
+
+    List<Integer> loadNewGoals();
+
+    void cleanNewGoals();
 
     void setNotificationCount(int count);
 

@@ -17,6 +17,7 @@
     <string name="notify_new_goal">New goal added! Check your goals.</string>
     <string name="qr_code_not_found">QR code not found!</string>
     <string name="character_text">Characters</string>
+    <string name="new_goals_text">New goals</string>
 
     // AppMenu
     <string name="your_person_name_text">Your person - </string>

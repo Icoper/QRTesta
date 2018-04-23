@@ -290,8 +290,7 @@ public class QrReaderFragment extends Fragment {
                 showAnimation();
             }
         }, 2000);
-        int countNotification = iGoalsDataStore.getNotificationCount();
-        countNotification++;
+        int countNotification = iGoalsDataStore.loadNewGoals().size();
         iGoalsDataStore.setNotificationCount(countNotification);
         bottomNavigationView.setNotification(String.valueOf(countNotification), 4);
 

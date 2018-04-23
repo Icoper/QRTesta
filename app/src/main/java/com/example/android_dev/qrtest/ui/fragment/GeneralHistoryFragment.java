@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,65 +35,51 @@ public class GeneralHistoryFragment extends Fragment {
         mContext = v.getContext();
         InMemoryStoryRepository inMemoryStoryRepository = new InMemoryStoryRepository();
         IStory ourStory = inMemoryStoryRepository.getSelectedStory();
+
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_media_recycler_view);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
         resIds = ourStory.getHistoryAssetTypesID();
 
-        new LoadContentInBackground().execute("");
+        MediaArrayAdapter mediaArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
+            @Override
+            public void onClick(AssetTypes resource) {
+                new GeneralHistoryFragmentPresenter(new IGeneralHistoryFragment() {
+                    @Override
+                    public void showMsg(String msg) {
+                        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+                    }
 
+                    @Override
+                    public void startVideoPlayerActivity(String filePath) {
+                        Intent intent = new Intent(mContext, SimpleVideoPlayer.class);
+                        intent.putExtra("res", filePath);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void startAudioPlayerActivity(String filePath) {
+                        try {
+                            Intent intent = new Intent();
+                            intent.setAction(android.content.Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.parse(filePath), "audio/*");
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void startImageViewerActivity(String filepath) {
+                        Intent intent = new Intent(GeneralHistoryFragment.this.mContext, ImageViewer.class);
+                        intent.putExtra("path", filepath);
+                        startActivity(intent);
+                    }
+                }).playMediaData(resource);
+            }
+        }, resIds);
+        recyclerView.setAdapter(mediaArrayAdapter);
         return v;
     }
 
-    public class LoadContentInBackground extends AsyncTask<String, Void, MediaArrayAdapter> {
-
-        @Override
-        protected MediaArrayAdapter doInBackground(String... strings) {
-            MediaArrayAdapter storyArrayAdapter = new MediaArrayAdapter(new MediaArrayAdapter.OnItemStoryClickListener() {
-                @Override
-                public void onClick(AssetTypes resource) {
-                    new GeneralHistoryFragmentPresenter(new IGeneralHistoryFragment() {
-                        @Override
-                        public void showMsg(String msg) {
-                            Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void startVideoPlayerActivity(String filePath) {
-                            Intent intent = new Intent(mContext, SimpleVideoPlayer.class);
-                            intent.putExtra("res", filePath);
-                            startActivity(intent);
-                        }
-
-                        @Override
-                        public void startAudioPlayerActivity(String filePath) {
-                            try {
-                                Intent intent = new Intent();
-                                intent.setAction(android.content.Intent.ACTION_VIEW);
-                                intent.setDataAndType(Uri.parse(filePath), "audio/*");
-                                startActivity(intent);
-                            } catch (ActivityNotFoundException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        @Override
-                        public void startImageViewerActivity(String filepath) {
-                            Intent intent = new Intent(GeneralHistoryFragment.this.mContext, ImageViewer.class);
-                            intent.putExtra("path", filepath);
-                            startActivity(intent);
-                        }
-                    }).playMediaData(resource);
-                }
-            }, resIds);
-            return storyArrayAdapter;
-        }
-
-        @Override
-        protected void onPostExecute(MediaArrayAdapter mediaArrayAdapter) {
-            super.onPostExecute(mediaArrayAdapter);
-            recyclerView.setAdapter(mediaArrayAdapter);
-        }
-    }
 }
