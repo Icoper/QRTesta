@@ -2,11 +2,9 @@ package com.example.android_dev.qrtest.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +23,8 @@ import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.historyScan.HistoryScanPresenter;
+import com.example.android_dev.qrtest.ui.AudioPlayerAlertDialog;
+import com.example.android_dev.qrtest.ui.IAudioPlayerAlertDialog;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.StoryListRVAdapter;
 import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
@@ -41,14 +41,13 @@ public class HistoryScanFragment extends Fragment {
     private IStoryRepository iStoryRepository;
     private IStory jsonStory;
     private IHistoryScanDataStore iHistoryScanDataStore;
-    private final double calculationPercent = 5.4;
-    private ViewGroup.LayoutParams deafLayoutParams;
-    private View view;
+    private IAudioPlayerAlertDialog audioPlayerAlertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_history_scan, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_scan, container, false);
         mContext = view.getContext();
+        audioPlayerAlertDialog = new AudioPlayerAlertDialog();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.fhs_recycler_view);
         setupPresenter();
@@ -134,14 +133,7 @@ public class HistoryScanFragment extends Fragment {
 
             @Override
             public void startAudioPlayerActivity(String filePath) {
-                try {
-                    Intent intent = new Intent();
-                    intent.setAction(android.content.Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(filePath), "audio/*");
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
+                audioPlayerAlertDialog.playTrack(filePath, mContext);
             }
 
 

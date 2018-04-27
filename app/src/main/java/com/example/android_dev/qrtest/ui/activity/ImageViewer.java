@@ -25,5 +25,4 @@ public class ImageViewer extends AppCompatActivity {
         Glide.with(this).load(filepath).into(imageView);
     }
 
-
 }
