@@ -191,7 +191,6 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
             Drawable drawable = new BitmapDrawable(params[0].getContext().getResources(), bitmap);
             DrawableTaskParams taskParams = params[0];
             taskParams.setDrawable(drawable);
-
             try {
                 baos.close();
             } catch (IOException e) {
