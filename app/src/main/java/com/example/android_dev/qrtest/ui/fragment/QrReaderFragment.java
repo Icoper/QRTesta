@@ -3,12 +3,10 @@ package com.example.android_dev.qrtest.ui.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -34,10 +32,11 @@ import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.db.IGoalsDataStore;
-import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
+import com.example.android_dev.qrtest.db.goals.IGoalsDataStore;
+import com.example.android_dev.qrtest.db.historyScan.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.qr.QRFPresenter;
+import com.example.android_dev.qrtest.ui.activity.ImageViewer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
@@ -55,8 +54,8 @@ public class QrReaderFragment extends Fragment {
     private static final String LOG_TAG = "QrReaderFragment";
     private CodeScanner mCodeScanner;
     // Repository
-    private IHistoryScanDataStore iHistoryScanDataStore;
-    private IGoalsDataStore iGoalsDataStore;
+    private IHistoryScanDataStore historyScanDataStore;
+    private IGoalsDataStore goalsDataStore;
 
     private OnCloseQrReaderButtonClickListener onCloseQrReaderButtonClickListener;
     //view
@@ -130,6 +129,10 @@ public class QrReaderFragment extends Fragment {
 
         // Request a layout to be re-done
         current.requestLayout();
+    }
+
+    private void hardCodeQR() {
+        qrfPresenter.checkCode("1111");
     }
 
     private void setupPresenter() {
@@ -222,25 +225,18 @@ public class QrReaderFragment extends Fragment {
             }
 
             @Override
-            public void startAudioPlayerActivity(String filePath) {
-                try {
-                    Intent intent = new Intent();
-                    intent.setAction(android.content.Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(filePath), "audio/*");
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
+            public void startImageViewerActivity(String filepath) {
+                Intent intent = new Intent(mContext, ImageViewer.class);
+                intent.putExtra("path", filepath);
+                startActivity(intent);
             }
+        }, historyScanDataStore, goalsDataStore);
 
-
-        }, iHistoryScanDataStore, iGoalsDataStore);
     }
 
     private void setupScanner() {
         final Activity activity = getActivity();
         mCodeScanner = new CodeScanner(activity, scannerView);
-        mCodeScanner.setAutoFocusEnabled(true);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -279,7 +275,6 @@ public class QrReaderFragment extends Fragment {
                 ObjectAnimator.ofFloat(pnlFlash, "Y", 2500)
         );
         set.setDuration(1500).start();
-
     }
 
     public void notifyAboutGoal() {
@@ -288,11 +283,11 @@ public class QrReaderFragment extends Fragment {
                 new NotificationWorker(mContext).showNotification(getString(R.string.notify_new_goal),
                         GlobalNames.NOTIFICATION_NEW_GOAL_ID);
                 showAnimation();
+                int countNotification = goalsDataStore.getNewGoals().size();
+                bottomNavigationView.setNotification(String.valueOf(countNotification), 4);
             }
         }, 2000);
-        int countNotification = iGoalsDataStore.loadNewGoals().size();
-        iGoalsDataStore.setNotificationCount(countNotification);
-        bottomNavigationView.setNotification(String.valueOf(countNotification), 4);
+
 
     }
 
@@ -301,8 +296,8 @@ public class QrReaderFragment extends Fragment {
     }
 
     public void setupRepository(IHistoryScanDataStore iHistoryScanDataStore, IGoalsDataStore iGoalsDataStore) {
-        this.iGoalsDataStore = iGoalsDataStore;
-        this.iHistoryScanDataStore = iHistoryScanDataStore;
+        this.goalsDataStore = iGoalsDataStore;
+        this.historyScanDataStore = iHistoryScanDataStore;
     }
 
     private boolean checkPermission() {

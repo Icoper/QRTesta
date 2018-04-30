@@ -12,4 +12,5 @@
     <color name="colorNotification">#ff1f1f</color>
     <color name="colorBlue">#1b1a58</color>
     <color name="colorIconInactive">#aeaeae</color>
+    <color name="layoutBackgroundColor">#FFF</color>
 </resources>

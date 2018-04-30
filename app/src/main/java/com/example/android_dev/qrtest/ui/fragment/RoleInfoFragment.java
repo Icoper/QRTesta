@@ -19,8 +19,7 @@ import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.presenter.character.CharacterInfoPresenter;
-import com.example.android_dev.qrtest.ui.AudioPlayerAlertDialog;
-import com.example.android_dev.qrtest.ui.IAudioPlayerAlertDialog;
+import com.example.android_dev.qrtest.ui.activity.ImageViewer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
 import com.example.android_dev.qrtest.util.GlobalNames;
@@ -38,14 +37,12 @@ public class RoleInfoFragment extends Fragment {
     private Context mContext;
     private CircleImageView roleImg;
     private TextView roleName;
-    private IAudioPlayerAlertDialog audioPlayerAlertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_role_info, container, false);
         mContext = view.getContext();
         inMemoryStoryRepository = new InMemoryStoryRepository();
-        audioPlayerAlertDialog = new AudioPlayerAlertDialog();
         initializeView();
         List<Integer> resIds = new ArrayList<>();
         resIds.addAll(inMemoryStoryRepository.getSelectedRole().getInformationAssertIDList());
@@ -66,9 +63,12 @@ public class RoleInfoFragment extends Fragment {
                     }
 
                     @Override
-                    public void startAudioPlayerActivity(String filePath) {
-                        audioPlayerAlertDialog.playTrack(filePath, mContext);
+                    public void startImageViewerActivity(String filepath) {
+                        Intent intent = new Intent(mContext, ImageViewer.class);
+                        intent.putExtra("path", filepath);
+                        startActivity(intent);
                     }
+
                 }).playMediaData(resource);
             }
         }, resIds);

@@ -16,15 +16,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.IStoryRepository;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.historyScan.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.model.QrInformation;
 import com.example.android_dev.qrtest.presenter.historyScan.HistoryScanPresenter;
-import com.example.android_dev.qrtest.ui.AudioPlayerAlertDialog;
-import com.example.android_dev.qrtest.ui.IAudioPlayerAlertDialog;
+import com.example.android_dev.qrtest.ui.activity.ImageViewer;
 import com.example.android_dev.qrtest.ui.activity.SimpleVideoPlayer;
 import com.example.android_dev.qrtest.ui.adapter.StoryListRVAdapter;
 import com.example.android_dev.qrtest.ui.adapter.mediaAdapter.MediaArrayAdapter;
@@ -38,17 +37,14 @@ public class HistoryScanFragment extends Fragment {
     private RecyclerView recyclerView;
     private HistoryScanPresenter historyScanPresenter;
     private QrInformation selectedQrInformation;
-    private IStoryRepository iStoryRepository;
+    private IStoryRepository storyRepository;
     private IStory jsonStory;
-    private IHistoryScanDataStore iHistoryScanDataStore;
-    private IAudioPlayerAlertDialog audioPlayerAlertDialog;
+    private IHistoryScanDataStore historyScanDataStore;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history_scan, container, false);
         mContext = view.getContext();
-        audioPlayerAlertDialog = new AudioPlayerAlertDialog();
-
         recyclerView = (RecyclerView) view.findViewById(R.id.fhs_recycler_view);
         setupPresenter();
         return view;
@@ -59,8 +55,8 @@ public class HistoryScanFragment extends Fragment {
         historyScanPresenter = new HistoryScanPresenter(new IHistoryScanFragment() {
             @Override
             public void showGridView(final ArrayList<QrInformation> scannedQrInfo) {
-                iStoryRepository = new InMemoryStoryRepository();
-                jsonStory = iStoryRepository.getSelectedStory();
+                storyRepository = new InMemoryStoryRepository();
+                jsonStory = storyRepository.getSelectedStory();
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
                 recyclerView.setLayoutManager(mLayoutManager);
                 List<IStory> stories = new ArrayList<>();
@@ -130,19 +126,18 @@ public class HistoryScanFragment extends Fragment {
                 startActivity(intent);
             }
 
-
             @Override
-            public void startAudioPlayerActivity(String filePath) {
-                audioPlayerAlertDialog.playTrack(filePath, mContext);
+            public void startImageViewerActivity(String filepath) {
+                Intent intent = new Intent(mContext, ImageViewer.class);
+                intent.putExtra("path", filepath);
+                startActivity(intent);
             }
-
-
-        }, iHistoryScanDataStore);
+        }, historyScanDataStore);
         historyScanPresenter.getScannedStoryList();
     }
 
 
     public void setupRepository(IHistoryScanDataStore iHistoryScanDataStore) {
-        this.iHistoryScanDataStore = iHistoryScanDataStore;
+        this.historyScanDataStore = iHistoryScanDataStore;
     }
 }

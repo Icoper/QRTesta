@@ -185,7 +185,10 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(params[0].getContext(), params[0].getUri());
             Bitmap bitmap = retriever
-                    .getFrameAtTime(100000, MediaMetadataRetriever.OPTION_PREVIOUS_SYNC);
+                    .getFrameAtTime(20000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            if (bitmap == null) {
+                return null;
+            }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);
             Drawable drawable = new BitmapDrawable(params[0].getContext().getResources(), bitmap);
@@ -201,6 +204,9 @@ public class PhotoVideoTypeAdapter extends RecyclerView.Adapter<PhotoVideoTypeAd
 
         @Override
         protected void onPostExecute(DrawableTaskParams videoPreviewDrawableTaskParams) {
+            if (videoPreviewDrawableTaskParams == null) {
+                return;
+            }
             Drawable drawable = videoPreviewDrawableTaskParams.getDrawable();
             try {
                 Glide.with(videoPreviewDrawableTaskParams.context).load(drawable).into(videoPreviewDrawableTaskParams.getStoryViewHolder().backgroundImage);

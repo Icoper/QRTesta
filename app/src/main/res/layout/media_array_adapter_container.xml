@@ -10,6 +10,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:background="@color/layoutBackgroundColor"
             tools:visibility="visible"
             android:visibility="gone"
             android:id="@+id/mac_text_rv_container"
@@ -32,6 +33,7 @@
 
 
         <LinearLayout
+            android:background="@color/layoutBackgroundColor"
             tools:visibility="visible"
             android:visibility="gone"
             android:id="@+id/mac_audio_rv_container"
@@ -63,6 +65,7 @@
 
 
         <LinearLayout
+            android:background="@color/layoutBackgroundColor"
             tools:visibility="visible"
             android:visibility="gone"
             android:id="@+id/mac_pvideo_rv_container"

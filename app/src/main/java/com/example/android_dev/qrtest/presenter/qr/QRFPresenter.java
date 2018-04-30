@@ -1,9 +1,9 @@
 package com.example.android_dev.qrtest.presenter.qr;
 
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.db.IGoalsDataStore;
-import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
+import com.example.android_dev.qrtest.db.goals.IGoalsDataStore;
+import com.example.android_dev.qrtest.db.historyScan.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.model.AssetTypes;
 import com.example.android_dev.qrtest.model.HistoryScansQRInformationIDs;
 import com.example.android_dev.qrtest.model.IStory;
@@ -16,16 +16,16 @@ import java.util.List;
 
 public class QRFPresenter implements IQRPresenter {
     private InMemoryStoryRepository inMemoryStoryRepository;
-    private IQRFragment iqrFragment;
-    private AppMediaPlayerPresenter iAppMediaPlayerPresenter;
+    private IQRFragment qrFragment;
+    private AppMediaPlayerPresenter appMediaPlayerPresenter;
     private QrInformation selectedQrInformation;
-    private IHistoryScanDataStore iHistoryScanDataStore;
-    private IGoalsDataStore iGoalsDataStore;
+    private IHistoryScanDataStore historyScanDataStore;
+    private IGoalsDataStore goalsDataStore;
 
-    public QRFPresenter(IQRFragment iqrFragment,IHistoryScanDataStore iHistoryScanDataStore,IGoalsDataStore iGoalsDataStore) {
-        this.iqrFragment = iqrFragment;
-        this.iGoalsDataStore = iGoalsDataStore;
-        this.iHistoryScanDataStore = iHistoryScanDataStore;
+    public QRFPresenter(IQRFragment iqrFragment, IHistoryScanDataStore iHistoryScanDataStore, IGoalsDataStore iGoalsDataStore) {
+        this.qrFragment = iqrFragment;
+        this.goalsDataStore = iGoalsDataStore;
+        this.historyScanDataStore = iHistoryScanDataStore;
     }
 
     private InMemoryStoryRepository getStoryRepo() {
@@ -38,25 +38,22 @@ public class QRFPresenter implements IQRPresenter {
     @Override
     public void playMediaData(AssetTypes resource) {
 
-        if (iAppMediaPlayerPresenter == null) {
-            iAppMediaPlayerPresenter = new AppMediaPlayerPresenter();
+        if (appMediaPlayerPresenter == null) {
+            appMediaPlayerPresenter = new AppMediaPlayerPresenter();
         }
         String filePath = GlobalNames.ENVIRONMENT_STORE +
                 inMemoryStoryRepository.getSelectedStory().getResFolderName() + "/Resource1/" +
                 resource.getFileName();
-        String msg = iAppMediaPlayerPresenter.processMediaData(resource);
+        String msg = appMediaPlayerPresenter.processMediaData(resource);
         if (msg.equals(GlobalNames.VIDEO_RES)) {
-            iqrFragment.startVideoPlayerActivity(filePath);
+            qrFragment.startVideoPlayerActivity(filePath);
             return;
-        } else if (msg.equals(GlobalNames.AUDIO_RES)) {
-            iqrFragment.startAudioPlayerActivity(filePath);
         }
     }
 
     @Override
     public synchronized void checkCode(String scannedCode) {
         int alertScanMode = 0;
-
         int qrInformationId = 0;
         selectedQrInformation = null;
         IStory jsonStory = getStoryRepo().getSelectedStory();
@@ -76,7 +73,7 @@ public class QRFPresenter implements IQRPresenter {
                 if (historyScansQRInfo.getQrInformationID() == qrInfoId) {
                     if (historyScansQRInfo.isShortInfo()) {
                         alertScanMode = GlobalNames.QR_MODE_FIRST_SCAN;
-                        iHistoryScanDataStore.update(qrInformationId);
+                        historyScanDataStore.update(qrInformationId);
                         historyScansQRInfo.setShortInfo(false);
 
                         QrInformation.QrData qrData = null;
@@ -85,7 +82,7 @@ public class QRFPresenter implements IQRPresenter {
                                 qrData = _qrData;
                             }
                         }
-                        iGoalsDataStore.saveNewGoals(qrData.getQrItemList().getGoalDetailAssetIDList());
+                        goalsDataStore.updateNewGoals(qrData.getQrItemList().getGoalDetailAssetIDList());
                     } else {
                         alertScanMode = GlobalNames.QR_MODE_SIMPLE_SCAN;
                     }
@@ -97,9 +94,9 @@ public class QRFPresenter implements IQRPresenter {
                     resIds = qrData.getQrItemList().getShortInfoAssetIDList();
                 }
             }
-            iqrFragment.showAlertDialog(alertScanMode, resIds, GlobalNames.ALERT_MODE_SMALL_INFO);
+            qrFragment.showAlertDialog(alertScanMode, resIds, GlobalNames.ALERT_MODE_SMALL_INFO);
         } else {
-            iqrFragment.showMsg(R.string.qr_code_not_found);
+            qrFragment.showMsg(R.string.qr_code_not_found);
         }
 
 
@@ -118,6 +115,6 @@ public class QRFPresenter implements IQRPresenter {
             }
         }
 
-        iqrFragment.showAlertDialog(modeScan, resIds, modeShow);
+        qrFragment.showAlertDialog(modeScan, resIds, modeShow);
     }
 }

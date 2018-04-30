@@ -10,8 +10,9 @@ public interface IHistoryScanFragment {
 
     void showAlertDialog(List<Integer> storyResId, int modeShow);
 
+    void startImageViewerActivity(String filepath);
+
     void startVideoPlayerActivity(String filePath);
     void showMsg(String msg);
 
-    void startAudioPlayerActivity(String filePath);
 }

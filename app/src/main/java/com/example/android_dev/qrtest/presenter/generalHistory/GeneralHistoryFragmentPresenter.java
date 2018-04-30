@@ -10,31 +10,29 @@ import com.example.android_dev.qrtest.ui.fragment.IGeneralHistoryFragment;
 import com.example.android_dev.qrtest.util.GlobalNames;
 
 public class GeneralHistoryFragmentPresenter implements IGeneralHistoryFragmentPresenter {
-    private IGeneralHistoryFragment iGeneralHistoryFragment;
-    private IAppMediaPlayerPresenter iAppMediaPlayerPresenter;
-    private IStoryRepository iStoryRepository;
+    private IGeneralHistoryFragment generalHistoryFragment;
+    private IAppMediaPlayerPresenter appMediaPlayerPresenter;
+    private IStoryRepository storyRepository;
 
     public GeneralHistoryFragmentPresenter(IGeneralHistoryFragment iGeneralHistoryFragment) {
-        this.iGeneralHistoryFragment = iGeneralHistoryFragment;
-        iStoryRepository = new InMemoryStoryRepository();
+        this.generalHistoryFragment = iGeneralHistoryFragment;
+        storyRepository = new InMemoryStoryRepository();
     }
 
     @Override
     public void playMediaData(AssetTypes resource) {
-        if (iAppMediaPlayerPresenter == null) {
-            iAppMediaPlayerPresenter = new AppMediaPlayerPresenter();
+        if (appMediaPlayerPresenter == null) {
+            appMediaPlayerPresenter = new AppMediaPlayerPresenter();
         }
         String filePath = GlobalNames.ENVIRONMENT_STORE +
-                iStoryRepository.getSelectedStory().getResFolderName() + "/Resource1/" +
+                storyRepository.getSelectedStory().getResFolderName() + "/Resource1/" +
                 resource.getFileName();
-        String msg = iAppMediaPlayerPresenter.processMediaData(resource);
+        String msg = appMediaPlayerPresenter.processMediaData(resource);
         if (msg.equals(GlobalNames.VIDEO_RES)) {
-            iGeneralHistoryFragment.startVideoPlayerActivity(filePath);
+            generalHistoryFragment.startVideoPlayerActivity(filePath);
             return;
-        } else if (msg.equals(GlobalNames.AUDIO_RES)) {
-            iGeneralHistoryFragment.startAudioPlayerActivity(filePath);
         } else if (msg.equals(GlobalNames.IMG_RES)) {
-            iGeneralHistoryFragment.startImageViewerActivity(filePath);
+            generalHistoryFragment.startImageViewerActivity(filePath);
             return;
         }
     }

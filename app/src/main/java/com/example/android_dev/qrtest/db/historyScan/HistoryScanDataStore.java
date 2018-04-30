@@ -1,4 +1,7 @@
-package com.example.android_dev.qrtest.db;
+package com.example.android_dev.qrtest.db.historyScan;
+
+import com.example.android_dev.qrtest.db.SavedDataStore;
+import com.example.android_dev.qrtest.db.SingletonStoryData;
 
 import java.util.List;
 

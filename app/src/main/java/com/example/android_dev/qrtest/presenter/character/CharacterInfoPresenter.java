@@ -9,30 +9,32 @@ import com.example.android_dev.qrtest.util.GlobalNames;
 
 public class CharacterInfoPresenter implements ICharacterInfoPresenter {
     private InMemoryStoryRepository inMemoryStoryRepository;
-    private ICharacterInfoFragment iCharacterInfoFragment;
-    private AppMediaPlayerPresenter iAppMediaPlayerPresenter;
+    private ICharacterInfoFragment characterInfoFragment;
+    private AppMediaPlayerPresenter appMediaPlayerPresenter;
 
     public CharacterInfoPresenter(ICharacterInfoFragment iCharacterInfoFragment) {
-        this.iCharacterInfoFragment = iCharacterInfoFragment;
+        this.characterInfoFragment = iCharacterInfoFragment;
         inMemoryStoryRepository = new InMemoryStoryRepository();
 
     }
 
     @Override
     public void playMediaData(AssetTypes resource) {
-        if (iAppMediaPlayerPresenter == null) {
-            iAppMediaPlayerPresenter = new AppMediaPlayerPresenter();
+        if (appMediaPlayerPresenter == null) {
+            appMediaPlayerPresenter = new AppMediaPlayerPresenter();
         }
         String filePath = GlobalNames.ENVIRONMENT_STORE +
                 inMemoryStoryRepository.getSelectedStory().getResFolderName() + "/Resource1/" +
                 resource.getFileName();
-        String msg = iAppMediaPlayerPresenter.processMediaData(resource);
+        String msg = appMediaPlayerPresenter.processMediaData(resource);
+
         if (msg.equals(GlobalNames.VIDEO_RES)) {
-            iCharacterInfoFragment.startVideoPlayerActivity(filePath);
+            characterInfoFragment.startVideoPlayerActivity(filePath);
             return;
-        } else if (msg.equals(GlobalNames.AUDIO_RES)) {
-            iCharacterInfoFragment.startAudioPlayerActivity(filePath);
+        } else if (msg.equals(GlobalNames.IMG_RES)) {
+            characterInfoFragment.startImageViewerActivity(filePath);
+            return;
         }
-        iCharacterInfoFragment.showMsg(msg);
+        characterInfoFragment.showMsg(msg);
     }
 }

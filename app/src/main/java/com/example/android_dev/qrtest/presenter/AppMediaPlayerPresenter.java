@@ -8,7 +8,6 @@ import com.example.android_dev.qrtest.util.GlobalNames;
 public class AppMediaPlayerPresenter implements IAppMediaPlayerPresenter {
     private final String LOG_TAG = "AppMediaPlayerPresenter";
 
-
     public AppMediaPlayerPresenter() {
     }
 

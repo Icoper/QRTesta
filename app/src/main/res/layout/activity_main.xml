@@ -38,6 +38,7 @@
 
 
         <FrameLayout
+            android:background="@color/layoutBackgroundColor"
             android:id="@+id/ma_fragment_container"
             android:layout_width="0dp"
             android:layout_height="0dp"

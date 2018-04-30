@@ -7,10 +7,19 @@ import java.util.List;
 public class SavedData implements Serializable {
     private IStory jsonStory;
     private Role role;
-    private List<Integer> goalsList;
+    private List<Integer> allGoalsList;
+    private List<Integer> newGoalsList;
     private List<Integer> scanQRStoreList;
 
     public SavedData() {
+    }
+
+    public List<Integer> getNewGoalsList() {
+        return newGoalsList;
+    }
+
+    public void setNewGoalsList(List<Integer> newGoalsList) {
+        this.newGoalsList = newGoalsList;
     }
 
     public IStory getJsonStory() {
@@ -29,12 +38,12 @@ public class SavedData implements Serializable {
         this.role = role;
     }
 
-    public List<Integer> getGoalsList() {
-        return goalsList;
+    public List<Integer> getAllGoalsList() {
+        return allGoalsList;
     }
 
-    public void setGoalsList(List<Integer> goalsList) {
-        this.goalsList = goalsList;
+    public void setAllGoalsList(List<Integer> allGoalsList) {
+        this.allGoalsList = allGoalsList;
     }
 
     public List<Integer> getScanQRStoreList() {

@@ -14,9 +14,9 @@ public interface ISavedDataStore {
 
     Role loadSelectedRole();
 
-    void saveKnowGoals(List<Integer> list);
+    void saveAllGoals(List<Integer> list);
 
-    List<Integer> loadKnowGoals();
+    List<Integer> loadAllGoals();
 
     void saveNewGoals(List<Integer> list);
 

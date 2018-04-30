@@ -49,26 +49,29 @@ public class SavedDataStore implements ISavedDataStore {
     }
 
     @Override
-    public void saveKnowGoals(List<Integer> list) {
+    public void saveAllGoals(List<Integer> list) {
         savedData = getSavedData();
-        savedData.setGoalsList(list);
+        savedData.setAllGoalsList(list);
         saveDataToFile();
     }
 
     @Override
-    public List<Integer> loadKnowGoals() {
+    public List<Integer> loadAllGoals() {
         savedData = getSavedData();
-        return savedData.getGoalsList();
+        return savedData.getAllGoalsList();
     }
 
     @Override
     public void saveNewGoals(List<Integer> list) {
-
+        savedData = getSavedData();
+        savedData.setNewGoalsList(list);
+        saveDataToFile();
     }
 
     @Override
     public List<Integer> loadNewGoals() {
-        return null;
+        savedData = getSavedData();
+        return savedData.getNewGoalsList();
     }
 
     @Override
@@ -104,17 +107,21 @@ public class SavedDataStore implements ISavedDataStore {
     }
 
     private synchronized void saveDataToFile() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // Write objects to file
-            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(new File(FILE_PATH + FILE_NAME)))) {
-                outputStream.writeObject(savedData);
-            } catch (IOException e) {
-                e.printStackTrace();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    // Write objects to file
+                    try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(new File(FILE_PATH + FILE_NAME)))) {
+                        outputStream.writeObject(savedData);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // TODO implement from older API
+                }
             }
-        } else {
-            // TODO implement from older API
-        }
-
+        }).run();
 
     }
 

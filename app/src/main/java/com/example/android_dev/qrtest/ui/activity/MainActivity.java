@@ -32,13 +32,13 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.android_dev.qrtest.R;
-import com.example.android_dev.qrtest.db.GoalsDataStore;
-import com.example.android_dev.qrtest.db.HistoryScanDataStore;
-import com.example.android_dev.qrtest.db.IGoalsDataStore;
-import com.example.android_dev.qrtest.db.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.db.InMemoryStoryRepository;
 import com.example.android_dev.qrtest.db.SavedDataStore;
 import com.example.android_dev.qrtest.db.SingletonStoryData;
+import com.example.android_dev.qrtest.db.goals.GoalsDataStore;
+import com.example.android_dev.qrtest.db.goals.IGoalsDataStore;
+import com.example.android_dev.qrtest.db.historyScan.HistoryScanDataStore;
+import com.example.android_dev.qrtest.db.historyScan.IHistoryScanDataStore;
 import com.example.android_dev.qrtest.model.HistoryScansQRInformationIDs;
 import com.example.android_dev.qrtest.model.IStory;
 import com.example.android_dev.qrtest.ui.fragment.GeneralHistoryFragment;
@@ -46,7 +46,6 @@ import com.example.android_dev.qrtest.ui.fragment.GoalsFragment;
 import com.example.android_dev.qrtest.ui.fragment.HistoryScanFragment;
 import com.example.android_dev.qrtest.ui.fragment.QrReaderFragment;
 import com.example.android_dev.qrtest.ui.fragment.RoleInfoFragment;
-import com.facebook.drawee.backends.pipeline.Fresco;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String LOG_TAG = "MainActivity";
@@ -98,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        Fresco.initialize(this);
         inMemoryStoryRepository = new InMemoryStoryRepository();
         iGoalsDataStore = new GoalsDataStore();
         iHistoryScanDataStore = new HistoryScanDataStore();
@@ -114,9 +112,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(mActionBarToolbar);
         setTitle(selectedStory.getPreviewText());
         mActionBarToolbar.setElevation(8);
-
         setupBottomNavigationView();
-        initializeFragment();
+
+        initGeneralHistoryFragment();
+        getFragmentTransaction().add(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
 
     }
 
@@ -142,6 +141,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ahBottomNavigationView.setAccentColor(getResources().getColor(R.color.colorBlue));
         ahBottomNavigationView.setNotificationTextColor(getResources().getColor(R.color.colorWhite));
         ahBottomNavigationView.setNotificationBackgroundColor(getResources().getColor(R.color.colorNotification));
+        if (iGoalsDataStore.getNewGoals().size() > 0) {
+            ahBottomNavigationView.setNotification(iGoalsDataStore.getNewGoals().size(), 4);
+        }
         ahBottomNavigationView.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
@@ -149,32 +151,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (position) {
                     case 0:
                         if (!wasSelected) {
+                            initGeneralHistoryFragment();
                             fragment = mGeneralHistoryFragment;
                             showFab(false);
                         }
                         break;
                     case 1:
                         if (!wasSelected) {
+                            initRoleInfoFragment();
                             fragment = mRoleInfoFragment;
                             showFab(false);
                         }
                         break;
                     case 2:
                         if (!wasSelected) {
+                            initQrReaderFragment();
                             fragment = mQrReaderFragment;
                             showFab(false);
                         }
                         break;
                     case 3:
                         if (!wasSelected) {
+                            initHistoryScanFragment();
                             fragment = mHistoryScanFragment;
                             showFab(false);
                         }
                         break;
                     case 4:
                         if (!wasSelected) {
+                            initGoalsFragment();
                             fragment = mGoalsFragment;
-                            showFab(true);
+                            showFab(false);
                         }
                         break;
                 }
@@ -186,27 +193,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void initializeFragment() {
-        mQrReaderFragment = new QrReaderFragment();
-        mQrReaderFragment.setupRepository(iHistoryScanDataStore, iGoalsDataStore);
-        mQrReaderFragment.setBottomNavigationView(ahBottomNavigationView);
-        mQrReaderFragment.setupOnCloseQrListener(new QrReaderFragment.OnCloseQrReaderButtonClickListener() {
-            @Override
-            public void onClick() {
-                getFragmentTransaction().replace(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
-                ahBottomNavigationView.setCurrentItem(0);
-            }
-        });
-        mRoleInfoFragment = new RoleInfoFragment();
-        mGeneralHistoryFragment = new GeneralHistoryFragment();
-        mHistoryScanFragment = new HistoryScanFragment();
-        mHistoryScanFragment.setupRepository(iHistoryScanDataStore);
-        mGoalsFragment = new GoalsFragment();
-        mGoalsFragment.setupRepository(iGoalsDataStore);
-        mGoalsFragment.setBottomNavigationView(ahBottomNavigationView);
-
-        getFragmentTransaction().add(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
+    private void initQrReaderFragment() {
+        if (mQrReaderFragment == null) {
+            mQrReaderFragment = new QrReaderFragment();
+            mQrReaderFragment.setupRepository(iHistoryScanDataStore, iGoalsDataStore);
+            mQrReaderFragment.setBottomNavigationView(ahBottomNavigationView);
+            mQrReaderFragment.setupOnCloseQrListener(new QrReaderFragment.OnCloseQrReaderButtonClickListener() {
+                @Override
+                public void onClick() {
+                    getFragmentTransaction().replace(R.id.ma_fragment_container, mGeneralHistoryFragment).commit();
+                    ahBottomNavigationView.setCurrentItem(0);
+                }
+            });
+        }
     }
+
+    private void initRoleInfoFragment() {
+        if (mRoleInfoFragment == null) {
+            mRoleInfoFragment = new RoleInfoFragment();
+        }
+    }
+
+    private void initGeneralHistoryFragment() {
+        if (mGeneralHistoryFragment == null) {
+            mGeneralHistoryFragment = new GeneralHistoryFragment();
+        }
+    }
+
+    private void initHistoryScanFragment() {
+        if (mHistoryScanFragment == null) {
+            mHistoryScanFragment = new HistoryScanFragment();
+            mHistoryScanFragment.setupRepository(iHistoryScanDataStore);
+        }
+    }
+
+    private void initGoalsFragment() {
+        if (mGoalsFragment == null) {
+            mGoalsFragment = new GoalsFragment();
+            mGoalsFragment.setupRepository(iGoalsDataStore);
+            mGoalsFragment.setBottomNavigationView(ahBottomNavigationView);
+        }
+    }
+
 
     private FragmentTransaction getFragmentTransaction() {
         FragmentManager fragmentManager = getFragmentManager();
@@ -314,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = v.getId();
         switch (id) {
             case R.id.ma_fab:
-                // update data
+                // updateNewGoals data
                 break;
         }
     }

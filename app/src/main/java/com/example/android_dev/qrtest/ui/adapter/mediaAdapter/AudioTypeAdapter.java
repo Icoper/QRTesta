@@ -1,20 +1,21 @@
 package com.example.android_dev.qrtest.ui.adapter.mediaAdapter;
 
-import android.content.Context;
-import android.media.MediaMetadataRetriever;
+
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android_dev.qrtest.R;
 import com.example.android_dev.qrtest.model.AssetTypes;
 
 import java.util.List;
+
+import nl.changer.audiowife.AudioWife;
 
 
 public class AudioTypeAdapter extends RecyclerView.Adapter<AudioTypeAdapter.AudioTypeViewHolder> {
@@ -41,30 +42,31 @@ public class AudioTypeAdapter extends RecyclerView.Adapter<AudioTypeAdapter.Audi
 
     @Override
     public void onBindViewHolder(AudioTypeViewHolder holder, int i) {
-        int width = getMaximumWeight();
-        int height = width / 2 + 100;
-        ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
         final int position = i;
         holder.soundName.setText(assetTypesList.get(position).getFileName());
         holder.audioLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemStoryClickListener.onClick(assetTypesList.get(position));
+//                onItemStoryClickListener.onClick(assetTypesList.get(position));
             }
         });
 
-        // load data file
-        MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
-        metaRetriever.setDataSource(resPath + assetTypesList.get(i).getFileName());
-        // convert duration to minute:seconds
-        String duration =
-                metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long dur = Long.parseLong(duration);
-        String seconds = String.valueOf((dur % 60000) / 1000);
-        String minutes = String.valueOf(dur / 60000);
-        String out = minutes + ":" + seconds;
+        AudioWife.getInstance()
+                .init(view.getContext(), Uri.parse(resPath + assetTypesList.get(i).getFileName()))
+                .useDefaultUi((ViewGroup) view, LayoutInflater.from(view.getContext()));
 
-        holder.soundDuration.setText(out);
+//        // load data file
+//        MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+//        metaRetriever.setDataSource(resPath + assetTypesList.get(i).getFileName());
+//        // convert duration to minute:seconds
+//        String duration =
+//                metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//        long dur = Long.parseLong(duration);
+//        String seconds = String.valueOf((dur % 60000) / 1000);
+//        String minutes = String.valueOf(dur / 60000);
+//        String out = minutes + ":" + seconds;
+//
+//        holder.soundDuration.setText(out);
     }
 
     @Override
@@ -72,22 +74,19 @@ public class AudioTypeAdapter extends RecyclerView.Adapter<AudioTypeAdapter.Audi
         return assetTypesList.size();
     }
 
-    private Integer getMaximumWeight() {
-        WindowManager windowManager = (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
-        assert windowManager != null;
-        return windowManager.getDefaultDisplay().getWidth();
-    }
 
     class AudioTypeViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout audioLayout;
+        //        LinearLayout audioLayout;
+//        TextView soundDuration;
         TextView soundName;
-        TextView soundDuration;
+        RelativeLayout audioLayout;
 
         AudioTypeViewHolder(View itemView) {
             super(itemView);
-            audioLayout = (LinearLayout) itemView.findViewById(R.id.iatl_audio_layout);
             soundName = (TextView) itemView.findViewById(R.id.iatl_audio_name);
-            soundDuration = (TextView) itemView.findViewById(R.id.iatl_sound_duration);
+            audioLayout = (RelativeLayout) itemView.findViewById(R.id.iatl_audio_layout);
+//            audioLayout = (LinearLayout) itemView.findViewById(R.id.iatl_audio_layout);
+//            soundDuration = (TextView) itemView.findViewById(R.id.iatl_sound_duration);
         }
     }
 
